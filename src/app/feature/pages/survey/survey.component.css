@@ -1,0 +1,35 @@
+.survey-section {
+  padding-block: var(--spacing-lg) var(--spacing-xl);
+  max-width: 600px;
+}
+
+.survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 400;
+}
+
+fieldset.form-field {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+}
+
+.success-message {
+  color: var(--color-success);
+  font-weight: 600;
+}

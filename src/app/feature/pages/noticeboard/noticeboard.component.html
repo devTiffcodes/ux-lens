@@ -1,0 +1,25 @@
+<section class="container">
+  <h1>Noticeboard</h1>
+
+  @if (isLoading()) {
+  @if (uxModeService.isGoodMode()) {
+  <p class="text-muted">Loading notices...</p>
+  }
+  } @else if (notices().length === 0) {
+  @if (uxModeService.isGoodMode()) {
+  <p class="text-muted">No notices yet. Be the first to post one!</p>
+  }
+  } @else {
+  <ul class="notice-list">
+    @for (notice of notices(); track notice.id) {
+    <li class="card notice-card">
+      <div class="notice-header">
+        <strong>{{ notice.author }}</strong>
+        <span class="text-muted">{{ notice.postedAt }}</span>
+      </div>
+      <p>{{ notice.message }}</p>
+    </li>
+    }
+  </ul>
+  }
+</section>

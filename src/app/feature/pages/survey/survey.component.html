@@ -1,0 +1,61 @@
+<section class="container survey-section">
+  <h1>Share Your Experience</h1>
+  <p class="text-muted">
+    This short survey helps evaluate the UX Lens research study. Your responses are anonymous.
+  </p>
+
+  @if (submitSuccess()) {
+  <p class="success-message">Thank you — your response has been recorded.</p>
+  }
+
+  @if (submitError()) {
+  <p class="field-error">{{ submitError() }}</p>
+  }
+
+  <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" class="survey-form">
+    <div class="form-field">
+      <label for="stress">How stressful did you find using the site? (1 = Not at all, 5 = Very)</label>
+      <input id="stress" type="range" min="1" max="5" formControlName="stress" />
+      <span class="text-muted">{{ surveyForm.controls.stress.value }}</span>
+    </div>
+
+    <div class="form-field">
+      <label for="ease">How easy was it to complete tasks? (1 = Very hard, 5 = Very easy)</label>
+      <input id="ease" type="range" min="1" max="5" formControlName="ease" />
+      <span class="text-muted">{{ surveyForm.controls.ease.value }}</span>
+    </div>
+
+    <div class="form-field">
+      <label for="overwhelmed">Did you feel overwhelmed by the interface? (1 = Not at all, 5 = Very)</label>
+      <input id="overwhelmed" type="range" min="1" max="5" formControlName="overwhelmed" />
+      <span class="text-muted">{{ surveyForm.controls.overwhelmed.value }}</span>
+    </div>
+
+    <div class="form-field">
+      <label for="satisfaction">Overall, how satisfied are you? (1 = Not at all, 5 = Very)</label>
+      <input id="satisfaction" type="range" min="1" max="5" formControlName="satisfaction" />
+      <span class="text-muted">{{ surveyForm.controls.satisfaction.value }}</span>
+    </div>
+
+    <fieldset class="form-field">
+      <legend>Which pages did you test?</legend>
+      @for (page of pageOptions; track page; let i = $index) {
+      <label class="checkbox-label">
+        <input type="checkbox"
+               [checked]="surveyForm.controls.pagesTested.at(i).value"
+               (change)="togglePage(i)" />
+        {{ page }}
+      </label>
+      }
+    </fieldset>
+
+    <div class="form-field">
+      <label for="openFeedback">Anything else you'd like to share?</label>
+      <textarea id="openFeedback" rows="4" formControlName="openFeedback"></textarea>
+    </div>
+
+    <button type="submit" class="btn" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Submitting...' : 'Submit Survey' }}
+    </button>
+  </form>
+</section>

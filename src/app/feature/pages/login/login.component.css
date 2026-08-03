@@ -1,0 +1,11 @@
+.login-section {
+  max-width: 400px;
+  padding-block: var(--spacing-xl);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
