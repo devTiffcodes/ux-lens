@@ -1,0 +1,14 @@
+.ux-mode-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: #fdecea;
+  color: #7a2e22;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f3c6c0;
+}
+
+.ux-mode-banner-icon {
+  font-size: 1.1rem;
+}

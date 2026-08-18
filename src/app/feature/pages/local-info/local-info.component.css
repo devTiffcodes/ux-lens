@@ -1,0 +1,12 @@
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  padding-block: var(--spacing-lg);
+}
+
+.info-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}

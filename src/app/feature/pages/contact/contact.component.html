@@ -1,0 +1,36 @@
+<section class="container contact-section">
+  <h1>Contact Mera</h1>
+  <p class="text-muted">Have a question or feedback for the community team? Send us a message.</p>
+
+  @if (showSuccess()) {
+  <p class="success-message">Thanks — your message has been sent.</p>
+  }
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" novalidate>
+    <div class="form-field">
+      <label for="name">Name</label>
+      <input id="name" type="text" formControlName="name" [class.field-invalid]="fieldInvalid('name')" />
+      @if (fieldInvalid('name')) {
+      <span class="field-error">Please enter your name.</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" [class.field-invalid]="fieldInvalid('email')" />
+      @if (fieldInvalid('email')) {
+      <span class="field-error">Please enter a valid email address.</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="message">Message</label>
+      <textarea id="message" rows="5" formControlName="message" [class.field-invalid]="fieldInvalid('message')"></textarea>
+      @if (fieldInvalid('message')) {
+      <span class="field-error">Please enter a message.</span>
+      }
+    </div>
+
+    <button type="submit" class="btn">Send Message</button>
+  </form>
+</section>

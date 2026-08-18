@@ -1,0 +1,15 @@
+<section class="container">
+  <h1>Local Info</h1>
+
+  <div class="info-grid">
+    @for (category of categories; track category.id) {
+    <div class="card info-card">
+      <span class="info-icon">{{ category.icon }}</span>
+      @if (uxModeService.isGoodMode()) {
+      <h2>{{ category.label }}</h2>
+      }
+      <p class="text-muted">{{ category.summary }}</p>
+    </div>
+    }
+  </div>
+</section>
