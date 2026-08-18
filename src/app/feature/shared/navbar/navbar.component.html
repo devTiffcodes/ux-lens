@@ -1,0 +1,36 @@
+<header class="navbar">
+  <div class="navbar-inner container">
+    <a routerLink="/home" class="navbar-brand">Mera</a>
+    
+    <nav class="navbar-links" aria-label="Main navigation">
+      @for (link of navLinks; track link.path) {
+
+      <a [routerLink]="link.path"
+      routerLinkActive="navbar-link-active"
+      class="navbar-link"
+      >
+      {{ link.label }}
+      </a>
+      }
+    </nav>
+
+    <div class="navbar-actions">
+      <a routerLink="/survey" class="navbar-link navbar-link-secondary">Survey</a>
+      <a routerLink="/guidelines" class="navbar-link navbar-link-secondary">Guidelines</a>
+      <a routerLink="/site-analyzer" class="navbar-link navbar-link-secondary">Site Analyzer</a>
+
+      <button type="button"
+              class="btn btn-secondary navbar-mode-toggle"
+              (click)="toggleUxMode()">
+        {{ uxModeService.isPoorMode() ? 'Poor UX Mode' : 'Good UX Mode' }}
+      </button>
+
+      <button type="button"
+              class="btn navbar-dev-toggle"
+              (click)="toggleDevMode()"
+              aria-label="Toggle developer panel">
+        Dev Mode
+      </button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,59 @@
+<section class="container dashboard-section">
+  <div class="dashboard-header">
+    <h1>Research Dashboard</h1>
+    <button type="button" class="btn btn-secondary" (click)="logout()">Log Out</button>
+  </div>
+
+  @if (isLoading()) {
+  <p class="text-muted">Loading survey data...</p>
+  } @else if (responses().length === 0) {
+  <p class="text-muted">No survey responses yet.</p>
+  } @else {
+  <div class="comparison-grid">
+    <div class="card mode-summary">
+      <h2>Good UX Mode</h2>
+      <p class="text-muted">{{ goodModeAverages().count }} responses</p>
+      <dl>
+        <dt>Avg. Stress</dt>
+        <dd>{{ goodModeAverages().stressLevel.toFixed(1) }}</dd>
+        <dt>Avg. Ease</dt>
+        <dd>{{ goodModeAverages().easeOfUse.toFixed(1) }}</dd>
+        <dt>Avg. Overwhelmed</dt>
+        <dd>{{ goodModeAverages().overwhelmed.toFixed(1) }}</dd>
+        <dt>Avg. Satisfaction</dt>
+        <dd>{{ goodModeAverages().satisfactionScore.toFixed(1) }}</dd>
+      </dl>
+    </div>
+
+    <div class="card mode-summary">
+      <h2>Poor UX Mode</h2>
+      <p class="text-muted">{{ poorModeAverages().count }} responses</p>
+      <dl>
+        <dt>Avg. Stress</dt>
+        <dd>{{ poorModeAverages().stressLevel.toFixed(1) }}</dd>
+        <dt>Avg. Ease</dt>
+        <dd>{{ poorModeAverages().easeOfUse.toFixed(1) }}</dd>
+        <dt>Avg. Overwhelmed</dt>
+        <dd>{{ poorModeAverages().overwhelmed.toFixed(1) }}</dd>
+        <dt>Avg. Satisfaction</dt>
+        <dd>{{ poorModeAverages().satisfactionScore.toFixed(1) }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2>All Responses</h2>
+  <ul class="response-list">
+    @for (response of responses(); track response.sessionId) {
+    <li class="card response-card">
+      <div class="response-header">
+        <span class="response-mode" [class.mode-poor]="response.uxMode === 'poor'">{{ response.uxMode }}</span>
+        <span class="text-muted">{{ response.pagesTested.join(', ') }}</span>
+      </div>
+      @if (response.openFeedback) {
+      <p>{{ response.openFeedback }}</p>
+      }
+    </li>
+    }
+  </ul>
+  }
+</section>

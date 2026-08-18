@@ -1,0 +1,10 @@
+.guidelines-section {
+  padding-block: var(--spacing-lg) var(--spacing-xl);
+}
+
+.principle-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}

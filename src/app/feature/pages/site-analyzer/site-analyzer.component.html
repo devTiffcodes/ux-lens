@@ -1,0 +1,106 @@
+<section class="container analyzer-section">
+  <h1>Site Analyzer</h1>
+  <p class="text-muted">
+    Paste any public website URL to get a real accessibility audit — powered by
+    Google Lighthouse — mapped to the same UX principles used throughout this project.
+  </p>
+
+  @if (!siteAnalyzerService.result()) {
+  <form [formGroup]="urlForm" (ngSubmit)="onAnalyze()" class="analyzer-form" novalidate>
+    <div class="form-field">
+      <label for="url">Website URL</label>
+      <input id="url"
+             type="text"
+             formControlName="url"
+             placeholder="https://example.com" />
+      @if (urlForm.controls.url.invalid && urlForm.controls.url.touched) {
+      <span class="field-error">Please enter a valid URL starting with http:// or https://</span>
+      }
+    </div>
+
+    <button type="submit" class="btn" [disabled]="siteAnalyzerService.isLoading()">
+      {{ siteAnalyzerService.isLoading() ? 'Analyzing...' : 'Analyze Site' }}
+    </button>
+  </form>
+
+  @if (siteAnalyzerService.error()) {
+  <p class="field-error">{{ siteAnalyzerService.error() }}</p>
+  }
+  } @else {
+  @let result = siteAnalyzerService.result()!;
+
+  <div class="analyzer-header">
+    <div>
+      <p class="text-muted">Results for</p>
+      <h2 class="analyzer-url">{{ result.url }}</h2>
+    </div>
+    <button type="button" class="btn btn-secondary" (click)="startOver()">
+      Analyze Another Site
+    </button>
+  </div>
+
+  <div class="score-grid">
+    <div class="card score-card">
+      <span class="score-label">Accessibility</span>
+      <span class="score-value">{{ result.scores.accessibility }}</span>
+    </div>
+    <div class="card score-card">
+      <span class="score-label">Best Practices</span>
+      <span class="score-value">{{ result.scores.bestPractices }}</span>
+    </div>
+    <div class="card score-card">
+      <span class="score-label">SEO</span>
+      <span class="score-value">{{ result.scores.seo }}</span>
+    </div>
+    <div class="card score-card">
+      <span class="score-label">Performance</span>
+      <span class="score-value">{{ result.scores.performance }}</span>
+    </div>
+  </div>
+
+  <section class="dev-panel-section">
+    <h3>Accessibility Issues ({{ result.issues.length }})</h3>
+    @if (result.issues.length === 0) {
+    <p class="text-muted">No accessibility issues detected — great result.</p>
+    } @else {
+    <ul class="issue-list">
+      @for (issue of result.issues; track issue.id) {
+      <li class="issue-card">
+        <div class="issue-header">
+          <span class="issue-severity" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
+          <strong>{{ issue.title }}</strong>
+        </div>
+        <p>{{ issue.description }}</p>
+        <p class="text-muted"><em>Principle:</em> {{ issue.principle }}</p>
+      </li>
+      }
+    </ul>
+    }
+  </section>
+
+  <section class="dev-panel-section">
+    <h3>AI Mentor</h3>
+    <textarea class="mentor-input"
+              rows="2"
+              placeholder="Ask the mentor about these results (optional)..."
+              [value]="mentorQuestion()"
+              (input)="onMentorInput($event)"></textarea>
+    <button type="button"
+            class="btn"
+            (click)="askMentor()"
+            [disabled]="claudeService.isLoading()">
+      {{ claudeService.isLoading() ? 'Thinking...' : 'Ask Mentor' }}
+    </button>
+
+    @if (claudeService.error()) {
+    <p class="mentor-error">{{ claudeService.error() }}</p>
+    }
+
+    @if (claudeService.lastResponse()) {
+    <div class="mentor-response">
+      <p>{{ claudeService.lastResponse() }}</p>
+    </div>
+    }
+  </section>
+  }
+</section>

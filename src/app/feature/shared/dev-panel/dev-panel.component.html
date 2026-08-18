@@ -1,0 +1,69 @@
+<aside class="dev-panel"
+       [class.dev-panel-open]="uxModeService.devModeActive()"
+       aria-label="Developer analysis panel">
+  <div class="dev-panel-header">
+    <h2>Dev Analysis</h2>
+    <button type="button"
+            class="dev-panel-close"
+            (click)="closePanel()"
+            aria-label="Close developer panel">
+      ×
+    </button>
+  </div>
+
+  <section class="dev-panel-section">
+    <h3>Wellbeing Score</h3>
+    <div class="wellbeing-score">
+      <div class="wellbeing-bar">
+        <div class="wellbeing-bar-fill" [style.width.%]="wellbeingScore()"></div>
+      </div>
+      <span class="wellbeing-value">{{ wellbeingScore() }}/100</span>
+    </div>
+  </section>
+
+  <section class="dev-panel-section">
+    <h3>Detected Issues ({{ issues().length }})</h3>
+    @if (issues().length === 0) {
+    <p class="text-muted">No issues detected on this page in the current mode.</p>
+    } @else {
+    <ul class="issue-list">
+      @for (issue of issues(); track issue.id) {
+      <li class="issue-card">
+        <div class="issue-header">
+          <span class="issue-severity" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
+          <strong>{{ issue.title }}</strong>
+        </div>
+        <p>{{ issue.description }}</p>
+        <p class="text-muted"><em>Principle:</em> {{ issue.principle }}</p>
+        <p class="text-muted"><em>Fix:</em> {{ issue.recommendation }}</p>
+      </li>
+      }
+    </ul>
+    }
+  </section>
+
+  <section class="dev-panel-section">
+    <h3>AI Mentor</h3>
+    <textarea class="mentor-input"
+              rows="2"
+              placeholder="Ask the mentor about this page (optional)..."
+              [value]="mentorQuestion()"
+              (input)="onMentorInput($event)"></textarea>
+    <button type="button"
+            class="btn"
+            (click)="askMentor()"
+            [disabled]="claudeService.isLoading()">
+      {{ claudeService.isLoading() ? 'Thinking...' : 'Ask Mentor' }}
+    </button>
+
+    @if (claudeService.error()) {
+    <p class="mentor-error">{{ claudeService.error() }}</p>
+    }
+
+    @if (claudeService.lastResponse()) {
+    <div class="mentor-response">
+      <p>{{ claudeService.lastResponse() }}</p>
+    </div>
+    }
+  </section>
+</aside>
