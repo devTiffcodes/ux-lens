@@ -1,11 +1,8 @@
-<div class="app-root">
+<div class="app-root" [class.dev-panel-open]="uxModeService.devModeActive()">
   <app-ux-mode-banner />
-
   <app-navbar />
-
   <main class="app-main">
     <router-outlet />
   </main>
-
   <app-dev-panel />
 </div>

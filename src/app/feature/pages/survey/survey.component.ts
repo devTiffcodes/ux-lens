@@ -24,10 +24,10 @@ export class SurveyComponent {
   protected readonly submitSuccess = signal<boolean>(false);
 
   protected readonly surveyForm = this.fb.nonNullable.group({
-    stress: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
-    ease: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
+    stressLevel: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
+    easeOfUse: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
     overwhelmed: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
-    satisfaction: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
+    satisfactionScore: [3, [Validators.required, Validators.min(1), Validators.max(5)]],
     openFeedback: [''],
     pagesTested: this.fb.nonNullable.array<boolean>(PAGE_OPTIONS.map(() => false)),
   });
@@ -53,10 +53,10 @@ export class SurveyComponent {
       sessionId: crypto.randomUUID(),
       uxMode: this.uxModeService.isPoorMode() ? 'poor' : 'good',
       submittedAt: new Date(),
-      stress: raw.stress,
-      ease: raw.ease,
+      stressLevel: raw.stressLevel,
+      easeOfUse: raw.easeOfUse,
       overwhelmed: raw.overwhelmed,
-      satisfaction: raw.satisfaction,
+      satisfactionScore: raw.satisfactionScore,
       openFeedback: raw.openFeedback,
       pagesTested: selectedPages,
     };
@@ -65,10 +65,10 @@ export class SurveyComponent {
       await this.surveyRepository.save(response);
       this.submitSuccess.set(true);
       this.surveyForm.reset({
-        stress: 3,
-        ease: 3,
+        stressLevel: 3,
+        easeOfUse: 3,
         overwhelmed: 3,
-        satisfaction: 3,
+        satisfactionScore: 3,
         openFeedback: '',
         pagesTested: PAGE_OPTIONS.map(() => false),
       });

@@ -5,7 +5,7 @@ export interface SurveyResponse {
   submittedAt: Date;
   stressLevel: number;
   easeOfUse: number;
-  overwhelmed: boolean;
+  overwhelmed: number;
   satisfactionScore: number;
   openFeedback: string;
   pagesTested: string[];

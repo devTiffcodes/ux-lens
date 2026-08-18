@@ -19,7 +19,7 @@ export const authGuard: CanActivateFn = () => {
         if (firebaseService.currentUser()) {
           resolve(true);
         } else {
-          router.navigate(['/home']);
+          router.navigate(['/login']);
           resolve(false);
         }
       } else {

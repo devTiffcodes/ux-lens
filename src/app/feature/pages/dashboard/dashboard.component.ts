@@ -6,10 +6,10 @@ import { FirebaseService } from '../../../data/services/firebase.service';
 
 interface ModeAverages {
   count: number;
-  stress: number;
-  ease: number;
+  stressLevel: number;
+  easeOfUse: number;
   overwhelmed: number;
-  satisfaction: number;
+  satisfactionScore: number;
 }
 
 @Component({
@@ -49,25 +49,25 @@ export class DashboardComponent {
   private calculateAverages(responses: SurveyResponse[]): ModeAverages {
     const count = responses.length;
     if (count === 0) {
-      return { count: 0, stress: 0, ease: 0, overwhelmed: 0, satisfaction: 0 };
+      return { count: 0, stressLevel: 0, easeOfUse: 0, overwhelmed: 0, satisfactionScore: 0 };
     }
 
     const sum = responses.reduce(
       (acc, r) => ({
-        stress: acc.stress + r.stress,
-        ease: acc.ease + r.ease,
+        stressLevel: acc.stressLevel + r.stressLevel,
+        easeOfUse: acc.easeOfUse + r.easeOfUse,
         overwhelmed: acc.overwhelmed + r.overwhelmed,
-        satisfaction: acc.satisfaction + r.satisfaction,
+        satisfactionScore: acc.satisfactionScore + r.satisfactionScore,
       }),
-      { stress: 0, ease: 0, overwhelmed: 0, satisfaction: 0 }
+      { stressLevel: 0, easeOfUse: 0, overwhelmed: 0, satisfactionScore: 0 }
     );
 
     return {
       count,
-      stress: sum.stress / count,
-      ease: sum.ease / count,
+      stressLevel: sum.stressLevel / count,
+      easeOfUse: sum.easeOfUse / count,
       overwhelmed: sum.overwhelmed / count,
-      satisfaction: sum.satisfaction / count,
+      satisfactionScore: sum.satisfactionScore / count,
     };
   }
 

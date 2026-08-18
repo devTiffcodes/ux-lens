@@ -12,7 +12,7 @@ import { UxIssue } from '../../../domain/models/ux-issue.model';
   standalone: true,
   imports: [],
   templateUrl: './dev-panel.component.html',
-  styleUrl: './dev-panel.component.css',
+  styleUrls: ['./dev-panel.component.css', '../../shared/styles/analysis-shared.css']
 })
 export class DevPanelComponent {
   protected readonly uxModeService = inject(UxModeService);

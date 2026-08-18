@@ -14,15 +14,15 @@
 
   <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" class="survey-form">
     <div class="form-field">
-      <label for="stress">How stressful did you find using the site? (1 = Not at all, 5 = Very)</label>
-      <input id="stress" type="range" min="1" max="5" formControlName="stress" />
-      <span class="text-muted">{{ surveyForm.controls.stress.value }}</span>
+      <label for="stressLevel">How stressful did you find using the site? (1 = Not at all, 5 = Very)</label>
+      <input id="stressLevel" type="range" min="1" max="5" formControlName="stressLevel" />
+      <span class="text-muted">{{ surveyForm.controls.stressLevel.value }}</span>
     </div>
 
     <div class="form-field">
-      <label for="ease">How easy was it to complete tasks? (1 = Very hard, 5 = Very easy)</label>
-      <input id="ease" type="range" min="1" max="5" formControlName="ease" />
-      <span class="text-muted">{{ surveyForm.controls.ease.value }}</span>
+      <label for="easeOfUse">How easy was it to complete tasks? (1 = Very hard, 5 = Very easy)</label>
+      <input id="easeOfUse" type="range" min="1" max="5" formControlName="easeOfUse" />
+      <span class="text-muted">{{ surveyForm.controls.easeOfUse.value }}</span>
     </div>
 
     <div class="form-field">
@@ -32,9 +32,9 @@
     </div>
 
     <div class="form-field">
-      <label for="satisfaction">Overall, how satisfied are you? (1 = Not at all, 5 = Very)</label>
-      <input id="satisfaction" type="range" min="1" max="5" formControlName="satisfaction" />
-      <span class="text-muted">{{ surveyForm.controls.satisfaction.value }}</span>
+      <label for="satisfactionScore">Overall, how satisfied are you? (1 = Not at all, 5 = Very)</label>
+      <input id="satisfactionScore" type="range" min="1" max="5" formControlName="satisfactionScore" />
+      <span class="text-muted">{{ surveyForm.controls.satisfactionScore.value }}</span>
     </div>
 
     <fieldset class="form-field">

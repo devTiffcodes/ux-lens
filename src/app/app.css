@@ -1,0 +1,28 @@
+/* ==========================================================================
+   App Shell — layout glue for the root component
+   All design tokens live in styles.css; this file only handles the
+   shell-level layout that app.html owns.
+   ========================================================================== */
+
+/* The flex column that stretches the shell to full viewport height */
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Main content area grows to fill remaining space between navbar and bottom */
+.app-main {
+  flex: 1;
+  width: 100%;
+  /* Shift content left when dev panel is open so it doesn't get covered */
+  transition: margin-right var(--transition-base);
+}
+
+/* Dev panel is fixed to the right edge — defined in dev-panel.component.css.
+   We add a right-margin to app-main only when the panel is open so content
+   stays readable without being obscured. */
+.app-root.dev-panel-open .app-main {
+  margin-right: var(--dev-panel-width);
+}
