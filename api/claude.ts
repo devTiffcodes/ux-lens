@@ -40,16 +40,28 @@ export default async function handler(
   }
 
   // Parse body — Vercel may pass it as string or object depending on content-type
+  // Parse body explicitly
   let body: MentorRequestBody;
   try {
-    body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    if (typeof req.body === 'string') {
+      body = JSON.parse(req.body);
+    } else if (req.body && typeof req.body === 'object') {
+      body = req.body as MentorRequestBody;
+    } else {
+      // Body is empty — try reading raw
+      const chunks: Buffer[] = [];
+      for await (const chunk of req as unknown as AsyncIterable<Buffer>) {
+        chunks.push(chunk);
+      }
+      body = JSON.parse(Buffer.concat(chunks).toString());
+    }
   } catch {
-    res.status(400).json({ error: 'Invalid JSON body' });
+    res.status(400).json({ error: 'Could not parse request body' });
     return;
   }
 
-  if (!body || !body.pageName) {
-    res.status(400).json({ error: 'Missing required fields in request body' });
+  if (!body?.pageName) {
+    res.status(400).json({ error: 'Missing pageName in request body' });
     return;
   }
 
