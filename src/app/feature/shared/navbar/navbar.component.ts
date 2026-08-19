@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UxModeService } from '../../../core/services/ux-mode.service';
 
@@ -11,6 +11,7 @@ import { UxModeService } from '../../../core/services/ux-mode.service';
 })
 export class NavbarComponent {
   protected readonly uxModeService = inject(UxModeService);
+protected readonly toolsOpen = signal<boolean>(false)
 
   protected readonly navLinks = [
     { path: '/home', label: 'Home' },
@@ -20,6 +21,11 @@ export class NavbarComponent {
     { path: '/contact', label: 'Contact' },
   ];
 
+  protected readonly toolLinks = [
+    { path: '/surver', label: 'Survey' },
+    { path: 'guidelines', label: 'Guidelines' },
+    { path: 'site-analyzer', labe: 'Site Analyzer' },
+  ];
   toggleUxMode(): void {
     this.uxModeService.toggleUxMode();
   }
@@ -27,4 +33,16 @@ export class NavbarComponent {
   toggleDevMode(): void {
     this.uxModeService.toggleDevMode();
   }
-}
+
+  toggleTool(): void {
+    this.toolsOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+
+    const target = event.target as HTMLElement;
+    if (!target.closesst('.tools-dropdown')) {
+      this.closeTools();
+    }
+  }
