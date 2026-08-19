@@ -6,15 +6,15 @@ export default async function handler(req: any, res: any): Promise<void> {
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
-  const apiKey = process.env['HF_API_KEY'];
-  if (!apiKey) { res.status(500).json({ error: 'Missing HF API key' }); return; }
+  const apiKey = process.env['GEMINI_API_KEY'];
+  if (!apiKey) { res.status(500).json({ error: 'Missing Gemini API key' }); return; }
 
   let body = req.body;
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch { res.status(400).json({ error: 'Bad JSON' }); return; }
   }
   if (!body || !body.pageName) {
-    res.status(400).json({ error: `No pageName. body=${JSON.stringify(body)}` });
+    res.status(400).json({ error: 'Missing pageName' });
     return;
   }
 
@@ -30,26 +30,17 @@ ${issuesList}
 
 ${body.userQuestion?.trim() ? `The student asks: ${body.userQuestion}` : ''}
 
-Give 2-4 short paragraphs of warm, educational mentor feedback explaining what these issues mean for real users and why they matter. Reference UX principles like Nielsen's heuristics or WCAG where relevant. Be encouraging and suitable for a student researcher.
-
-Response:`;
+Give 2-4 short paragraphs of warm, educational mentor feedback explaining what these issues mean for real users and why they matter. Reference UX principles like Nielsen's heuristics or WCAG where relevant. Be encouraging and suitable for a student researcher.`;
 
   try {
     const response = await fetch(
-      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inputs: prompt,
-          parameters: {
-            max_new_tokens: 500,
-            temperature: 0.7,
-            return_full_text: false,
-          },
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 500, temperature: 0.7 },
         }),
       }
     );
@@ -61,9 +52,8 @@ Response:`;
     }
 
     const data = await response.json();
-    const message = Array.isArray(data)
-      ? data[0]?.generated_text?.trim() ?? 'No response generated.'
-      : data?.generated_text?.trim() ?? 'No response generated.';
+    const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+      ?? 'No response generated.';
 
     res.status(200).json({ message });
   } catch (err) {
