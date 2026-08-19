@@ -1,23 +1,40 @@
 <header class="navbar">
   <div class="navbar-inner container">
     <a routerLink="/home" class="navbar-brand">Mera</a>
-    
+
     <nav class="navbar-links" aria-label="Main navigation">
       @for (link of navLinks; track link.path) {
-
       <a [routerLink]="link.path"
-      routerLinkActive="navbar-link-active"
-      class="navbar-link"
-      >
-      {{ link.label }}
+         routerLinkActive="navbar-link-active"
+         class="navbar-link">
+        {{ link.label }}
       </a>
       }
     </nav>
 
     <div class="navbar-actions">
-      <a routerLink="/survey" class="navbar-link navbar-link-secondary">Survey</a>
-      <a routerLink="/guidelines" class="navbar-link navbar-link-secondary">Guidelines</a>
-      <a routerLink="/site-analyzer" class="navbar-link navbar-link-secondary">Site Analyzer</a>
+
+      <!-- Tools dropdown -->
+      <div class="tools-dropdown">
+        <button type="button"
+                class="btn btn-secondary navbar-tools-toggle"
+                (click)="toggleTools()">
+          UX Lens Tools ▾
+        </button>
+
+        @if (toolsOpen()) {
+        <div class="tools-menu" role="menu">
+          @for (link of toolLinks; track link.path) {
+          <a [routerLink]="link.path"
+             routerLinkActive="tools-link-active"
+             class="tools-link"
+             (click)="closeTools()">
+            {{ link.label }}
+          </a>
+          }
+        </div>
+        }
+      </div>
 
       <button type="button"
               class="btn btn-secondary navbar-mode-toggle"
