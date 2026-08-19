@@ -3,8 +3,8 @@
   "outputDirectory": "dist/ux-lens/browser",
   "rewrites": [
     {
-      "source": "api/:path*",
-      "destination": "api/:path*"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
 
     {
