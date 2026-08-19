@@ -18,6 +18,16 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
+  // Handle CORS preflight
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -29,16 +39,38 @@ export default async function handler(
     return;
   }
 
-  const body = req.body as MentorRequestBody;
+  // Parse body — Vercel may pass it as string or object depending on content-type
+  // Parse body explicitly
+  let body: MentorRequestBody;
+  try {
+    if (typeof req.body === 'string') {
+      body = JSON.parse(req.body);
+    } else if (req.body && typeof req.body === 'object') {
+      body = req.body as MentorRequestBody;
+    } else {
+      // Body is empty — try reading raw
+      const chunks: Buffer[] = [];
+      for await (const chunk of req as unknown as AsyncIterable<Buffer>) {
+        chunks.push(chunk);
+      }
+      body = JSON.parse(Buffer.concat(chunks).toString());
+    }
+  } catch {
+    res.status(400).json({ error: 'Could not parse request body' });
+    return;
+  }
+
+  if (!body?.pageName) {
+    res.status(400).json({ error: 'Missing pageName in request body' });
+    return;
+  }
+
   const { pageName, uxMode, issues, wellbeingScore, userQuestion } = body;
 
-  const issuesList = issues.length
-    ? issues
-      .map(
-        (issue) =>
-          `- [${issue.severity}] ${issue.title}: ${issue.description} (violates: ${issue.principle}; fix: ${issue.recommendation})`
-      )
-      .join('\n')
+  const issuesList = issues?.length
+    ? issues.map((issue) =>
+      `- [${issue.severity}] ${issue.title}: ${issue.description} (violates: ${issue.principle}; fix: ${issue.recommendation})`
+    ).join('\n')
     : 'No issues detected on this page.';
 
   const systemPrompt = `You are a friendly, encouraging UX mentor embedded in a student's final year project called "UX Lens". You are looking at the "${pageName}" page of a mock community platform called Mera, currently in ${uxMode.toUpperCase()} UX mode. The page has a wellbeing score of ${wellbeingScore}/100.
@@ -48,10 +80,9 @@ ${issuesList}
 
 Explain, in a supportive and educational tone suited to a student researcher, what these issues mean for real users and why they matter, referencing UX principles where relevant. Keep your response to 2-4 short paragraphs. Do not repeat the raw issue list verbatim — synthesize it into mentor-style guidance.`;
 
-  const userContent =
-    userQuestion && userQuestion.trim().length > 0
-      ? userQuestion
-      : `Give me your mentor analysis of the ${pageName} page.`;
+  const userContent = userQuestion?.trim()
+    ? userQuestion
+    : `Give me your mentor analysis of the ${pageName} page.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -77,8 +108,8 @@ Explain, in a supportive and educational tone suited to a student researcher, wh
 
     const data = await response.json();
     const message =
-      data.content?.find((block: { type: string }) => block.type === 'text')
-        ?.text ?? 'The mentor had nothing to say about this page.';
+      data.content?.find((block: { type: string }) => block.type === 'text')?.text
+      ?? 'The mentor had nothing to say about this page.';
 
     res.status(200).json({ message });
   } catch (err) {
