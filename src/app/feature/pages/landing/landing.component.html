@@ -1,0 +1,46 @@
+@if (showSplash()) {
+<div class="splash">
+  <div class="splash-content">
+    <div class="splash-logo">UX Lens</div>
+    <p class="splash-tagline">Understanding how design affects wellbeing</p>
+    <div class="splash-spinner"></div>
+  </div>
+</div>
+}
+
+@if (showOnboarding()) {
+<div class="onboarding-overlay">
+  <div class="onboarding-modal">
+
+    <div class="onboarding-header">
+      <span class="ux-lens-badge">UX Lens</span>
+      <button type="button" class="skip-btn" (click)="goToLogin()">Skip →</button>
+    </div>
+
+    <div class="slide">
+      <div class="slide-icon">{{ slides[currentSlide()].icon }}</div>
+      <h2>{{ slides[currentSlide()].title }}</h2>
+      <p>{{ slides[currentSlide()].body }}</p>
+    </div>
+
+    <div class="slide-dots">
+      @for (slide of slides; track $index) {
+      <span class="dot" [class.dot-active]="$index === currentSlide()"></span>
+      }
+    </div>
+
+    <div class="onboarding-actions">
+      @if (currentSlide() > 0) {
+      <button type="button" class="btn btn-secondary" (click)="prevSlide()">← Back</button>
+      } @else {
+      <span></span>
+      }
+
+      <button type="button" class="btn" (click)="nextSlide()">
+        {{ currentSlide() === slides.length - 1 ? 'Get Started →' : 'Next →' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+}

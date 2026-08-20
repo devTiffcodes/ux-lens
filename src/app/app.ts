@@ -4,6 +4,7 @@ import { NavbarComponent } from './feature/shared/navbar/navbar.component';
 import { DevPanelComponent } from './feature/shared/dev-panel/dev-panel.component';
 import { UxModeBannerComponent } from './feature/shared/ux-mode-banner/ux-mode-banner.component';
 import { UxModeService } from './core/services/ux-mode.service';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,12 +12,13 @@ import { UxModeService } from './core/services/ux-mode.service';
     RouterOutlet,
     NavbarComponent,
     DevPanelComponent,
-    UxModeBannerComponent,],
+    UxModeBannerComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('ux-lens');
   protected readonly uxModeService = inject(UxModeService);
+  protected readonly authService = inject(AuthService);
 }
-

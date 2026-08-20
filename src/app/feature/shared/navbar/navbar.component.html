@@ -1,6 +1,6 @@
 <header class="navbar">
   <div class="navbar-inner container">
-    <a routerLink="/home" class="navbar-brand">Mera</a>
+    <a routerLink="/mera/home" class="navbar-brand">Mera</a>
 
     <nav class="navbar-links" aria-label="Main navigation">
       @for (link of navLinks; track link.path) {
@@ -14,14 +14,15 @@
 
     <div class="navbar-actions">
 
-      <!-- Tools dropdown -->
+      <a routerLink="/survey" class="navbar-link navbar-survey-link">Survey</a>
+
+      @if (authService.isResearcher()) {
       <div class="tools-dropdown">
         <button type="button"
                 class="btn btn-secondary navbar-tools-toggle"
                 (click)="toggleTools()">
           UX Lens Tools ▾
         </button>
-
         @if (toolsOpen()) {
         <div class="tools-menu" role="menu">
           @for (link of toolLinks; track link.path) {
@@ -48,6 +49,14 @@
               aria-label="Toggle developer panel">
         Dev Mode
       </button>
+      }
+
+      @if (authService.isLoggedIn()) {
+      <button type="button" class="btn btn-secondary navbar-signout" (click)="signOut()">
+        Sign Out
+      </button>
+      }
+
     </div>
   </div>
 </header>

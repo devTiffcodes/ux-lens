@@ -1,6 +1,7 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
+import { Component, inject, signal, HostListener, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UxModeService } from '../../../core/services/ux-mode.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,20 +12,21 @@ import { UxModeService } from '../../../core/services/ux-mode.service';
 })
 export class NavbarComponent {
   protected readonly uxModeService = inject(UxModeService);
+  protected readonly authService = inject(AuthService);
   protected readonly toolsOpen = signal<boolean>(false);
 
   protected readonly navLinks = [
-    { path: '/home', label: 'Home' },
-    { path: '/events', label: 'Events' },
-    { path: '/noticeboard', label: 'Noticeboard' },
-    { path: '/local-info', label: 'Local Info' },
-    { path: '/contact', label: 'Contact' },
+    { path: '/mera/home', label: 'Home' },
+    { path: '/mera/events', label: 'Events' },
+    { path: '/mera/noticeboard', label: 'Noticeboard' },
+    { path: '/mera/local-info', label: 'Local Info' },
+    { path: '/mera/contact', label: 'Contact' },
   ];
 
   protected readonly toolLinks = [
-    { path: '/survey', label: 'Survey' },
     { path: '/guidelines', label: 'Guidelines' },
     { path: '/site-analyzer', label: 'Site Analyzer' },
+    { path: '/dashboard', label: 'Dashboard' },
   ];
 
   protected toggleUxMode(): void {
@@ -41,6 +43,10 @@ export class NavbarComponent {
 
   protected closeTools(): void {
     this.toolsOpen.set(false);
+  }
+
+  protected async signOut(): Promise<void> {
+    await this.authService.signOut();
   }
 
   @HostListener('document:click', ['$event'])
