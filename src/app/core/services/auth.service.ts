@@ -49,6 +49,23 @@ export class AuthService {
     }
   }
 
+  async signInWithEmail(email: string, password: string): Promise<void> {
+    const { signInWithEmailAndPassword } = await import('firebase/auth');
+    const credential = await signInWithEmailAndPassword(this.firebaseService.auth, email, password);
+    const appUser = await this.loadOrCreateUser(credential.user);
+    this.currentUser.set(appUser);
+    this.router.navigate(['/mera/home']);
+  }
+
+  async registerWithEmail(email: string, password: string, displayName: string): Promise<void> {
+    const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
+    const credential = await createUserWithEmailAndPassword(this.firebaseService.auth, email, password);
+    await updateProfile(credential.user, { displayName });
+    const appUser = await this.loadOrCreateUser(credential.user);
+    this.currentUser.set(appUser);
+    this.router.navigate(['/mera/home']);
+  }
+
   async signOut(): Promise<void> {
     await signOut(this.firebaseService.auth);
     this.currentUser.set(null);
