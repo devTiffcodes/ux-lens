@@ -1,26 +1,19 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { UserRole } from '../../domain/models/user.model';
 
-/**
- * Protects the Dashboard route. Uses FirebaseService's reactive
- * `authReady`/`currentUser` signals rather than the raw Firebase Auth
- * instance, so it correctly waits for Firebase's async auth state check
- * to resolve before deciding (avoids a false redirect on page refresh,
- * when Firebase hasn't yet confirmed whether a session exists).
- */
-
-export const authGuard: CanActivateFn = () => {
+export const roleGuard = (requiredRole: UserRole): CanActivateFn => () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   return new Promise<boolean>((resolve) => {
     const check = () => {
       if (!authService.isLoading()) {
-        if (authService.isLoggedIn()) {
+        if (authService.currentUser()?.role === requiredRole) {
           resolve(true);
         } else {
-          router.navigate(['/login']);
+          router.navigate(['/mera/home']);
           resolve(false);
         }
       } else {
