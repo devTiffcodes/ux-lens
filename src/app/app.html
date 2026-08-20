@@ -1,8 +1,14 @@
 <div class="app-root" [class.dev-panel-open]="uxModeService.devModeActive()">
+  @if (authService.isLoggedIn()) {
   <app-ux-mode-banner />
   <app-navbar />
+  }
+
   <main class="app-main">
     <router-outlet />
   </main>
+
+  @if (authService.isLoggedIn() && authService.isResearcher()) {
   <app-dev-panel />
+  }
 </div>
