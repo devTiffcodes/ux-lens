@@ -1,23 +1,100 @@
-<section class="hero container">
-  <h1>Welcome to Mera</h1>
-  <p class="text-muted">Your community hub for Seychelles — events, notices, and local info in one place.</p>
+<!-- =========================================================
+     Mera — Home
+     Warm, community-centered hero + section cards
+     ========================================================= -->
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner container">
+    <span class="badge badge-accent hero-eyebrow">Seychelles Community</span>
+    <h1 class="hero-title">Your island,<br><em>connected.</em></h1>
+    <p class="hero-subtitle text-muted">
+      Mera brings together events, notices, and local information
+      for people across the Seychelles — in one calm, clear place.
+    </p>
+    <div class="hero-actions">
+      <a routerLink="/mera/events" class="btn">Explore events</a>
+      <a routerLink="/mera/noticeboard" class="btn btn-secondary">View noticeboard</a>
+    </div>
+  </div>
+
+  <!-- Decorative wave -->
+  <div class="hero-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="var(--color-bg)" />
+    </svg>
+  </div>
 </section>
 
-<section class="home-grid container">
-  <a routerLink="/mera/events" class="card home-tile">
-    <h2>Events</h2>
-    <p class="text-muted">See what's happening across the islands this month.</p>
-  </a>
-  <a routerLink="/mera/noticeboard" class="card home-tile">
-    <h2>Noticeboard</h2>
-    <p class="text-muted">Community announcements and shared notices.</p>
-  </a>
-  <a routerLink="/mera/local-info" class="card home-tile">
-    <h2>Local Info</h2>
-    <p class="text-muted">Transport, healthcare, and public service info.</p>
-  </a>
-  <a routerLink="/mera/contact" class="card home-tile">
-    <h2>Contact</h2>
-    <p class="text-muted">Reach the Mera community team.</p>
-  </a>
+<!-- Quick nav tiles -->
+<section class="tiles-section container">
+  <h2 class="section-label text-muted">Browse Mera</h2>
+  <div class="home-grid">
+    <a routerLink="/mera/events" class="card home-tile">
+      <div class="tile-icon" aria-hidden="true">🌺</div>
+      <h3 class="tile-title">Events</h3>
+      <p class="text-muted tile-desc">What's happening across the islands this month.</p>
+      <span class="tile-arrow">→</span>
+    </a>
+
+    <a routerLink="/mera/noticeboard" class="card home-tile">
+      <div class="tile-icon" aria-hidden="true">📋</div>
+      <h3 class="tile-title">Noticeboard</h3>
+      <p class="text-muted tile-desc">Community announcements and shared notices.</p>
+      <span class="tile-arrow">→</span>
+    </a>
+
+    <a routerLink="/mera/local-info" class="card home-tile">
+      <div class="tile-icon" aria-hidden="true">🗺️</div>
+      <h3 class="tile-title">Local Info</h3>
+      <p class="text-muted tile-desc">Transport, healthcare, and public services.</p>
+      <span class="tile-arrow">→</span>
+    </a>
+
+    <a routerLink="/mera/contact" class="card home-tile">
+      <div class="tile-icon" aria-hidden="true">💬</div>
+      <h3 class="tile-title">Contact</h3>
+      <p class="text-muted tile-desc">Reach the Mera community team.</p>
+      <span class="tile-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- Activity strip — makes Mera feel alive -->
+<section class="activity-section">
+  <div class="container">
+    <div class="activity-header">
+      <h2 class="section-label text-muted">Recent activity</h2>
+      <a routerLink="/mera/noticeboard" class="text-sm" style="color: var(--color-primary-mid)">See all →</a>
+    </div>
+    <div class="activity-list">
+      <div class="activity-item">
+        <span class="activity-dot"></span>
+        <div>
+          <p class="activity-title">Mahé Cultural Festival — registration open</p>
+          <span class="text-xs text-muted">Events · 2 hours ago</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot"></span>
+        <div>
+          <p class="activity-title">Water supply update — Anse Royale district</p>
+          <span class="text-xs text-muted">Noticeboard · 5 hours ago</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot"></span>
+        <div>
+          <p class="activity-title">New bus route: Victoria ↔ Beau Vallon</p>
+          <span class="text-xs text-muted">Local Info · Yesterday</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot"></span>
+        <div>
+          <p class="activity-title">Community clean-up — Praslin volunteers needed</p>
+          <span class="text-xs text-muted">Events · Yesterday</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
