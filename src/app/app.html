@@ -1,14 +1,26 @@
 <div class="app-root" [class.dev-panel-open]="uxModeService.devModeActive()">
+
   @if (authService.isLoggedIn()) {
+  @if (isMeraRoute()) {
   <app-ux-mode-banner />
   <app-navbar />
+  } @else {
+  <app-ux-lens-navbar />
+  }
   }
 
   <main class="app-main">
     <router-outlet />
   </main>
 
+  <app-footer />
+
+  @if (authService.isLoggedIn() && isMeraRoute()) {
+  <app-ux-lens-fab />
+  }
+
   @if (authService.isLoggedIn() && authService.isResearcher()) {
   <app-dev-panel />
   }
+
 </div>

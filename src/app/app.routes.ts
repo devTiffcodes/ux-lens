@@ -3,6 +3,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
+  // ─── Public ───────────────────────────────────────────────────────────────
   {
     path: '',
     loadComponent: () =>
@@ -14,6 +15,50 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./feature/pages/login/login.component').then(m => m.LoginComponent),
     title: 'UX Lens — Sign In',
+  },
+
+  // ─── UX Lens (researcher tools — main app) ────────────────────────────────
+  {
+    path: 'dashboard',
+    canActivate: [authGuard, roleGuard('researcher')],
+    loadComponent: () =>
+      import('./feature/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    title: 'UX Lens — Dashboard',
+  },
+  {
+    path: 'site-analyzer',
+    canActivate: [authGuard, roleGuard('researcher')],
+    loadComponent: () =>
+      import('./feature/pages/site-analyzer/site-analyzer.component').then(m => m.SiteAnalyzerComponent),
+    title: 'UX Lens — Site Analyzer',
+  },
+  {
+    path: 'results',
+    canActivate: [authGuard, roleGuard('researcher')],
+    loadComponent: () =>
+      import('./feature/pages/results/results.component').then(m => m.ResultsComponent),
+    title: 'UX Lens — Results',
+  },
+  {
+    path: 'guidelines',
+    canActivate: [authGuard, roleGuard('researcher')],
+    loadComponent: () =>
+      import('./feature/pages/guidelines/guidelines.component').then(m => m.GuidelinesComponent),
+    title: 'UX Lens — Guidelines',
+  },
+  {
+    path: 'survey',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./feature/pages/survey/survey.component').then(m => m.SurveyComponent),
+    title: 'UX Lens — Survey',
+  },
+
+  // ─── Mera (participant test environment — accessed via URL only) ───────────
+  {
+    path: 'mera',
+    redirectTo: 'mera/home',
+    pathMatch: 'full',
   },
   {
     path: 'mera/home',
@@ -37,6 +82,27 @@ export const routes: Routes = [
     title: 'Mera — Noticeboard',
   },
   {
+    path: 'mera/courses',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./feature/pages/courses/courses.component').then(m => m.CoursesComponent),
+    title: 'Mera — My Courses',
+  },
+  {
+    path: 'mera/resources',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./feature/pages/resources/resources.component').then(m => m.ResourcesComponent),
+    title: 'Mera — Resources',
+  },
+  {
+    path: 'mera/profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./feature/pages/profile/profile.component').then(m => m.ProfileComponent),
+    title: 'Mera — Profile',
+  },
+  {
     path: 'mera/local-info',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -50,33 +116,7 @@ export const routes: Routes = [
       import('./feature/pages/contact/contact.component').then(m => m.ContactComponent),
     title: 'Mera — Contact',
   },
-  {
-    path: 'survey',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./feature/pages/survey/survey.component').then(m => m.SurveyComponent),
-    title: 'UX Lens — Survey',
-  },
-  {
-    path: 'guidelines',
-    canActivate: [authGuard, roleGuard('researcher')],
-    loadComponent: () =>
-      import('./feature/pages/guidelines/guidelines.component').then(m => m.GuidelinesComponent),
-    title: 'UX Lens — Guidelines',
-  },
-  {
-    path: 'site-analyzer',
-    canActivate: [authGuard, roleGuard('researcher')],
-    loadComponent: () =>
-      import('./feature/pages/site-analyzer/site-analyzer.component').then(m => m.SiteAnalyzerComponent),
-    title: 'UX Lens — Site Analyzer',
-  },
-  {
-    path: 'dashboard',
-    canActivate: [authGuard, roleGuard('researcher')],
-    loadComponent: () =>
-      import('./feature/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    title: 'UX Lens — Dashboard',
-  },
+
+  // ─── Fallback ─────────────────────────────────────────────────────────────
   { path: '**', redirectTo: '' },
 ];

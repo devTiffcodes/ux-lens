@@ -1,0 +1,82 @@
+<section class="container results-section">
+
+  <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
+  <div class="results-header">
+    <h1>Survey Results</h1>
+    <p class="text-muted">Comparison of participant responses across Good UX and Poor UX modes.</p>
+  </div>
+
+  @if (isLoading()) {
+  <p class="text-muted">Just a moment...</p>
+  } @else if (responses().length === 0) {
+  <p class="text-muted">No survey responses yet. Share the Mera link with participants to get started.</p>
+  } @else {
+
+  <div class="comparison-grid">
+    <div class="card mode-summary mode-good">
+      <div class="mode-summary-header">
+        <span class="mode-badge mode-badge-good">Good UX</span>
+        <span class="text-muted">{{ goodModeAverages().count }} responses</span>
+      </div>
+      <dl>
+        <dt>Task Completion</dt>
+        <dd>{{ goodModeAverages().sections.taskCompletion.toFixed(1) }}</dd>
+
+        <dt>Cognitive Load</dt>
+        <dd>{{ goodModeAverages().sections.cognitiveLoad.toFixed(1) }}</dd>
+
+        <dt>Emotional Wellbeing</dt>
+        <dd>{{ goodModeAverages().sections.emotionalWellbeing.toFixed(1) }}</dd>
+
+        <dt>Visual Comfort</dt>
+        <dd>{{ goodModeAverages().sections.visualComfort.toFixed(1) }}</dd>
+
+        <dt>Overall</dt>
+        <dd>{{ goodModeAverages().sections.overall.toFixed(1) }}</dd>
+      </dl>
+    </div>
+
+    <div class="card mode-summary mode-poor">
+      <div class="mode-summary-header">
+        <span class="mode-badge mode-badge-poor">Poor UX</span>
+        <span class="text-muted">{{ poorModeAverages().count }} responses</span>
+      </div>
+      <dl>
+        <dt>Task Completion</dt>
+        <dd>{{ poorModeAverages().sections.taskCompletion.toFixed(1) }}</dd>
+
+        <dt>Cognitive Load</dt>
+        <dd>{{ poorModeAverages().sections.cognitiveLoad.toFixed(1) }}</dd>
+
+        <dt>Emotional Wellbeing</dt>
+        <dd>{{ poorModeAverages().sections.emotionalWellbeing.toFixed(1) }}</dd>
+
+        <dt>Visual Comfort</dt>
+        <dd>{{ poorModeAverages().sections.visualComfort.toFixed(1) }}</dd>
+
+        <dt>Overall</dt>
+        <dd>{{ poorModeAverages().sections.overall.toFixed(1) }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 class="section-title">All Responses</h2>
+  <ul class="response-list">
+    @for (response of responses(); track response.sessionId) {
+    <li class="card response-card">
+      <div class="response-header">
+        <span class="mode-badge" [class.mode-badge-poor]="response.uxMode === 'poor'" [class.mode-badge-good]="response.uxMode === 'good'">
+          {{ response.uxMode }}
+        </span>
+        <span class="text-muted">{{ response.pagesTested.join(', ') }}</span>
+      </div>
+      @if (response.openFeedback) {
+      <p>{{ response.openFeedback }}</p>
+      }
+    </li>
+    }
+  </ul>
+  }
+
+</section>

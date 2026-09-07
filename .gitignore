@@ -46,4 +46,4 @@ Thumbs.db
 .env*
 .vs/ 
  
- 
+ /scripts/service-account.json

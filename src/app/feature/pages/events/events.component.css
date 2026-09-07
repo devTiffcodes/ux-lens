@@ -1,21 +1,206 @@
-.event-list {
-  list-style: none;
-  margin: 0;
-  padding: var(--spacing-lg) 0;
+.events-page {
+  min-height: calc(100vh - 72px);
+  padding-bottom: var(--spacing-xl);
+}
+
+.events-hero {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.page-eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-mid);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  margin-top: var(--spacing-sm);
+}
+
+.events-filter {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--color-text);
+}
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+
+.events-grid-section {
+  padding-top: var(--spacing-md);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
 }
 
 .event-card {
   display: flex;
-  gap: var(--spacing-lg);
-  align-items: flex-start;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.event-date {
-  flex-shrink: 0;
-  min-width: 70px;
+  .event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+
+.event-card-header {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.event-category {
+  font-size: var(--font-size-xs);
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+.event-card-body {
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.event-date-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.event-day {
+  font-size: 1.8rem;
+  font-weight: 800;
   color: var(--color-primary);
+  line-height: 1;
+}
+
+.event-month {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary-mid);
+  text-transform: uppercase;
+}
+
+.event-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.event-location {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-sm);
+}
+
+.event-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  flex: 1;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.event-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.event-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.85rem;
+  font-size: var(--font-size-sm);
+}
+
+/* Poor UX overrides */
+.poor-ux .event-card {
+  border-radius: 0;
+  border: 2px solid #999;
+}
+
+.poor-ux .event-title {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.poor-ux .event-day {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.poor-ux .event-month {
+  display: none;
+}
+
+.poor-ux .filter-btn {
+  font-size: 0.6rem;
+  padding: 2px 4px;
+}
+
+.poor-ux .btn-sm {
+  background: #ccc;
+  color: #999;
+  font-size: 0.6rem;
+}
+
+@media (max-width: 1024px) {
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .events-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

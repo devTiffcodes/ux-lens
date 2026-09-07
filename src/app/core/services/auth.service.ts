@@ -22,7 +22,6 @@ export class AuthService {
   readonly isParticipant = computed(() => this.currentUser()?.role === 'participant');
 
   constructor() {
-    // Listen to Firebase auth state
     import('firebase/auth').then(({ onAuthStateChanged }) => {
       onAuthStateChanged(this.firebaseService.auth, async (firebaseUser) => {
         if (firebaseUser) {
@@ -41,12 +40,7 @@ export class AuthService {
     const credential = await signInWithPopup(this.firebaseService.auth, provider);
     const appUser = await this.loadOrCreateUser(credential.user);
     this.currentUser.set(appUser);
-
-    if (appUser.role === 'researcher') {
-      this.router.navigate(['/mera/home']);
-    } else {
-      this.router.navigate(['/mera/home']);
-    }
+    this.redirectAfterLogin(appUser.role);
   }
 
   async signInWithEmail(email: string, password: string): Promise<void> {
@@ -54,7 +48,7 @@ export class AuthService {
     const credential = await signInWithEmailAndPassword(this.firebaseService.auth, email, password);
     const appUser = await this.loadOrCreateUser(credential.user);
     this.currentUser.set(appUser);
-    this.router.navigate(['/mera/home']);
+    this.redirectAfterLogin(appUser.role);
   }
 
   async registerWithEmail(email: string, password: string, displayName: string): Promise<void> {
@@ -63,13 +57,21 @@ export class AuthService {
     await updateProfile(credential.user, { displayName });
     const appUser = await this.loadOrCreateUser(credential.user);
     this.currentUser.set(appUser);
-    this.router.navigate(['/mera/home']);
+    this.redirectAfterLogin(appUser.role);
   }
 
   async signOut(): Promise<void> {
     await signOut(this.firebaseService.auth);
     this.currentUser.set(null);
     this.router.navigate(['/']);
+  }
+
+  private redirectAfterLogin(role: UserRole): void {
+    if (role === 'researcher') {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/mera/home']);
+    }
   }
 
   private async loadOrCreateUser(firebaseUser: any): Promise<AppUser> {
@@ -87,7 +89,6 @@ export class AuthService {
       };
     }
 
-    // New user — assign participant role by default
     const newUser: AppUser = {
       uid: firebaseUser.uid,
       email: firebaseUser.email ?? '',

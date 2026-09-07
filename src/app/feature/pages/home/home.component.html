@@ -1,100 +1,248 @@
-<!-- =========================================================
-     Mera — Home
-     Warm, community-centered hero + section cards
-     ========================================================= -->
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-inner container">
-    <span class="badge badge-accent hero-eyebrow">Seychelles Community</span>
-    <h1 class="hero-title">Your island,<br><em>connected.</em></h1>
-    <p class="hero-subtitle text-muted">
-      Mera brings together events, notices, and local information
-      for people across the Seychelles — in one calm, clear place.
-    </p>
-    <div class="hero-actions">
-      <a routerLink="/mera/events" class="btn">Explore events</a>
-      <a routerLink="/mera/noticeboard" class="btn btn-secondary">View noticeboard</a>
+<main class="dashboard">
+
+  <!-- Welcome -->
+  <section class="welcome-section container">
+    <div>
+      <p class="welcome-eyebrow">STUDENT DASHBOARD</p>
+
+      <h1 class="welcome-title">
+        Good evening, <span>Tiff</span> 👋
+      </h1>
+
+      <p class="welcome-subtitle">
+        Here's what's happening with your studies today.
+      </p>
     </div>
-  </div>
 
-  <!-- Decorative wave -->
-  <div class="hero-wave" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="var(--color-bg)" />
-    </svg>
-  </div>
-</section>
-
-<!-- Quick nav tiles -->
-<section class="tiles-section container">
-  <h2 class="section-label text-muted">Browse Mera</h2>
-  <div class="home-grid">
-    <a routerLink="/mera/events" class="card home-tile">
-      <div class="tile-icon" aria-hidden="true">🌺</div>
-      <h3 class="tile-title">Events</h3>
-      <p class="text-muted tile-desc">What's happening across the islands this month.</p>
-      <span class="tile-arrow">→</span>
-    </a>
-
-    <a routerLink="/mera/noticeboard" class="card home-tile">
-      <div class="tile-icon" aria-hidden="true">📋</div>
-      <h3 class="tile-title">Noticeboard</h3>
-      <p class="text-muted tile-desc">Community announcements and shared notices.</p>
-      <span class="tile-arrow">→</span>
-    </a>
-
-    <a routerLink="/mera/local-info" class="card home-tile">
-      <div class="tile-icon" aria-hidden="true">🗺️</div>
-      <h3 class="tile-title">Local Info</h3>
-      <p class="text-muted tile-desc">Transport, healthcare, and public services.</p>
-      <span class="tile-arrow">→</span>
-    </a>
-
-    <a routerLink="/mera/contact" class="card home-tile">
-      <div class="tile-icon" aria-hidden="true">💬</div>
-      <h3 class="tile-title">Contact</h3>
-      <p class="text-muted tile-desc">Reach the Mera community team.</p>
-      <span class="tile-arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<!-- Activity strip — makes Mera feel alive -->
-<section class="activity-section">
-  <div class="container">
-    <div class="activity-header">
-      <h2 class="section-label text-muted">Recent activity</h2>
-      <a routerLink="/mera/noticeboard" class="text-sm" style="color: var(--color-primary-mid)">See all →</a>
+    <div class="semester-info">
+      <span class="semester-label">Current semester</span>
+      <strong>Semester 2 · 2026</strong>
     </div>
-    <div class="activity-list">
-      <div class="activity-item">
-        <span class="activity-dot"></span>
+  </section>
+
+
+  <!-- Overview -->
+  <section class="overview-section container">
+
+    <div class="progress-card card">
+      <div class="card-header">
         <div>
-          <p class="activity-title">Mahé Cultural Festival — registration open</p>
-          <span class="text-xs text-muted">Events · 2 hours ago</span>
+          <span class="card-label">ACADEMIC PROGRESS</span>
+          <h2>Your progress</h2>
         </div>
+
+        <span class="progress-percentage">68%</span>
       </div>
-      <div class="activity-item">
-        <span class="activity-dot"></span>
-        <div>
-          <p class="activity-title">Water supply update — Anse Royale district</p>
-          <span class="text-xs text-muted">Noticeboard · 5 hours ago</span>
-        </div>
+
+      <div class="progress-bar">
+        <div class="progress-value" style="width: 68%"></div>
       </div>
-      <div class="activity-item">
-        <span class="activity-dot"></span>
+
+      <p class="text-muted">
+        You're making good progress this semester.
+      </p>
+    </div>
+
+
+    <div class="schedule-card card">
+
+      <div class="card-header">
         <div>
-          <p class="activity-title">New bus route: Victoria ↔ Beau Vallon</p>
-          <span class="text-xs text-muted">Local Info · Yesterday</span>
+          <span class="card-label">TODAY</span>
+          <h2>Your schedule</h2>
         </div>
+
+        <a routerLink="/mera/schedule" class="view-link">
+          View all →
+        </a>
       </div>
-      <div class="activity-item">
-        <span class="activity-dot"></span>
-        <div>
-          <p class="activity-title">Community clean-up — Praslin volunteers needed</p>
-          <span class="text-xs text-muted">Events · Yesterday</span>
+
+      <div class="schedule-list">
+
+        <div class="schedule-item">
+          <span class="schedule-time">09:00</span>
+
+          <div>
+            <strong>Web Development II</strong>
+            <span class="text-muted">Computer Lab · Room 204</span>
+          </div>
         </div>
+
+        <div class="schedule-item">
+          <span class="schedule-time">11:00</span>
+
+          <div>
+            <strong>Database Systems</strong>
+            <span class="text-muted">Lecture Hall · Room 102</span>
+          </div>
+        </div>
+
+        <div class="schedule-item">
+          <span class="schedule-time">14:00</span>
+
+          <div>
+            <strong>Project Work</strong>
+            <span class="text-muted">Independent study</span>
+          </div>
+        </div>
+
       </div>
     </div>
-  </div>
-</section>
+
+  </section>
+
+
+  <!-- Quick Access -->
+  <section class="quick-section container">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">QUICK ACCESS</span>
+        <h2>What do you need?</h2>
+      </div>
+    </div>
+
+    <div class="quick-grid">
+
+      <a routerLink="/mera/courses" class="quick-card">
+        <div class="quick-icon">📚</div>
+        <div>
+          <h3>My Courses</h3>
+          <p>View your modules and learning materials.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+
+      <a routerLink="/mera/assignments" class="quick-card">
+        <div class="quick-icon">📝</div>
+        <div>
+          <h3>Assignments</h3>
+          <p>Keep track of your upcoming work.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+
+      <a routerLink="/mera/events" class="quick-card">
+        <div class="quick-icon">📅</div>
+        <div>
+          <h3>Events</h3>
+          <p>Discover what's happening on campus.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+
+      <a routerLink="/mera/noticeboard" class="quick-card">
+        <div class="quick-icon">📢</div>
+        <div>
+          <h3>Noticeboard</h3>
+          <p>Read important student announcements.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- Lower Dashboard -->
+  <section class="dashboard-grid container">
+
+    <!-- Assignments -->
+    <div class="dashboard-card card">
+
+      <div class="card-header">
+        <div>
+          <span class="card-label">UPCOMING</span>
+          <h2>Assignments</h2>
+        </div>
+
+        <a routerLink="/mera/assignments" class="view-link">
+          See all →
+        </a>
+      </div>
+
+      <div class="assignment-list">
+
+        <div class="assignment-item">
+          <div class="assignment-info">
+            <strong>Web Development II</strong>
+            <span class="text-muted">Final website project</span>
+          </div>
+
+          <span class="due-date">Sep 3</span>
+        </div>
+
+        <div class="assignment-item">
+          <div class="assignment-info">
+            <strong>Project Report Writing</strong>
+            <span class="text-muted">Literature review</span>
+          </div>
+
+          <span class="due-date">Sep 6</span>
+        </div>
+
+        <div class="assignment-item">
+          <div class="assignment-info">
+            <strong>Windows Server Infrastructure</strong>
+            <span class="text-muted">Practical assessment</span>
+          </div>
+
+          <span class="due-date">Sep 10</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Announcements -->
+    <div class="dashboard-card card">
+
+      <div class="card-header">
+        <div>
+          <span class="card-label">LATEST</span>
+          <h2>Announcements</h2>
+        </div>
+
+        <a routerLink="/mera/noticeboard" class="view-link">
+          See all →
+        </a>
+      </div>
+
+      <div class="announcement-list">
+
+        <a routerLink="/mera/noticeboard" class="announcement-item">
+          <span class="announcement-dot"></span>
+
+          <div>
+            <strong>Library hours updated</strong>
+            <span class="text-muted">Today · Student Services</span>
+          </div>
+        </a>
+
+        <a routerLink="/mera/noticeboard" class="announcement-item">
+          <span class="announcement-dot"></span>
+
+          <div>
+            <strong>Student event this Friday</strong>
+            <span class="text-muted">Yesterday · Student Affairs</span>
+          </div>
+        </a>
+
+        <a routerLink="/mera/noticeboard" class="announcement-item">
+          <span class="announcement-dot"></span>
+
+          <div>
+            <strong>Semester registration reminder</strong>
+            <span class="text-muted">2 days ago · Administration</span>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>

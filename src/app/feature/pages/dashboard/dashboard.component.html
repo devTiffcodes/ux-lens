@@ -1,49 +1,85 @@
 <section class="container dashboard-section">
-  <div class="dashboard-header">
-    <h1>Research Dashboard</h1>
-    <button type="button" class="btn btn-secondary" (click)="logout()">Log Out</button>
+
+  <!-- Welcome -->
+  <div class="dashboard-welcome">
+    <div>
+      <h1>Welcome back{{ authService.currentUser()?.displayName ? ', ' + (authService.currentUser()!.displayName ?? '').split(' ')[0] : '' }} 👋</h1>
+      <p class="text-muted">Here's an overview of your UX research activity.</p>
+    </div>
   </div>
 
+  <!-- Tool cards -->
+  <h2 class="section-title">Research Tools</h2>
+  <div class="tools-grid">
+
+    <a routerLink="/site-analyzer" class="tool-card">
+      <span class="tool-icon">🔍</span>
+      <div>
+        <h3>Site Analyzer</h3>
+        <p>Audit any URL with Lighthouse and get AI-powered UX feedback based on the 28 UX laws.</p>
+      </div>
+    </a>
+
+    <a routerLink="/dashboard/results" class="tool-card">
+      <span class="tool-icon">📊</span>
+      <div>
+        <h3>Survey Results</h3>
+        <p>Compare Good vs Poor UX survey averages across stress, ease, overwhelm and satisfaction.</p>
+      </div>
+    </a>
+
+    <a routerLink="/guidelines" class="tool-card">
+      <span class="tool-icon">📖</span>
+      <div>
+        <h3>UX Guidelines</h3>
+        <p>Browse all 28 UX laws with Pareto Principle as the focal point of the research framework.</p>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Quick stats -->
   @if (isLoading()) {
-  <p class="text-muted">Loading survey data...</p>
-  } @else if (responses().length === 0) {
-  <p class="text-muted">No survey responses yet.</p>
+  <div class="stats-strip">
+    <div class="stat-card"><span class="stat-value">—</span><span class="stat-label">Total Responses</span></div>
+    <div class="stat-card"><span class="stat-value">—</span><span class="stat-label">Good UX</span></div>
+    <div class="stat-card"><span class="stat-value">—</span><span class="stat-label">Poor UX</span></div>
+  </div>
   } @else {
-  <div class="comparison-grid">
-    <div class="card mode-summary">
-      <h2>Good UX Mode</h2>
-      <p class="text-muted">{{ goodModeAverages().count }} responses</p>
-      <dl>
-        <dt>Avg. Stress</dt>
-        <dd>{{ goodModeAverages().stressLevel.toFixed(1) }}</dd>
-        <dt>Avg. Ease</dt>
-        <dd>{{ goodModeAverages().easeOfUse.toFixed(1) }}</dd>
-        <dt>Avg. Overwhelmed</dt>
-        <dd>{{ goodModeAverages().overwhelmed.toFixed(1) }}</dd>
-        <dt>Avg. Satisfaction</dt>
-        <dd>{{ goodModeAverages().satisfactionScore.toFixed(1) }}</dd>
-      </dl>
+  <div class="stats-strip">
+    <div class="stat-card">
+      <span class="stat-value">{{ totalResponses() }}</span>
+      <span class="stat-label">Total Responses</span>
     </div>
-
-    <div class="card mode-summary">
-      <h2>Poor UX Mode</h2>
-      <p class="text-muted">{{ poorModeAverages().count }} responses</p>
-      <dl>
-        <dt>Avg. Stress</dt>
-        <dd>{{ poorModeAverages().stressLevel.toFixed(1) }}</dd>
-        <dt>Avg. Ease</dt>
-        <dd>{{ poorModeAverages().easeOfUse.toFixed(1) }}</dd>
-        <dt>Avg. Overwhelmed</dt>
-        <dd>{{ poorModeAverages().overwhelmed.toFixed(1) }}</dd>
-        <dt>Avg. Satisfaction</dt>
-        <dd>{{ poorModeAverages().satisfactionScore.toFixed(1) }}</dd>
-      </dl>
+    <div class="stat-card">
+      <span class="stat-value good">{{ goodCount() }}</span>
+      <span class="stat-label">Good UX Responses</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value poor">{{ poorCount() }}</span>
+      <span class="stat-label">Poor UX Responses</span>
     </div>
   </div>
+  }
 
-  <h2>All Responses</h2>
+  <!-- Mera entry point -->
+  <div class="mera-banner">
+    <div class="mera-banner-text">
+      <h3>Mera — Participant Test Environment</h3>
+      <p>Send this link to participants. They will experience both Good and Poor UX modes and complete the survey.</p>
+    </div>
+    <a routerLink="/mera" class="btn btn-primary">Open Mera →</a>
+  </div>
+
+  <!-- Recent responses -->
+  <h2 class="section-title">Recent Responses</h2>
+  @if (isLoading()) {
+  <p class="text-muted">Just a moment...</p>
+  } @else if (responses().length === 0) {
+  <p class="text-muted">No survey responses yet. Share the Mera link with participants to get started.</p>
+  } @else {
   <ul class="response-list">
-    @for (response of responses(); track response.sessionId) {
+    @for (response of responses().slice(0, 5); track response.sessionId) {
     <li class="card response-card">
       <div class="response-header">
         <span class="response-mode" [class.mode-poor]="response.uxMode === 'poor'">{{ response.uxMode }}</span>
@@ -55,5 +91,7 @@
     </li>
     }
   </ul>
+  <a routerLink="/results" class="view-all-link">View all responses →</a>
   }
+
 </section>

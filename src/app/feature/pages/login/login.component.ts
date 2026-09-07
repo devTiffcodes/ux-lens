@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -10,6 +11,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly isLoading = signal(false);
   protected readonly error = signal<string | null>(null);
@@ -17,6 +20,11 @@ export class LoginComponent {
   protected readonly email = signal('');
   protected readonly password = signal('');
   protected readonly displayName = signal('');
+
+  private redirectAfterLogin(): void {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/mera/home';
+    this.router.navigateByUrl(returnUrl);
+  }
 
   protected onEmailInput(e: Event): void {
     this.email.set((e.target as HTMLInputElement).value);
@@ -35,6 +43,7 @@ export class LoginComponent {
     this.error.set(null);
     try {
       await this.authService.signInWithGoogle();
+      this.redirectAfterLogin();
     } catch {
       this.error.set('Google sign in failed. Please try again.');
     } finally {
@@ -51,6 +60,7 @@ export class LoginComponent {
     this.error.set(null);
     try {
       await this.authService.signInWithEmail(this.email(), this.password());
+      this.redirectAfterLogin();
     } catch {
       this.error.set('Invalid email or password.');
     } finally {
@@ -71,6 +81,7 @@ export class LoginComponent {
     this.error.set(null);
     try {
       await this.authService.registerWithEmail(this.email(), this.password(), this.displayName());
+      this.redirectAfterLogin();
     } catch (err: any) {
       this.error.set(err.message ?? 'Registration failed. Please try again.');
     } finally {

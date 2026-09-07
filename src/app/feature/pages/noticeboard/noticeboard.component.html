@@ -1,25 +1,49 @@
-<section class="container">
-  <h1>Noticeboard</h1>
+<main class="noticeboard-page" [class.poor-ux]="uxModeService.isPoorMode()">
 
-  @if (isLoading()) {
-  @if (uxModeService.isGoodMode()) {
-  <p class="text-muted">Loading notices...</p>
-  }
-  } @else if (notices().length === 0) {
-  @if (uxModeService.isGoodMode()) {
-  <p class="text-muted">No notices yet. Be the first to post one!</p>
-  }
-  } @else {
-  <ul class="notice-list">
-    @for (notice of notices(); track notice.id) {
-    <li class="card notice-card">
-      <div class="notice-header">
-        <strong>{{ notice.author }}</strong>
-        <span class="text-muted">{{ notice.postedAt }}</span>
-      </div>
-      <p>{{ notice.message }}</p>
-    </li>
+  <section class="container noticeboard-hero">
+    <div>
+      <p class="page-eyebrow">Student Notices</p>
+      <h1>Noticeboard</h1>
+      <p class="page-subtitle">Important announcements from UNISEY administration and student affairs.</p>
+    </div>
+  </section>
+
+  <section class="container noticeboard-content">
+
+    @if (isLoading()) {
+    @if (uxModeService.isGoodMode()) {
+    <div class="loading-state">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-body"></div>
+      <div class="skeleton skeleton-body short"></div>
+    </div>
     }
-  </ul>
-  }
-</section>
+    } @else if (notices().length === 0) {
+    @if (uxModeService.isGoodMode()) {
+    <div class="empty-state">
+      <p class="empty-icon">📋</p>
+      <h2>No notices yet</h2>
+      <p class="text-muted">Check back soon for updates from UNISEY.</p>
+    </div>
+    }
+    } @else {
+    <div class="notices-grid">
+      @for (notice of notices(); track notice.id) {
+      <div class="notice-card card" [class]="'notice-' + notice.type">
+        <div class="notice-card-header">
+          <span class="notice-tag">{{ notice.tag }}</span>
+          <span class="notice-date">{{ notice.postedAt }}</span>
+        </div>
+        <h2 class="notice-title">{{ notice.title }}</h2>
+        <p class="notice-message">{{ notice.message }}</p>
+        <div class="notice-footer">
+          <span class="notice-author">— {{ notice.author }}</span>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+  </section>
+
+</main>

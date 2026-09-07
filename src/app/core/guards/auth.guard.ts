@@ -2,15 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-/**
- * Protects the Dashboard route. Uses FirebaseService's reactive
- * `authReady`/`currentUser` signals rather than the raw Firebase Auth
- * instance, so it correctly waits for Firebase's async auth state check
- * to resolve before deciding (avoids a false redirect on page refresh,
- * when Firebase hasn't yet confirmed whether a session exists).
- */
-
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -20,7 +12,7 @@ export const authGuard: CanActivateFn = () => {
         if (authService.isLoggedIn()) {
           resolve(true);
         } else {
-          router.navigate(['/login']);
+          router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
           resolve(false);
         }
       } else {
