@@ -46,7 +46,7 @@
         @for (page of pageOptions; track page; let i = $index) {
         <label class="checkbox-label">
           <input type="checkbox"
-                 [checked]="surveyForm.controls.pagesTested.at(i).value"
+                 [checked]="pagesTestedArray.at(i).value"
                  (change)="togglePage(i)" />
           {{ page }}
         </label>
