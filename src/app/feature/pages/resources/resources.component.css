@@ -1,0 +1,127 @@
+.resources-page {
+  min-height: calc(100vh - 72px);
+  padding-bottom: var(--spacing-xl);
+}
+
+.resources-hero {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+}
+
+.page-eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-mid);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  margin-top: var(--spacing-sm);
+}
+
+.resources-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.category-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+
+.resource-card {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  align-items: flex-start;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+  .resource-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+.resource-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.resource-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.resource-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: var(--spacing-sm);
+}
+
+.resource-link {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+  .resource-link:hover {
+    color: var(--color-primary-mid);
+  }
+
+/* Poor UX */
+.poor-ux .resource-card {
+  flex-direction: column;
+  border-radius: 0;
+  border: 1px solid #ccc;
+  gap: 2px;
+}
+
+.poor-ux .resource-name {
+  font-size: 0.7rem;
+  color: #aaa;
+}
+
+.poor-ux .resource-icon {
+  font-size: 0.9rem;
+}
+
+.poor-ux .resource-link {
+  color: #bbb;
+  font-size: 0.65rem;
+}
+
+.poor-ux .category-title {
+  font-size: 0.75rem;
+  color: #ccc;
+  border-bottom-color: #eee;
+}
+
+@media (max-width: 1024px) {
+  .resource-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}

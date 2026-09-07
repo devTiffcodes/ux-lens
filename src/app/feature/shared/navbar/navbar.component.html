@@ -1,11 +1,15 @@
 <header class="navbar">
   <div class="navbar-inner container">
-    <a routerLink="/mera/home" class="navbar-brand">Mera</a>
+
+    <a routerLink="/mera/home" class="navbar-brand">
+      Mera
+    </a>
 
     <nav class="navbar-links" aria-label="Main navigation">
       @for (link of navLinks; track link.path) {
       <a [routerLink]="link.path"
          routerLinkActive="navbar-link-active"
+         [routerLinkActiveOptions]="{ exact: true }"
          class="navbar-link">
         {{ link.label }}
       </a>
@@ -14,49 +18,49 @@
 
     <div class="navbar-actions">
 
-      <a routerLink="/survey" class="navbar-link navbar-survey-link">Survey</a>
-
-      @if (authService.isResearcher()) {
-      <div class="tools-dropdown">
-        <button type="button"
-                class="btn btn-secondary navbar-tools-toggle"
-                (click)="toggleTools()">
-          UX Lens Tools ▾
-        </button>
-        @if (toolsOpen()) {
-        <div class="tools-menu" role="menu">
-          @for (link of toolLinks; track link.path) {
-          <a [routerLink]="link.path"
-             routerLinkActive="tools-link-active"
-             class="tools-link"
-             (click)="closeTools()">
-            {{ link.label }}
-          </a>
-          }
-        </div>
-        }
-      </div>
-
       <button type="button"
-              class="btn btn-secondary navbar-mode-toggle"
-              (click)="toggleUxMode()">
-        {{ uxModeService.isPoorMode() ? 'Poor UX Mode' : 'Good UX Mode' }}
+              class="notification-button"
+              aria-label="Notifications">
+        🔔
       </button>
-
-      <button type="button"
-              class="btn navbar-dev-toggle"
-              (click)="toggleDevMode()"
-              aria-label="Toggle developer panel">
-        Dev Mode
-      </button>
-      }
 
       @if (authService.isLoggedIn()) {
-      <button type="button" class="btn btn-secondary navbar-signout" (click)="signOut()">
-        Sign Out
-      </button>
+      <div class="profile-wrapper" (clickOutside)="closeProfile()">
+
+        <button type="button"
+                class="profile-button"
+                [class.profile-button-open]="profileOpen()"
+                (click)="toggleProfile()"
+                aria-label="Profile menu">
+          <span class="profile-avatar">
+            {{ authService.currentUser()?.displayName?.charAt(0) ?? 'U' }}
+          </span>
+          <span class="profile-label">
+            {{ (authService.currentUser()?.displayName ?? 'Profile').split(' ')[0] }}
+          </span>
+          <span class="profile-chevron">{{ profileOpen() ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (profileOpen()) {
+        <div class="profile-dropdown" role="menu">
+          <a routerLink="/mera/profile"
+             class="dropdown-item"
+             (click)="closeProfile()">
+            <span>👤</span> My Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <button type="button"
+                  class="dropdown-item dropdown-signout"
+                  (click)="signOut()">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+        }
+
+      </div>
       }
 
     </div>
+
   </div>
 </header>

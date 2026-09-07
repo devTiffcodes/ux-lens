@@ -1,8 +1,12 @@
 <section class="container survey-section">
-  <h1>Share Your Experience</h1>
-  <p class="text-muted">
-    This short survey helps evaluate the UX Lens research study. Your responses are anonymous.
-  </p>
+  <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
+  <div class="survey-header">
+    <h1>Share Your Experience</h1>
+    <p class="text-muted">
+      This short survey helps evaluate the UX Lens research study. Your responses are anonymous.
+    </p>
+  </div>
 
   @if (submitSuccess()) {
   <p class="success-message">Thank you — your response has been recorded.</p>
@@ -13,40 +17,41 @@
   }
 
   <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" class="survey-form">
-    <div class="form-field">
-      <label for="stressLevel">How stressful did you find using the site? (1 = Not at all, 5 = Very)</label>
-      <input id="stressLevel" type="range" min="1" max="5" formControlName="stressLevel" />
-      <span class="text-muted">{{ surveyForm.controls.stressLevel.value }}</span>
-    </div>
 
-    <div class="form-field">
-      <label for="easeOfUse">How easy was it to complete tasks? (1 = Very hard, 5 = Very easy)</label>
-      <input id="easeOfUse" type="range" min="1" max="5" formControlName="easeOfUse" />
-      <span class="text-muted">{{ surveyForm.controls.easeOfUse.value }}</span>
-    </div>
+    @for (section of sections(); track section.title) {
+    <fieldset class="survey-section-group">
+      <legend class="survey-section-title">{{ section.title }}</legend>
 
-    <div class="form-field">
-      <label for="overwhelmed">Did you feel overwhelmed by the interface? (1 = Not at all, 5 = Very)</label>
-      <input id="overwhelmed" type="range" min="1" max="5" formControlName="overwhelmed" />
-      <span class="text-muted">{{ surveyForm.controls.overwhelmed.value }}</span>
-    </div>
-
-    <div class="form-field">
-      <label for="satisfactionScore">Overall, how satisfied are you? (1 = Not at all, 5 = Very)</label>
-      <input id="satisfactionScore" type="range" min="1" max="5" formControlName="satisfactionScore" />
-      <span class="text-muted">{{ surveyForm.controls.satisfactionScore.value }}</span>
-    </div>
-
-    <fieldset class="form-field">
-      <legend>Which pages did you test?</legend>
-      @for (page of pageOptions; track page; let i = $index) {
-      <label class="checkbox-label">
-        <input type="checkbox"
-               [checked]="surveyForm.controls.pagesTested.at(i).value"
-               (change)="togglePage(i)" />
-        {{ page }}
-      </label>
+      @for (question of section.questions; track question.controlName) {
+      <div class="form-field">
+        <label [for]="question.controlName">{{ question.text }}</label>
+        <div class="range-row">
+          <span class="range-label text-muted">{{ question.lowLabel }}</span>
+          <input [id]="question.controlName"
+                 type="range"
+                 min="1"
+                 max="5"
+                 [formControlName]="question.controlName" />
+          <span class="range-label text-muted">{{ question.highLabel }}</span>
+        </div>
+        <span class="range-value">{{ getControl(question.controlName)?.value }}</span>
+      </div>
       }
+    </fieldset>
+    }
+
+    <fieldset class="form-field survey-section-group">
+      <legend class="survey-section-title">Pages Tested</legend>
+      <div class="checkbox-grid">
+        @for (page of pageOptions; track page; let i = $index) {
+        <label class="checkbox-label">
+          <input type="checkbox"
+                 [checked]="pagesTestedArray.at(i).value"
+                 (change)="togglePage(i)" />
+          {{ page }}
+        </label>
+        }
+      </div>
     </fieldset>
 
     <div class="form-field">
@@ -57,5 +62,6 @@
     <button type="submit" class="btn" [disabled]="isSubmitting()">
       {{ isSubmitting() ? 'Submitting...' : 'Submit Survey' }}
     </button>
+
   </form>
 </section>

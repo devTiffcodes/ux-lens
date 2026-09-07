@@ -3,22 +3,21 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-ux-lens-navbar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css',
+  templateUrl: './ux-lens-navbar.component.html',
+  styleUrl: './ux-lens-navbar.component.css',
 })
-export class NavbarComponent {
+export class UxLensNavbarComponent {
   protected readonly authService = inject(AuthService);
   protected readonly profileOpen = signal<boolean>(false);
 
   protected readonly navLinks = [
-    { path: '/mera/home', label: 'Home' },
-    { path: '/mera/courses', label: 'My Courses' },
-    { path: '/mera/resources', label: 'Resources' },
-    { path: '/mera/events', label: 'Events' },
-    { path: '/mera/noticeboard', label: 'Noticeboard' },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/site-analyzer', label: 'Site Analyzer' },
+    { path: '/guidelines', label: 'Guidelines' },
+    { path: '/survey', label: 'Survey' },
   ];
 
   protected toggleProfile(): void {

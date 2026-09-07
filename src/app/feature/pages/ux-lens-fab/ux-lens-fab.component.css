@@ -1,0 +1,167 @@
+/* ── FAB root ── */
+.fab-root {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+/* ── Panel ── */
+.fab-panel {
+  background: #0f1117;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 0.75rem;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: fab-panel-in 0.15s ease;
+}
+
+@keyframes fab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Panel header ── */
+.fab-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+
+.fab-panel-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.fab-mode-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  background: rgba(100, 220, 140, 0.15);
+  color: #64dc8c;
+  border: 1px solid rgba(100, 220, 140, 0.3);
+  transition: all 0.2s ease;
+}
+
+  .fab-mode-badge.fab-mode-poor {
+    background: rgba(255, 90, 90, 0.15);
+    color: #ff5a5a;
+    border-color: rgba(255, 90, 90, 0.3);
+  }
+
+/* ── Divider ── */
+.fab-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0.25rem 0;
+}
+
+/* ── Action rows ── */
+.fab-action {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  width: 100%;
+  text-align: left;
+}
+
+  .fab-action:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+  }
+
+  .fab-action:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 2px;
+  }
+
+  .fab-action.fab-action-active {
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.08);
+  }
+
+.fab-action-icon {
+  width: 1.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.fab-action-label {
+  line-height: 1.2;
+}
+
+/* ── Trigger button ── */
+.fab-trigger {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  background: #0f1117;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  flex-shrink: 0;
+}
+
+  .fab-trigger:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .fab-trigger:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 3px;
+  }
+
+  /* When poor mode is active, tint the trigger to signal the mode */
+  .fab-trigger.fab-trigger-poor {
+    border-color: rgba(255, 90, 90, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 90, 90, 0.2);
+  }
+
+@media (prefers-reduced-motion: reduce) {
+  .fab-panel {
+    animation: none;
+  }
+
+  .fab-trigger {
+    transition: none;
+  }
+}

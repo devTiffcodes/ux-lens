@@ -1,0 +1,33 @@
+<main class="resources-page" [class.poor-ux]="uxModeService.isPoorMode()">
+
+  <section class="container resources-hero">
+    <div>
+      <p class="page-eyebrow">Student Support</p>
+      <h1>Resources</h1>
+      <p class="page-subtitle">Everything you need — library, IT, finance, and student services.</p>
+      <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+    </div>
+  </section>
+  
+
+  <section class="container resources-content">
+    @for (category of categories; track category.id) {
+    <div class="resource-category">
+      <h2 class="category-title">{{ category.title }}</h2>
+      <div class="resource-grid">
+        @for (item of category.items; track item.id) {
+        <div class="resource-card card">
+          <div class="resource-icon">{{ item.icon }}</div>
+          <div class="resource-body">
+            <h3 class="resource-name">{{ item.name }}</h3>
+            <p class="resource-desc">{{ item.description }}</p>
+            <a class="resource-link">{{ item.action }} →</a>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </section>
+
+</main>

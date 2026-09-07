@@ -1,8 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
 import { SurveyRepository } from '../../../data/repositories/survey.repository';
 import { SurveyResponse } from '../../../domain/models/survey-response.model';
-import { AuthService } from '../../../core/services/auth.service';
 
 interface SectionAverages {
   taskCompletion: number;
@@ -18,15 +17,15 @@ interface ModeAverages {
 }
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-results',
   standalone: true,
-  imports: [RouterLink],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
+  imports: [],
+  templateUrl: './results.component.html',
+  styleUrl: './results.component.css',
 })
-export class DashboardComponent {
+export class ResultsComponent {
   private readonly surveyRepository = inject(SurveyRepository);
-  protected readonly authService = inject(AuthService);
+  private readonly location = inject(Location);
 
   protected readonly isLoading = signal<boolean>(true);
   protected readonly responses = signal<SurveyResponse[]>([]);
@@ -39,12 +38,12 @@ export class DashboardComponent {
     this.calculateAverages(this.responses().filter((r) => r.uxMode === 'poor'))
   );
 
-  protected readonly totalResponses = computed(() => this.responses().length);
-  protected readonly goodCount = computed(() => this.responses().filter(r => r.uxMode === 'good').length);
-  protected readonly poorCount = computed(() => this.responses().filter(r => r.uxMode === 'poor').length);
-
   constructor() {
     this.loadResponses();
+  }
+
+  protected goBack(): void {
+    this.location.back();
   }
 
   private async loadResponses(): Promise<void> {
@@ -54,8 +53,6 @@ export class DashboardComponent {
     this.isLoading.set(false);
   }
 
-  // Reversed fields: high score = negative outcome.
-  // We invert them so all section scores read as "higher = better".
   private normalise(raw: number, reversed: boolean): number {
     return reversed ? 6 - raw : raw;
   }

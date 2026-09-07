@@ -1,0 +1,63 @@
+<header class="uxlens-navbar">
+  <div class="uxlens-navbar-inner container">
+
+    <a routerLink="/dashboard" class="uxlens-brand">
+      UX <span>Lens</span>
+    </a>
+
+    <nav class="uxlens-links" aria-label="Researcher navigation">
+      @for (link of navLinks; track link.path) {
+      <a [routerLink]="link.path"
+         routerLinkActive="uxlens-link-active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         class="uxlens-link">
+        {{ link.label }}
+      </a>
+      }
+    </nav>
+
+    <div class="uxlens-actions">
+      @if (authService.isLoggedIn()) {
+      <div class="uxlens-profile-wrapper">
+
+        <button type="button"
+                class="uxlens-profile-btn"
+                [class.uxlens-profile-btn-open]="profileOpen()"
+                (click)="toggleProfile()"
+                aria-label="Profile menu">
+          <span class="uxlens-avatar">
+            {{ (authService.currentUser()?.displayName ?? 'U').charAt(0) }}
+          </span>
+          <span class="uxlens-profile-name">
+            {{ (authService.currentUser()?.displayName ?? 'Researcher').split(' ')[0] }}
+          </span>
+          <span class="uxlens-chevron">{{ profileOpen() ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (profileOpen()) {
+        <div class="uxlens-dropdown" role="menu">
+          <div class="uxlens-dropdown-user">
+            <span class="uxlens-avatar uxlens-avatar-lg">
+              {{ (authService.currentUser()?.displayName ?? 'U').charAt(0) }}
+            </span>
+            <div>
+              <p class="uxlens-dropdown-name">{{ authService.currentUser()?.displayName ?? 'Researcher' }}</p>
+              <p class="uxlens-dropdown-email">{{ authService.currentUser()?.email ?? '' }}</p>
+            </div>
+          </div>
+          <div class="uxlens-dropdown-divider"></div>
+          <div class="uxlens-dropdown-divider"></div>
+          <button type="button"
+                  class="uxlens-dropdown-item uxlens-signout"
+                  (click)="signOut()">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+        }
+
+      </div>
+      }
+    </div>
+
+  </div>
+</header>

@@ -1,0 +1,62 @@
+<div class="fab-root" [class.fab-open]="isOpen()">
+
+  <!-- Expanded panel -->
+  @if (isOpen()) {
+  <div class="fab-panel" role="dialog" aria-label="UX Lens researcher tools">
+
+    <div class="fab-panel-header">
+      <span class="fab-panel-title">UX Lens</span>
+      <span class="fab-mode-badge" [class.fab-mode-poor]="uxModeService.isPoorMode()">
+        {{ uxModeService.isPoorMode() ? 'Poor UX' : 'Good UX' }}
+      </span>
+    </div>
+
+    <div class="fab-divider"></div>
+
+    <!-- Mode toggle -->
+    <button class="fab-action" (click)="toggleMode()">
+      <span class="fab-action-icon">{{ uxModeService.isPoorMode() ? '✦' : '◈' }}</span>
+      <span class="fab-action-label">
+        Switch to {{ uxModeService.isPoorMode() ? 'Good UX' : 'Poor UX' }}
+      </span>
+    </button>
+
+    <!-- Dev mode toggle -->
+    <button class="fab-action" [class.fab-action-active]="uxModeService.devModeActive()" (click)="toggleDev()">
+      <span class="fab-action-icon">⚙</span>
+      <span class="fab-action-label">
+        Dev Mode {{ uxModeService.devModeActive() ? 'On' : 'Off' }}
+      </span>
+    </button>
+
+    <div class="fab-divider"></div>
+
+    <!-- Navigation links -->
+    <a class="fab-action" routerLink="/survey">
+      <span class="fab-action-icon">📋</span>
+      <span class="fab-action-label">Survey</span>
+    </a>
+
+    <a class="fab-action" routerLink="/dashboard">
+      <span class="fab-action-icon">📊</span>
+      <span class="fab-action-label">Research Dashboard</span>
+    </a>
+
+    <a class="fab-action" routerLink="/site-analyzer">
+      <span class="fab-action-icon">🔍</span>
+      <span class="fab-action-label">Site Analyzer</span>
+    </a>
+
+  </div>
+  }
+
+  <!-- FAB trigger button -->
+  <button class="fab-trigger"
+          [class.fab-trigger-poor]="uxModeService.isPoorMode()"
+          (click)="togglePanel()"
+          [attr.aria-expanded]="isOpen()"
+          aria-label="Toggle UX Lens tools">
+    <span class="fab-trigger-icon">{{ isOpen() ? '✕' : '⬡' }}</span>
+  </button>
+
+</div>

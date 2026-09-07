@@ -1,0 +1,68 @@
+<main class="profile-page" [class.poor-ux]="uxModeService.isPoorMode()">
+
+  <section class="container profile-hero">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar-lg">
+        {{ authService.currentUser()?.displayName?.charAt(0) ?? 'S' }}
+      </div>
+      <div>
+        <p class="page-eyebrow">Student Profile</p>
+        <h1>{{ authService.currentUser()?.displayName ?? 'Student' }}</h1>
+        <p class="profile-email">{{ authService.currentUser()?.email }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container profile-content">
+
+    <div class="profile-grid">
+
+      <div class="profile-card card">
+        <h2 class="profile-section-title">Academic Details</h2>
+        <dl class="profile-dl">
+          <dt>Student Number</dt>
+          <dd>UNI-2024-1038</dd>
+          <dt>Programme</dt>
+          <dd>Diploma in Computing and IT</dd>
+          <dt>Faculty</dt>
+          <dd>Arts and Social Development</dd>
+          <dt>Campus</dt>
+          <dd>Mont Fleuri</dd>
+          <dt>Current Semester</dt>
+          <dd>Semester 2 · 2026</dd>
+          <dt>Status</dt>
+          <dd><span class="status-badge">Active</span></dd>
+        </dl>
+      </div>
+
+      <div class="profile-card card">
+        <h2 class="profile-section-title">Quick Actions</h2>
+        <div class="profile-actions">
+          <button class="profile-action-btn">
+            <span>📄</span>
+            <span>Download Student ID</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>📋</span>
+            <span>View Academic Transcript</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>💰</span>
+            <span>View Fee Statement</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>🔐</span>
+            <span>Change Password</span>
+          </button>
+          <button class="profile-action-btn sign-out" (click)="signOut()">
+            <span>🚪</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
