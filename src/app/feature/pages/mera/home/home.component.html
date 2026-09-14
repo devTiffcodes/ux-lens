@@ -1,0 +1,166 @@
+<main class="dashboard" [class.poor-ux]="uxMode.isPoorMode()">
+
+  <!-- Welcome -->
+  <section class="welcome-section container">
+    <div>
+      <p class="welcome-eyebrow">STUDENT DASHBOARD</p>
+      <h1 class="welcome-title">
+        {{ getGreeting() }}, <span>{{ home.studentName() }}</span> 👋
+      </h1>
+      <p class="welcome-subtitle">Here's what's happening with your studies today.</p>
+    </div>
+    <div class="semester-info">
+      <span class="semester-label">Current semester</span>
+      <strong>{{ home.semester() }}</strong>
+    </div>
+  </section>
+
+  <!-- Wellbeing tip -->
+  <section class="container">
+    <div class="wellbeing-tip" [class.wellbeing-tip--poor]="uxMode.isPoorMode()">
+      <span class="wellbeing-tip-icon">{{ home.wellbeingTip().icon }}</span>
+      <p class="wellbeing-tip-text">{{ home.wellbeingTip().message }}</p>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="overview-section container">
+
+    <div class="progress-card card">
+      <div class="card-header">
+        <div>
+          <span class="card-label">ACADEMIC PROGRESS</span>
+          <h2>Your progress</h2>
+        </div>
+        <span class="progress-percentage">{{ home.overallProgress() }}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-value" [style.width]="home.overallProgress() + '%'"></div>
+      </div>
+      <p class="enrolled-note text-muted">
+        Enrolled in <strong>{{ home.enrolledCount() }} courses</strong> this semester.
+      </p>
+    </div>
+
+    <div class="schedule-card card">
+      <div class="card-header">
+        <div>
+          <span class="card-label">TODAY</span>
+          <h2>Your schedule</h2>
+        </div>
+        <a routerLink="/mera/courses" class="view-link">View all →</a>
+      </div>
+      <div class="schedule-list">
+        @for (item of home.schedule(); track item.time) {
+        <div class="schedule-item">
+          <span class="schedule-time">{{ item.time }}</span>
+          <div>
+            <strong>{{ item.subject }}</strong>
+            <span class="text-muted">{{ item.location }}</span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Quick Access -->
+  <section class="quick-section container">
+    <div class="section-heading">
+      <span class="section-label">QUICK ACCESS</span>
+      <h2>What do you need?</h2>
+    </div>
+    <div class="quick-grid">
+      <a routerLink="/mera/courses" class="quick-card">
+        <div class="quick-icon">📚</div>
+        <div>
+          <h3>My Courses</h3>
+          <p>View your modules, progress, and assignments.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+      <a routerLink="/mera/events" class="quick-card">
+        <div class="quick-icon">📅</div>
+        <div>
+          <h3>Events</h3>
+          <p>Discover what's happening on campus.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+      <a routerLink="/mera/noticeboard" class="quick-card">
+        <div class="quick-icon">📢</div>
+        <div>
+          <h3>Noticeboard</h3>
+          <p>Read important student announcements.</p>
+          @if (home.getUnreadCount() > 0) {
+          <span class="unread-badge">{{ home.getUnreadCount() }} unread</span>
+          }
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+      <a routerLink="/mera/resources" class="quick-card">
+        <div class="quick-icon">🗂️</div>
+        <div>
+          <h3>Resources</h3>
+          <p>Access library, IT, and support services.</p>
+        </div>
+        <span class="quick-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Lower Dashboard -->
+  <section class="dashboard-grid container">
+
+    <!-- Assignments -->
+    <div class="dashboard-card card">
+      <div class="card-header">
+        <div>
+          <span class="card-label">UPCOMING</span>
+          <h2>Assignments</h2>
+        </div>
+        <a routerLink="/mera/courses" class="view-link">See all →</a>
+      </div>
+      <div class="assignment-list">
+        @for (a of home.assignments(); track a.id) {
+        <div class="assignment-item">
+          <div class="assignment-info">
+            <strong>{{ a.course }}</strong>
+            <span class="text-muted">{{ a.title }}</span>
+          </div>
+          @if (a.submitted) {
+          <span class="due-date submitted">Done ✓</span>
+          } @else {
+          <span class="due-date" [class.urgent]="a.urgent">{{ a.dueLabel }}</span>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="dashboard-card card">
+      <div class="card-header">
+        <div>
+          <span class="card-label">LATEST</span>
+          <h2>Announcements</h2>
+        </div>
+        <a routerLink="/mera/noticeboard" class="view-link">See all →</a>
+      </div>
+      <div class="announcement-list">
+        @for (a of home.announcements(); track a.id) {
+        <button class="announcement-item" [class.announcement-read]="a.read" (click)="markRead(a.id)">
+          <span class="announcement-dot" [class.dot-read]="a.read"></span>
+          <div>
+            <strong>{{ a.title }}</strong>
+            <span class="text-muted">{{ a.timeAgo }} · {{ a.source }}</span>
+          </div>
+        </button>
+        }
+      </div>
+    </div>
+
+  </section>
+
+</main>

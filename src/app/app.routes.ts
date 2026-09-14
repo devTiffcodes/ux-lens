@@ -7,13 +7,13 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./feature/pages/landing/landing.component').then(m => m.LandingComponent),
+      import('./feature/pages/ux-lens/landing/landing.component').then(m => m.LandingComponent),
     title: 'UX Lens',
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./feature/pages/login/login.component').then(m => m.LoginComponent),
+      import('./feature/pages/ux-lens/login/login.component').then(m => m.LoginComponent),
     title: 'UX Lens — Sign In',
   },
 
@@ -22,35 +22,35 @@ export const routes: Routes = [
     path: 'dashboard',
     canActivate: [authGuard, roleGuard('researcher')],
     loadComponent: () =>
-      import('./feature/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+      import('./feature/pages/ux-lens/dashboard/dashboard.component').then(m => m.DashboardComponent),
     title: 'UX Lens — Dashboard',
   },
   {
     path: 'site-analyzer',
     canActivate: [authGuard, roleGuard('researcher')],
     loadComponent: () =>
-      import('./feature/pages/site-analyzer/site-analyzer.component').then(m => m.SiteAnalyzerComponent),
+      import('./feature/pages/ux-lens/site-analyzer/site-analyzer.component').then(m => m.SiteAnalyzerComponent),
     title: 'UX Lens — Site Analyzer',
   },
   {
     path: 'results',
     canActivate: [authGuard, roleGuard('researcher')],
     loadComponent: () =>
-      import('./feature/pages/results/results.component').then(m => m.ResultsComponent),
+      import('./feature/pages/ux-lens/results/results.component').then(m => m.ResultsComponent),
     title: 'UX Lens — Results',
   },
   {
     path: 'guidelines',
     canActivate: [authGuard, roleGuard('researcher')],
     loadComponent: () =>
-      import('./feature/pages/guidelines/guidelines.component').then(m => m.GuidelinesComponent),
+      import('./feature/pages/ux-lens/guidelines/guidelines.component').then(m => m.GuidelinesComponent),
     title: 'UX Lens — Guidelines',
   },
   {
     path: 'survey',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/survey/survey.component').then(m => m.SurveyComponent),
+      import('./feature/pages/ux-lens/survey/survey.component').then(m => m.SurveyComponent),
     title: 'UX Lens — Survey',
   },
 
@@ -64,56 +64,56 @@ export const routes: Routes = [
     path: 'mera/home',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/home/home.component').then(m => m.HomeComponent),
+      import('./feature/pages/mera/home/home.component').then(m => m.HomeComponent),
     title: 'Mera — Home',
   },
   {
     path: 'mera/events',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/events/events.component').then(m => m.EventsComponent),
+      import('./feature/pages/mera/events/events.component').then(m => m.EventsComponent),
     title: 'Mera — Events',
   },
   {
     path: 'mera/noticeboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/noticeboard/noticeboard.component').then(m => m.NoticeboardComponent),
+      import('./feature/pages/mera/noticeboard/noticeboard.component').then(m => m.NoticeboardComponent),
     title: 'Mera — Noticeboard',
   },
   {
     path: 'mera/courses',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/courses/courses.component').then(m => m.CoursesComponent),
+      import('./feature/pages/mera/courses/courses.component').then(m => m.CoursesComponent),
     title: 'Mera — My Courses',
   },
   {
     path: 'mera/resources',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/resources/resources.component').then(m => m.ResourcesComponent),
+      import('./feature/pages/mera/resources/resources.component').then(m => m.ResourcesComponent),
     title: 'Mera — Resources',
   },
   {
     path: 'mera/profile',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/profile/profile.component').then(m => m.ProfileComponent),
+      import('./feature/pages/mera/profile/profile.component').then(m => m.ProfileComponent),
     title: 'Mera — Profile',
   },
   {
     path: 'mera/local-info',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/local-info/local-info.component').then(m => m.LocalInfoComponent),
+      import('./feature/pages/ux-lens/local-info/local-info.component').then(m => m.LocalInfoComponent),
     title: 'Mera — Local Info',
   },
   {
     path: 'mera/contact',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./feature/pages/contact/contact.component').then(m => m.ContactComponent),
+      import('./feature/pages/mera/contact/contact.component').then(m => m.ContactComponent),
     title: 'Mera — Contact',
   },
 

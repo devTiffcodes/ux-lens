@@ -1,0 +1,146 @@
+<main class="profile-page" [class.poor-ux]="uxMode.isPoorMode()">
+
+  <!-- Toast -->
+  @if (profileService.toastMessage()) {
+  <div class="toast">{{ profileService.toastMessage() }}</div>
+  }
+
+  <section class="container profile-hero">
+    <div class="profile-avatar-wrap">
+
+      <!-- Avatar -->
+      <div class="avatar-container">
+        @if (profileService.avatarPreview()) {
+        <img class="profile-avatar-lg profile-avatar-img" [src]="profileService.avatarPreview()!" alt="Profile photo" />
+        } @else {
+        <div class="profile-avatar-lg">
+          {{ profileService.profile().avatarInitial }}
+        </div>
+        }
+        <label class="avatar-upload-btn" title="Upload photo">
+          📷
+          <input type="file" accept="image/*" class="avatar-file-input" (change)="onFileSelected($event)" />
+        </label>
+      </div>
+
+      <div>
+        <p class="page-eyebrow">Student Profile</p>
+        <h1>{{ profileService.profile().displayName }}</h1>
+        <p class="profile-email">{{ profileService.profile().email }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container profile-content">
+    <div class="profile-grid">
+
+      <!-- Academic Details -->
+      <div class="profile-card card">
+        <h2 class="profile-section-title">Academic Details</h2>
+        <dl class="profile-dl">
+          <dt>Student Number</dt>
+          <dd>{{ profileService.profile().studentNumber }}</dd>
+          <dt>Programme</dt>
+          <dd>{{ profileService.profile().programme }}</dd>
+          <dt>Faculty</dt>
+          <dd>{{ profileService.profile().faculty }}</dd>
+          <dt>Campus</dt>
+          <dd>{{ profileService.profile().campus }}</dd>
+          <dt>Current Semester</dt>
+          <dd>{{ profileService.profile().semester }}</dd>
+          <dt>Status</dt>
+          <dd><span class="status-badge">{{ profileService.profile().status }}</span></dd>
+        </dl>
+      </div>
+
+      <!-- Contact & Edit -->
+      <div class="profile-card card">
+        <div class="card-title-row">
+          <h2 class="profile-section-title">Contact Details</h2>
+          @if (!profileService.isEditing()) {
+          <button class="edit-btn" (click)="startEditing()">✏️ Edit</button>
+          }
+        </div>
+
+        @if (profileService.isEditing()) {
+        <div class="edit-form">
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input type="text"
+                   class="form-input"
+                   [value]="profileService.draft().displayName ?? profileService.profile().displayName"
+                   (input)="updateField('displayName', $event)"
+                   placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel"
+                   class="form-input"
+                   [value]="profileService.draft().phone ?? profileService.profile().phone"
+                   (input)="updateField('phone', $event)"
+                   placeholder="+248 2 500 000" />
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveChanges()">Save changes</button>
+            <button class="btn btn-ghost" (click)="cancelEditing()">Cancel</button>
+          </div>
+        </div>
+        } @else {
+        <dl class="profile-dl">
+          <dt>Phone</dt>
+          <dd>{{ profileService.profile().phone }}</dd>
+          <dt>Email</dt>
+          <dd>{{ profileService.profile().email }}</dd>
+        </dl>
+        }
+
+        <!-- Notifications -->
+        <div class="notifications-section">
+          <h3 class="notifications-title">Notification Preferences</h3>
+          <div class="notification-toggles">
+            @for (key of ['email', 'sms', 'announcements', 'events']; track key) {
+            <div class="toggle-row">
+              <span class="toggle-label">{{ key | titlecase }}</span>
+              <button class="toggle-btn"
+                      [class.on]="(profileService.isEditing() ? profileService.draft().notifications : profileService.profile().notifications)?.[key]"
+                      (click)="toggleNotification(key)"
+                      [attr.aria-label]="'Toggle ' + key + ' notifications'">
+                <span class="toggle-thumb"></span>
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="profile-card card profile-card-full">
+        <h2 class="profile-section-title">Quick Actions</h2>
+        <div class="profile-actions">
+          <button class="profile-action-btn">
+            <span>📄</span>
+            <span>Download Student ID</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>📋</span>
+            <span>View Academic Transcript</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>💰</span>
+            <span>View Fee Statement</span>
+          </button>
+          <button class="profile-action-btn">
+            <span>🔑</span>
+            <span>Change Password</span>
+          </button>
+          <button class="profile-action-btn sign-out" (click)="signOut()">
+            <span>🚪</span>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
