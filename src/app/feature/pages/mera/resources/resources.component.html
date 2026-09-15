@@ -4,22 +4,27 @@
   @if (resourcesService.toastMessage()) {
   <div class="toast">{{ resourcesService.toastMessage() }}</div>
   }
-
+ 
   <section class="container resources-hero">
+
     <div class="hero-top">
       <div>
+
         <p class="page-eyebrow">Student Support</p>
         <h1>Resources</h1>
         <p class="page-subtitle">Everything you need — library, IT, finance, and student services.</p>
-        <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
       </div>
 
-      @if (resourcesService.bookmarkedItems().length > 0) {
-      <div class="bookmarks-summary">
-        <span class="bookmarks-icon">🔖</span>
-        <span><strong>{{ resourcesService.bookmarkedItems().length }}</strong> bookmarked</span>
+      <div class="hero-top-right">
+        <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+        @if (resourcesService.bookmarkedItems().length > 0) {
+        <div class="bookmarks-summary">
+          <span class="bookmarks-icon">🔖</span>
+          <span><strong>{{ resourcesService.bookmarkedItems().length }}</strong> bookmarked</span>
+        </div>
+        }
       </div>
-      }
     </div>
 
     <!-- Search -->

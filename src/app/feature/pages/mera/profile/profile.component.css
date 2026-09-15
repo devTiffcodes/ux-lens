@@ -1,71 +1,358 @@
-/* ── Poor UX enhancements (profile) ─────────────────────────────────────── */
-
-/* Fitts's Law: all action buttons tiny and hard to hit */
-.poor-ux .profile-action-btn {
-  padding: 2px 4px;
-  min-height: unset;
-  justify-content: flex-end;
+.profile-page {
+  min-height: calc(100vh - 72px);
+  padding-bottom: var(--spacing-xl);
 }
 
-  /* Pareto: sign out button (most used action) hidden in visual noise */
-  .poor-ux .profile-action-btn.sign-out {
-    opacity: 0.2;
-    font-size: 0.5rem;
+.profile-hero {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+}
+
+.page-eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-mid);
+  margin-bottom: var(--spacing-sm);
+}
+
+.profile-avatar-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.profile-avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-size: 2rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.avatar-upload-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+  .avatar-upload-btn:hover {
+    background: var(--color-primary-light);
   }
 
-/* Von Restorff: status badge indistinguishable */
-.poor-ux .status-badge {
-  background: #eee;
-  color: #ccc;
-  font-size: 0.55rem;
+.avatar-file-input {
+  display: none;
 }
 
-/* Feedback: no hover state on action buttons */
-.poor-ux .profile-action-btn:hover {
+.profile-email {
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
+}
+
+.profile-content {
+  padding-top: var(--spacing-lg);
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.profile-card {
+  padding: var(--spacing-lg);
+}
+
+.profile-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.profile-dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm) var(--spacing-md);
+  margin: 0;
+}
+
+  .profile-dl dt {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .profile-dl dd {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+  }
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+}
+
+.edit-btn {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   background: transparent;
-  border-color: #eee;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-/* Jakob's Law: grid flips column order unexpectedly */
-.poor-ux .profile-grid {
-  direction: rtl;
-}
-
-  .poor-ux .profile-grid > * {
-    direction: ltr;
+  .edit-btn:hover {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
   }
 
-/* Hick's Law: inject fake notification options */
-.poor-ux .notifications-section::after {
-  content: 'Email • SMS • Push • In-app • Digest • Weekly • Monthly • Urgent only • None • Custom • Third-party';
-  display: block;
-  font-size: 0.5rem;
-  color: #ccc;
-  margin-top: 4px;
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.form-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition-fast);
+}
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.notifications-section {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.notifications-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+}
+
+.notification-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-label {
+  font-size: var(--font-size-sm);
+}
+
+.toggle-btn {
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-border);
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+  .toggle-btn.on {
+    background: var(--color-primary);
+  }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: transform var(--transition-fast);
+}
+
+.toggle-btn.on .toggle-thumb {
+  transform: translateX(18px);
+}
+
+.profile-card-full {
+  grid-column: 1 / -1;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.profile-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+  .profile-action-btn:hover {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary-mid);
+  }
+
+  .profile-action-btn.sign-out {
+    color: #e53935;
+    border-color: #ffcdd2;
+  }
+
+    .profile-action-btn.sign-out:hover {
+      background: #ffebee;
+    }
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: var(--color-text);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  z-index: 999;
   white-space: nowrap;
-  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.3s ease;
 }
 
-/* Fake urgency on profile */
-.poor-ux .profile-hero::after {
-  content: '⚠ Your profile is incomplete. Some services may be restricted.';
-  display: block;
-  font-size: 0.55rem;
-  color: #c00;
-  font-style: italic;
-  margin-top: 4px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
-/* Avatar shrunk further */
-.poor-ux .profile-avatar-lg {
-  width: 28px;
-  height: 28px;
+/* Poor UX */
+.poor-ux .profile-action-btn {
+  font-size: 0.65rem;
+  color: #bbb;
+  border-color: #eee;
+  gap: 2px;
+  padding: 4px;
+}
+
+.poor-ux .profile-dl dt {
+  color: #ccc;
   font-size: 0.65rem;
 }
 
-/* Contact details hard to read */
-.poor-ux .profile-section-title {
-  font-size: 0.6rem;
-  color: #ddd;
-  border-bottom-color: #f0f0f0;
+.poor-ux .profile-dl dd {
+  font-size: 0.65rem;
+  color: #bbb;
+}
+
+.poor-ux .profile-avatar-lg {
+  background: #ddd;
+  color: #aaa;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-avatar-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
