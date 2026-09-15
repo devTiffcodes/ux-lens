@@ -1,0 +1,96 @@
+<section class="container survey-section">
+  <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
+  <div class="survey-header">
+    <h1>Share Your Experience</h1>
+    <p class="text-muted">
+      This short survey helps evaluate the UX Lens research study. Your responses are anonymous.
+    </p>
+  </div>
+
+  @if (submitSuccess()) {
+  <p class="success-message">Thank you — your response has been recorded.</p>
+  }
+
+  @if (submitError()) {
+  <p class="field-error">{{ submitError() }}</p>
+  }
+
+  <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" class="survey-form">
+
+    <!-- Task Checklist -->
+    <fieldset class="survey-section-group">
+      <legend class="survey-section-title">Task Checklist</legend>
+      <p class="task-checklist-intro text-muted">
+        Which of the following tasks were you able to complete during this session?
+      </p>
+      <div class="task-checklist">
+        @for (task of studyTasks; track task.id) {
+        <label class="task-checklist-item" [class.checked]="isTaskChecked(task.id)">
+          <input type="checkbox"
+                 [checked]="isTaskChecked(task.id)"
+                 (change)="toggleTask(task.id)"
+                 class="task-checkbox" />
+          <span class="task-checklist-icon">{{ task.icon }}</span>
+          <div class="task-checklist-text">
+            <span class="task-page">{{ task.page }}</span>
+            <span class="task-instruction">{{ task.instruction }}</span>
+          </div>
+        </label>
+        }
+      </div>
+      <p class="task-checklist-count text-muted">
+        {{ checkedTaskCount() }} of {{ studyTasks.length }} tasks completed
+      </p>
+    </fieldset>
+
+    <!-- Likert sections from Firestore -->
+    @for (section of sections(); track section.title) {
+    <fieldset class="survey-section-group">
+      <legend class="survey-section-title">{{ section.title }}</legend>
+
+      @for (question of section.questions; track question.controlName) {
+      <div class="form-field">
+        <label [for]="question.controlName">{{ question.text }}</label>
+        <div class="range-row">
+          <span class="range-label text-muted">{{ question.lowLabel }}</span>
+          <input [id]="question.controlName"
+                 type="range"
+                 min="1"
+                 max="5"
+                 [formControlName]="question.controlName" />
+          <span class="range-label text-muted">{{ question.highLabel }}</span>
+        </div>
+        <span class="range-value">{{ getControl(question.controlName)?.value }}</span>
+      </div>
+      }
+    </fieldset>
+    }
+
+    <!-- Pages tested -->
+    <fieldset class="form-field survey-section-group">
+      <legend class="survey-section-title">Pages Tested</legend>
+      <div class="checkbox-grid">
+        @for (page of pageOptions; track page; let i = $index) {
+        <label class="checkbox-label">
+          <input type="checkbox"
+                 [checked]="pagesTestedArray.at(i).value"
+                 (change)="togglePage(i)" />
+          {{ page }}
+        </label>
+        }
+      </div>
+    </fieldset>
+
+    <!-- Open feedback -->
+    <div class="form-field">
+      <label for="openFeedback">Anything else you'd like to share?</label>
+      <textarea id="openFeedback" rows="4" formControlName="openFeedback"></textarea>
+    </div>
+
+    <button type="submit" class="btn" [disabled]="isSubmitting()">
+      {{ isSubmitting() ? 'Submitting...' : 'Submit Survey' }}
+    </button>
+
+  </form>
+</section>

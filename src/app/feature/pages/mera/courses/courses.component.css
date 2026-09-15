@@ -1,0 +1,67 @@
+/* ── Poor UX enhancements (courses) ─────────────────────────────────────── */
+
+/* Fitts's Law: submit and expand buttons nearly untappable */
+.poor-ux .submit-btn {
+  padding: 1px 4px;
+  font-size: 0.5rem;
+  border-radius: 0;
+}
+
+.poor-ux .expand-btn {
+  padding: 1px 3px;
+  font-size: 0.5rem;
+}
+
+/* Pareto: progress bar (most useful at-a-glance info) hidden */
+.poor-ux .course-progress-wrap {
+  display: none;
+}
+
+/* Von Restorff: all course cards same muted colour top */
+.poor-ux .course-card-top {
+  background: #e8e8e8 !important;
+  height: 30px;
+}
+
+/* Feedback: no hover */
+.poor-ux .course-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Jakob's Law: course code moved to wrong place via float */
+.poor-ux .course-code {
+  float: right;
+  font-size: 0.5rem;
+  opacity: 0.3;
+}
+
+/* Hick's Law: inject fake course action noise */
+.poor-ux .course-card-body::after {
+  content: 'Enrol • Withdraw • Defer • RPL • Transfer • Appeal • Archive';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-top: 4px;
+  letter-spacing: -0.3px;
+}
+
+/* Fake urgency on assignment rows */
+.poor-ux .assignment-row::after {
+  content: '⚠ Submission portal may be unavailable';
+  display: block;
+  font-size: 0.5rem;
+  color: #c00;
+  font-style: italic;
+  width: 100%;
+}
+
+/* Kill lecturer info — Pareto */
+.poor-ux .course-lecturer {
+  display: none;
+}
+
+/* Kill schedule */
+.poor-ux .course-schedule {
+  display: none;
+}

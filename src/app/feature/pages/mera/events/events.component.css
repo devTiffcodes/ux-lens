@@ -1,0 +1,66 @@
+/* ── Poor UX enhancements (events) ──────────────────────────────────────── */
+
+/* Fitts's Law: register button tiny and low contrast */
+.poor-ux .btn-sm {
+  padding: 2px 4px;
+  font-size: 0.55rem;
+  min-width: unset;
+}
+
+/* Hick's Law: inject fake extra filter options via pseudo */
+.poor-ux .events-filter::after {
+  content: 'All • Academic • Sports • Culture • Health • Admin • External • Alumni • Research • Other';
+  font-size: 0.55rem;
+  color: #bbb;
+  white-space: nowrap;
+  align-self: center;
+  letter-spacing: -0.3px;
+}
+
+/* Pareto: bury the event date — the most important info */
+.poor-ux .event-date-badge {
+  opacity: 0.3;
+  font-size: 0.6rem;
+}
+
+/* Von Restorff: all cards look identical regardless of category */
+.poor-ux .event-card-header {
+  background: #eee !important;
+  height: 30px;
+}
+
+/* Feedback: no hover state */
+.poor-ux .event-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Fake urgency on every card */
+.poor-ux .event-card::after {
+  content: '⚠ Only 2 spots remaining — expires soon';
+  display: block;
+  font-size: 0.55rem;
+  color: #c00;
+  padding: 2px 6px 4px;
+  font-style: italic;
+}
+
+/* Misalign event footer — Jakob's Law */
+.poor-ux .event-footer {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+/* Kill location info — Pareto (useful info buried) */
+.poor-ux .event-location {
+  display: none;
+}
+
+/* Kill description */
+.poor-ux .event-desc {
+  font-size: 0.55rem;
+  color: #ddd;
+  max-height: 20px;
+  overflow: hidden;
+}

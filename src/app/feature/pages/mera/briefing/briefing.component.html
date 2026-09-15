@@ -1,0 +1,68 @@
+<main class="briefing-page">
+  <div class="briefing-container">
+
+    <div class="briefing-header">
+      <span class="briefing-icon">🔬</span>
+      <h1>Study Briefing</h1>
+      <p class="briefing-subtitle">
+        Please read the following before you begin. This should take about 10–15 minutes.
+      </p>
+    </div>
+
+    <div class="briefing-card">
+      <h2>What you'll be doing</h2>
+      <p>
+        You'll be exploring <strong>Mera</strong>, a mock student portal. You'll complete two
+        sessions — one in each interface mode — and fill in a short survey after each one.
+        Your responses are <strong>anonymous</strong> and used only for this research study.
+      </p>
+    </div>
+
+    <div class="briefing-card">
+      <h2>Your 5 tasks</h2>
+      <p class="briefing-tasks-intro">
+        Complete each task in Mera to the best of your ability. Don't worry if you get stuck
+        — that's useful data too.
+      </p>
+      <ol class="briefing-task-list">
+        @for (task of tasks; track task.id) {
+        <li class="briefing-task-item">
+          <span class="task-icon">{{ task.icon }}</span>
+          <div>
+            <span class="task-page">{{ task.page }}</span>
+            <p class="task-instruction">{{ task.instruction }}</p>
+          </div>
+        </li>
+        }
+      </ol>
+    </div>
+
+    <div class="briefing-card">
+      <h2>A few things to know</h2>
+      <ul class="briefing-info-list">
+        <li>⏱️ There is no time limit — work at your own pace</li>
+        <li>🔇 Your clicks are recorded anonymously to generate a heatmap</li>
+        <li>📋 You'll fill in a short survey after each session</li>
+        <li>🔄 You'll switch interface modes between sessions</li>
+        <li>🚪 You may withdraw at any time without consequence</li>
+      </ul>
+    </div>
+
+    <div class="briefing-agree">
+      <label class="agree-label">
+        <input type="checkbox"
+               [checked]="agreed()"
+               (change)="toggleAgreement()"
+               class="agree-checkbox" />
+        I have read and understood the above. I consent to participate in this study.
+      </label>
+    </div>
+
+    <button class="btn btn-primary briefing-begin-btn"
+            [disabled]="!agreed()"
+            (click)="beginStudy()">
+      Begin Study →
+    </button>
+
+  </div>
+</main>

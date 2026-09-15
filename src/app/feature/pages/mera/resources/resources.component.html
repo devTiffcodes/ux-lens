@@ -1,0 +1,80 @@
+<main class="resources-page" [class.poor-ux]="uxMode.isPoorMode()">
+
+  <!-- Toast -->
+  @if (resourcesService.toastMessage()) {
+  <div class="toast">{{ resourcesService.toastMessage() }}</div>
+  }
+
+  <section class="container resources-hero">
+    <div class="hero-top">
+      <div>
+        <p class="page-eyebrow">Student Support</p>
+        <h1>Resources</h1>
+        <p class="page-subtitle">Everything you need — library, IT, finance, and student services.</p>
+        <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+      </div>
+
+      @if (resourcesService.bookmarkedItems().length > 0) {
+      <div class="bookmarks-summary">
+        <span class="bookmarks-icon">🔖</span>
+        <span><strong>{{ resourcesService.bookmarkedItems().length }}</strong> bookmarked</span>
+      </div>
+      }
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text"
+             class="search-input"
+             placeholder="Search resources…"
+             [value]="resourcesService.searchQuery()"
+             (input)="onSearch($event)"
+             aria-label="Search resources" />
+    </div>
+  </section>
+
+  <section class="container resources-content">
+
+    @if (resourcesService.filteredCategories().length === 0) {
+    <div class="empty-state">
+      <p class="empty-icon">🗂️</p>
+      <h2>No resources found</h2>
+      <p class="text-muted">Try a different search term.</p>
+    </div>
+    } @else {
+    @for (category of resourcesService.filteredCategories(); track category.id) {
+    <div class="resource-category">
+      <h2 class="category-title">{{ category.title }}</h2>
+      <div class="resource-grid">
+        @for (item of category.items; track item.id) {
+        <div class="resource-card card">
+          <div class="resource-icon">{{ item.icon }}</div>
+          <div class="resource-body">
+            <div class="resource-name-row">
+              <h3 class="resource-name">{{ item.name }}</h3>
+              <button class="bookmark-btn"
+                      [class.bookmarked]="item.bookmarked"
+                      (click)="toggleBookmark(item.id)"
+                      [attr.aria-label]="item.bookmarked ? 'Remove bookmark' : 'Bookmark'">
+                {{ item.bookmarked ? '🔖' : '🏷️' }}
+              </button>
+            </div>
+            @if (item.course) {
+            <span class="resource-course-tag">{{ item.course }}</span>
+            }
+            <p class="resource-desc">{{ item.description }}</p>
+            <button class="resource-link" (click)="handleAction(item)">
+              {{ item.action }} →
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+    }
+
+  </section>
+
+</main>

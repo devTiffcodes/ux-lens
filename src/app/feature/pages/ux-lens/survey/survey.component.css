@@ -1,0 +1,162 @@
+.survey-section {
+  padding-block: var(--spacing-lg) var(--spacing-xl);
+  max-width: 600px;
+}
+
+.survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 400;
+}
+
+fieldset.form-field,
+.survey-section-group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+}
+
+.survey-section-title {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary-mid);
+  margin-bottom: var(--spacing-md);
+  padding: 0;
+}
+
+.success-message {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.field-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+}
+
+/* ── Range slider ────────────────────────────────────────────────────────── */
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+  .range-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--color-primary);
+  }
+
+.range-label {
+  font-size: var(--font-size-xs);
+  min-width: 60px;
+}
+
+  .range-label:last-of-type {
+    text-align: right;
+  }
+
+.range-value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+/* ── Pages tested ────────────────────────────────────────────────────────── */
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+}
+
+/* ── Task checklist ──────────────────────────────────────────────────────── */
+
+.task-checklist-intro {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.task-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.task-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+  .task-checklist-item.checked {
+    border-color: var(--color-primary-mid);
+    background-color: var(--color-primary-light);
+  }
+
+.task-checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.task-checklist-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.task-checklist-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.task-page {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+
+.task-instruction {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-base);
+}
+
+.task-checklist-count {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  text-align: right;
+}

@@ -1,0 +1,73 @@
+/* ── Poor UX enhancements (home) ─────────────────────────────────────────── */
+
+/* Fitts's Law: shrink the most important quick-access cards */
+.poor-ux .quick-card {
+  min-height: 60px;
+  padding: 4px 6px;
+  border-radius: 0;
+}
+
+  /* Hick's Law: visual noise on every card via pseudo-element */
+  .poor-ux .quick-card::before {
+    content: '⚠ Requires verification • Last updated 01/01/2021 • Ref: SYS-' counter(card);
+    display: block;
+    font-size: 0.55rem;
+    color: #bbb;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+/* Pareto: bury the schedule (most useful content) */
+.poor-ux .schedule-card {
+  order: 99;
+  opacity: 0.4;
+  font-size: 0.6rem;
+}
+
+/* Von Restorff: kill all colour differentiation */
+.poor-ux .due-date.urgent {
+  background: #f5f5f5;
+  color: #ccc;
+}
+
+.poor-ux .due-date.submitted {
+  background: #f5f5f5;
+  color: #ccc;
+}
+
+/* Feedback: no hover response on interactive elements */
+.poor-ux .quick-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--color-border);
+}
+
+.poor-ux .announcement-item:hover {
+  background: none;
+}
+
+/* Fake urgency banner on progress card */
+.poor-ux .progress-card::after {
+  content: '⚠ ACTION REQUIRED: Your enrolment may be at risk. Contact registry immediately.';
+  display: block;
+  font-size: 0.6rem;
+  color: #c00;
+  margin-top: var(--spacing-sm);
+  font-style: italic;
+  border-top: 1px solid #eee;
+  padding-top: var(--spacing-xs);
+}
+
+/* Jakob's Law: misalign the semester info so it feels wrong */
+.poor-ux .semester-info {
+  text-align: right;
+  padding: 2px 4px;
+}
+
+/* Cluttered welcome */
+.poor-ux .welcome-subtitle {
+  font-size: 0.6rem;
+  color: #ccc;
+  letter-spacing: -0.5px;
+}

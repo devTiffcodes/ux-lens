@@ -1,0 +1,66 @@
+/* ── Poor UX enhancements (resources) ───────────────────────────────────── */
+
+/* Fitts's Law: download/access links tiny */
+.poor-ux .resource-link {
+  font-size: 0.5rem;
+  padding: 0;
+}
+
+/* Pareto: descriptions hidden — the most helpful text gone */
+.poor-ux .resource-desc {
+  display: none;
+}
+
+/* Von Restorff: all resource icons same muted size */
+.poor-ux .resource-icon {
+  font-size: 0.75rem;
+  filter: grayscale(1) opacity(0.3);
+}
+
+/* Feedback: no hover */
+.poor-ux .resource-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Hick's Law: inject fake category noise */
+.poor-ux .resources-content::before {
+  content: 'Showing results for: All Categories • All Courses • All Semesters • All Types • All Authors • All Languages • Sort: Default';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-bottom: var(--spacing-sm);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Fake access warning */
+.poor-ux .resource-card::after {
+  content: '⚠ Access may require VPN or library login';
+  display: block;
+  font-size: 0.5rem;
+  color: #c00;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Jakob's Law: grid becomes a confusing single column with wrong alignment */
+.poor-ux .resource-grid {
+  grid-template-columns: 1fr;
+}
+
+.poor-ux .resource-card {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.poor-ux .resource-name-row {
+  flex-direction: row-reverse;
+}
+
+/* Search placeholder misleading */
+.poor-ux .search-input::placeholder {
+  content: 'Search by ISBN, DOI, or call number...';
+  font-size: 0.6rem;
+  color: #ddd;
+}

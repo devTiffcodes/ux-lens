@@ -1,0 +1,61 @@
+/* ── Poor UX enhancements (noticeboard) ─────────────────────────────────── */
+
+/* Pareto: most recent/urgent notices get buried styling */
+.poor-ux .notice-urgent {
+  border-left: none;
+  opacity: 0.5;
+}
+
+/* Von Restorff: all notices look identical */
+.poor-ux .notice-card {
+  border-left: none !important;
+  background: #f9f9f9 !important;
+}
+
+/* Fitts's Law: make the whole notice non-interactive */
+.poor-ux .notice-card {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Hick's Law: inject fake filter noise */
+.poor-ux .notice-filters::after {
+  content: 'All • Urgent • Info • Academic • General • Archived • Pending • Draft • External';
+  font-size: 0.5rem;
+  color: #ccc;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Fake urgency on notices */
+.poor-ux .notice-card::after {
+  content: 'This notice may have expired. Please verify with the relevant department.';
+  display: block;
+  font-size: 0.55rem;
+  color: #bbb;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Search is broken looking */
+.poor-ux .search-input::placeholder {
+  color: #ddd;
+  font-size: 0.6rem;
+}
+
+/* Notice title deprioritised */
+.poor-ux .notice-title {
+  font-weight: 400;
+  font-size: 0.7rem;
+}
+
+/* Author hidden — removes accountability cue */
+.poor-ux .notice-author {
+  display: none;
+}
+
+/* Kill notice message colour differentiation */
+.poor-ux .notice-message {
+  color: #ddd;
+  font-size: 0.6rem;
+}

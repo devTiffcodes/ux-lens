@@ -1,0 +1,71 @@
+/* ── Poor UX enhancements (profile) ─────────────────────────────────────── */
+
+/* Fitts's Law: all action buttons tiny and hard to hit */
+.poor-ux .profile-action-btn {
+  padding: 2px 4px;
+  min-height: unset;
+  justify-content: flex-end;
+}
+
+  /* Pareto: sign out button (most used action) hidden in visual noise */
+  .poor-ux .profile-action-btn.sign-out {
+    opacity: 0.2;
+    font-size: 0.5rem;
+  }
+
+/* Von Restorff: status badge indistinguishable */
+.poor-ux .status-badge {
+  background: #eee;
+  color: #ccc;
+  font-size: 0.55rem;
+}
+
+/* Feedback: no hover state on action buttons */
+.poor-ux .profile-action-btn:hover {
+  background: transparent;
+  border-color: #eee;
+}
+
+/* Jakob's Law: grid flips column order unexpectedly */
+.poor-ux .profile-grid {
+  direction: rtl;
+}
+
+  .poor-ux .profile-grid > * {
+    direction: ltr;
+  }
+
+/* Hick's Law: inject fake notification options */
+.poor-ux .notifications-section::after {
+  content: 'Email • SMS • Push • In-app • Digest • Weekly • Monthly • Urgent only • None • Custom • Third-party';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Fake urgency on profile */
+.poor-ux .profile-hero::after {
+  content: '⚠ Your profile is incomplete. Some services may be restricted.';
+  display: block;
+  font-size: 0.55rem;
+  color: #c00;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Avatar shrunk further */
+.poor-ux .profile-avatar-lg {
+  width: 28px;
+  height: 28px;
+  font-size: 0.65rem;
+}
+
+/* Contact details hard to read */
+.poor-ux .profile-section-title {
+  font-size: 0.6rem;
+  color: #ddd;
+  border-bottom-color: #f0f0f0;
+}

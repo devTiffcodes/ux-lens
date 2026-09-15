@@ -3,7 +3,7 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
-import { UxLensFabComponent } from './feature/pages/ux-lens-fab/ux-lens-fab.component';
+import { UxLensFabComponent } from './feature/pages/ux-lens/ux-lens-fab/ux-lens-fab.component';
 import { NavbarComponent } from './feature/shared/navbar/navbar.component';
 import { UxLensNavbarComponent } from './feature/shared/ux-lens-navbar/ux-lens-navbar.component';
 import { DevPanelComponent } from './feature/shared/dev-panel/dev-panel.component';

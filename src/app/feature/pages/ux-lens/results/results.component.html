@@ -1,0 +1,214 @@
+<section class="container results-section">
+
+  <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
+  <div class="results-header">
+    <h1>Survey Results</h1>
+    <p class="text-muted">Comparison of participant responses across Good UX and Poor UX modes.</p>
+  </div>
+
+  @if (isLoading()) {
+  <p class="text-muted">Just a moment...</p>
+  } @else if (responses().length === 0) {
+  <p class="text-muted">No survey responses yet. Share the Mera link with participants to get started.</p>
+  } @else {
+
+  <!-- Tabs -->
+  <div class="results-tabs">
+    <button class="results-tab" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')">📊 Overview</button>
+    <button class="results-tab" [class.active]="activeTab() === 'heatmap'" (click)="setTab('heatmap')">🔥 Heatmap</button>
+    <button class="results-tab" [class.active]="activeTab() === 'responses'" (click)="setTab('responses')">📋 Responses</button>
+    <button class="btn btn-secondary export-btn" (click)="exportCsv()">⬇ Export CSV</button>
+  </div>
+
+  <!-- Overview tab -->
+  @if (activeTab() === 'overview') {
+
+  <div class="comparison-grid">
+    <div class="card mode-summary mode-good">
+      <div class="mode-summary-header">
+        <span class="mode-badge mode-badge-good">Good UX</span>
+        <span class="text-muted">{{ goodModeAverages().count }} responses</span>
+      </div>
+      <dl>
+        <dt>Task Completion</dt>
+        <dd>{{ goodModeAverages().sections.taskCompletion.toFixed(1) }}</dd>
+        <dt>Cognitive Load</dt>
+        <dd>{{ goodModeAverages().sections.cognitiveLoad.toFixed(1) }}</dd>
+        <dt>Emotional Wellbeing</dt>
+        <dd>{{ goodModeAverages().sections.emotionalWellbeing.toFixed(1) }}</dd>
+        <dt>Visual Comfort</dt>
+        <dd>{{ goodModeAverages().sections.visualComfort.toFixed(1) }}</dd>
+        <dt>Overall</dt>
+        <dd>{{ goodModeAverages().sections.overall.toFixed(1) }}</dd>
+      </dl>
+    </div>
+
+    <div class="card mode-summary mode-poor">
+      <div class="mode-summary-header">
+        <span class="mode-badge mode-badge-poor">Poor UX</span>
+        <span class="text-muted">{{ poorModeAverages().count }} responses</span>
+      </div>
+      <dl>
+        <dt>Task Completion</dt>
+        <dd>{{ poorModeAverages().sections.taskCompletion.toFixed(1) }}</dd>
+        <dt>Cognitive Load</dt>
+        <dd>{{ poorModeAverages().sections.cognitiveLoad.toFixed(1) }}</dd>
+        <dt>Emotional Wellbeing</dt>
+        <dd>{{ poorModeAverages().sections.emotionalWellbeing.toFixed(1) }}</dd>
+        <dt>Visual Comfort</dt>
+        <dd>{{ poorModeAverages().sections.visualComfort.toFixed(1) }}</dd>
+        <dt>Overall</dt>
+        <dd>{{ poorModeAverages().sections.overall.toFixed(1) }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Radar chart -->
+  <div class="card radar-card">
+    <h2 class="section-title">Section Comparison</h2>
+    <div class="radar-wrap">
+      <canvas #radarCanvas></canvas>
+    </div>
+  </div>
+
+  <!-- Task completion rates -->
+  <div class="card task-rates-card">
+    <h2 class="section-title">Task Completion Rates</h2>
+    <div class="task-rates">
+      @for (task of taskCompletionRates(); track task.label) {
+      <div class="task-rate-row">
+        <span class="task-rate-label">{{ task.label }}</span>
+        <div class="task-rate-bars">
+          <div class="task-rate-bar-wrap">
+            <span class="task-rate-mode good">Good</span>
+            <div class="task-rate-bar-track">
+              <div class="task-rate-bar good" [style.width.%]="task.goodRate"></div>
+            </div>
+            <span class="task-rate-pct">{{ task.goodRate.toFixed(0) }}%</span>
+          </div>
+          <div class="task-rate-bar-wrap">
+            <span class="task-rate-mode poor">Poor</span>
+            <div class="task-rate-bar-track">
+              <div class="task-rate-bar poor" [style.width.%]="task.poorRate"></div>
+            </div>
+            <span class="task-rate-pct">{{ task.poorRate.toFixed(0) }}%</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  }
+
+  <!-- Heatmap tab -->
+  @if (activeTab() === 'heatmap') {
+  <div class="card heatmap-card">
+    <div class="heatmap-controls">
+      <h2 class="section-title">Click Heatmap</h2>
+      <div class="page-tabs">
+        @for (page of meraPages; track page) {
+        <button class="page-tab" [class.active]="selectedPage() === page" (click)="setPage(page)">
+          {{ page }}
+        </button>
+        }
+      </div>
+    </div>
+
+    <div class="heatmap-legend">
+      <span class="text-muted">Showing {{ heatmapClicks().length }} clicks on /mera/{{ selectedPage() }}</span>
+      <div class="heatmap-legend-dots">
+        <span class="legend-dot good"></span><span class="text-muted">Good UX</span>
+        <span class="legend-dot poor"></span><span class="text-muted">Poor UX</span>
+      </div>
+    </div>
+
+    <div class="heatmap-area">
+      <div class="heatmap-page-label">{{ selectedPage() | titlecase }}</div>
+      @@for (click of heatmapClicks(); track $index) {
+      <div class="heatmap-dot"
+           [class.good]="isGoodClick(click)"
+           [style.left]="heatmapStyle(click)['left']"
+           [style.top]="heatmapStyle(click)['top']"
+           [title]="click.target"></div>
+      }
+      @if (heatmapClicks().length === 0) {
+      <p class="heatmap-empty text-muted">No clicks recorded for this page yet.</p>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Responses tab -->
+  @if (activeTab() === 'responses') {
+  <div class="response-list-wrap">
+    <h2 class="section-title">All Responses ({{ responses().length }})</h2>
+    <ul class="response-list">
+      @for (response of responses(); track response.sessionId) {
+      <li class="card response-card" (click)="openResponse(response)">
+        <div class="response-header">
+          <span class="mode-badge" [class.mode-badge-poor]="response.uxMode === 'poor'" [class.mode-badge-good]="response.uxMode === 'good'">
+            {{ response.uxMode }}
+          </span>
+          <span class="text-muted response-meta">
+            {{ (response.tasksCompleted ?? []).length }}/5 tasks ·
+            {{ response.sessionDurationSeconds ?? 0 }}s ·
+            {{ (response.clickEvents ?? []).length }} clicks
+          </span>
+        </div>
+        @if (response.openFeedback) {
+        <p class="response-feedback">{{ response.openFeedback }}</p>
+        }
+        <span class="response-cta text-muted">Click to view full response →</span>
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+  }
+
+</section>
+
+<!-- Per-participant modal -->
+@if (selectedResponse()) {
+<div class="modal-backdrop" (click)="closeResponse()">
+  <div class="modal-panel card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <span class="mode-badge" [class.mode-badge-poor]="selectedResponse()!.uxMode === 'poor'" [class.mode-badge-good]="selectedResponse()!.uxMode === 'good'">
+        {{ selectedResponse()!.uxMode }}
+      </span>
+      <button class="modal-close" (click)="closeResponse()">✕</button>
+    </div>
+
+    <dl class="modal-dl">
+      <dt>Session Duration</dt>
+      <dd>{{ selectedResponse()!.sessionDurationSeconds ?? 0 }}s</dd>
+      <dt>Tasks Completed</dt>
+      <dd>{{ (selectedResponse()!.tasksCompleted ?? []).join(', ') || 'None' }}</dd>
+      <dt>Pages Tested</dt>
+      <dd>{{ selectedResponse()!.pagesTested.join(', ') }}</dd>
+      <dt>Total Clicks</dt>
+      <dd>{{ (selectedResponse()!.clickEvents ?? []).length }}</dd>
+      <dt>Task Completion Score</dt>
+      <dd>{{ sectionScore(selectedResponse()!, 'taskCompletion').toFixed(2) }}</dd>
+      <dt>Cognitive Load Score</dt>
+      <dd>{{ sectionScore(selectedResponse()!, 'cognitiveLoad').toFixed(2) }}</dd>
+      <dt>Emotional Wellbeing Score</dt>
+      <dd>{{ sectionScore(selectedResponse()!, 'emotionalWellbeing').toFixed(2) }}</dd>
+      <dt>Visual Comfort Score</dt>
+      <dd>{{ sectionScore(selectedResponse()!, 'visualComfort').toFixed(2) }}</dd>
+      <dt>Overall Score</dt>
+      <dd>{{ sectionScore(selectedResponse()!, 'overall').toFixed(2) }}</dd>
+    </dl>
+
+    @if (selectedResponse()!.openFeedback) {
+    <div class="modal-feedback">
+      <h3>Open Feedback</h3>
+      <p>{{ selectedResponse()!.openFeedback }}</p>
+    </div>
+    }
+  </div>
+</div>
+}
