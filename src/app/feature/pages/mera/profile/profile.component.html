@@ -98,7 +98,7 @@
         <div class="notifications-section">
           <h3 class="notifications-title">Notification Preferences</h3>
           <div class="notification-toggles">
-            @for (key of ['email', 'sms', 'announcements', 'events']; track key) {
+            @for (key of notificationKeys; track key) {
             <div class="toggle-row">
               <span class="toggle-label">{{ key | titlecase }}</span>
               <button class="toggle-btn"

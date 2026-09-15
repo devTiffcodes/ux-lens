@@ -1,306 +1,66 @@
-.resources-page {
-  min-height: calc(100vh - 72px);
-  padding-bottom: var(--spacing-xl);
-  position: relative;
-}
+/* ── Poor UX enhancements (resources) ───────────────────────────────────── */
 
-.resources-hero {
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-}
-
-.hero-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
-}
-
-.page-eyebrow {
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-primary-mid);
-  margin-bottom: var(--spacing-sm);
-}
-
-.page-subtitle {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
-  margin-top: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-/* Bookmarks summary */
-.bookmarks-summary {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: #fff8e1;
-  border: 1px solid #ffe082;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  margin-top: 2.5rem;
-}
-
-  .bookmarks-summary strong {
-    color: var(--color-text);
-  }
-
-.bookmarks-icon {
-  font-size: 1.1rem;
-}
-
-/* Search */
-.search-wrap {
-  position: relative;
-  max-width: 480px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.9rem;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.55rem 0.75rem 0.55rem 2.2rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  transition: border-color var(--transition-fast);
-}
-
-  .search-input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
-
-/* Content */
-.resources-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
-
-.category-title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 2px solid var(--color-border);
-}
-
-.resource-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-md);
-}
-
-.resource-card {
-  display: flex;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  align-items: flex-start;
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-}
-
-  .resource-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-.resource-icon {
-  font-size: 1.8rem;
-  flex-shrink: 0;
-}
-
-.resource-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.resource-name-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-xs);
-}
-
-.resource-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.bookmark-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0;
-  flex-shrink: 0;
-  opacity: 0.5;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
-}
-
-  .bookmark-btn:hover {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-
-  .bookmark-btn.bookmarked {
-    opacity: 1;
-  }
-
-.resource-course-tag {
-  display: inline-block;
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.resource-desc {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  line-height: 1.5;
-  margin-bottom: var(--spacing-sm);
-}
-
-.resource-link {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-primary);
-  cursor: pointer;
-  transition: color var(--transition-fast);
-  text-align: left;
-}
-
-  .resource-link:hover {
-    color: var(--color-primary-mid);
-  }
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: var(--spacing-xl) 0;
-}
-
-.empty-icon {
-  font-size: 3rem;
-  margin-bottom: var(--spacing-md);
-}
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.75rem 1.5rem;
-  background: var(--color-text);
-  color: white;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  z-index: 999;
-  white-space: nowrap;
-  box-shadow: var(--shadow-md);
-  animation: fadeInUp 0.3s ease;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* Poor UX */
-.poor-ux .resource-card {
-  flex-direction: column;
-  border-radius: 0;
-  border: 1px solid #ccc;
-  gap: 2px;
-}
-
-.poor-ux .resource-name {
-  font-size: 0.7rem;
-  color: #aaa;
-}
-
-.poor-ux .resource-icon {
-  font-size: 0.9rem;
-}
-
+/* Fitts's Law: download/access links tiny */
 .poor-ux .resource-link {
-  color: #bbb;
-  font-size: 0.65rem;
+  font-size: 0.5rem;
+  padding: 0;
 }
 
-.poor-ux .category-title {
+/* Pareto: descriptions hidden — the most helpful text gone */
+.poor-ux .resource-desc {
+  display: none;
+}
+
+/* Von Restorff: all resource icons same muted size */
+.poor-ux .resource-icon {
   font-size: 0.75rem;
+  filter: grayscale(1) opacity(0.3);
+}
+
+/* Feedback: no hover */
+.poor-ux .resource-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Hick's Law: inject fake category noise */
+.poor-ux .resources-content::before {
+  content: 'Showing results for: All Categories • All Courses • All Semesters • All Types • All Authors • All Languages • Sort: Default';
+  display: block;
+  font-size: 0.5rem;
   color: #ccc;
-  border-bottom-color: #eee;
+  margin-bottom: var(--spacing-sm);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.poor-ux .bookmark-btn {
-  display: none;
+/* Fake access warning */
+.poor-ux .resource-card::after {
+  content: '⚠ Access may require VPN or library login';
+  display: block;
+  font-size: 0.5rem;
+  color: #c00;
+  font-style: italic;
+  margin-top: 2px;
 }
 
-.poor-ux .bookmarks-summary {
-  display: none;
+/* Jakob's Law: grid becomes a confusing single column with wrong alignment */
+.poor-ux .resource-grid {
+  grid-template-columns: 1fr;
 }
 
-.poor-ux .search-input {
-  font-size: 0.65rem;
-  background: #f5f5f5;
+.poor-ux .resource-card {
+  flex-direction: row-reverse;
+  text-align: right;
 }
 
-.poor-ux .resource-course-tag {
-  display: none;
+.poor-ux .resource-name-row {
+  flex-direction: row-reverse;
 }
 
-@media (max-width: 1024px) {
-  .resource-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .resource-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-top {
-    flex-direction: column;
-  }
-
-  .bookmarks-summary {
-    margin-top: 0;
-  }
+/* Search placeholder misleading */
+.poor-ux .search-input::placeholder {
+  content: 'Search by ISBN, DOI, or call number...';
+  font-size: 0.6rem;
+  color: #ddd;
 }

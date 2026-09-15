@@ -1,3 +1,15 @@
+<!-- Live heatmap canvas overlay — sits over the full viewport -->
+@if (showHeatmap()) {
+<canvas #heatmapCanvas class="heatmap-canvas"></canvas>
+<div class="heatmap-ui-bar">
+  <span class="heatmap-ui-label">
+    🔥 Live Heatmap
+    <span class="heatmap-count">{{ clickCount }} clicks</span>
+  </span>
+  <button class="heatmap-clear-btn" (click)="clearHeatmap()">Clear</button>
+</div>
+}
+
 <div class="fab-root" [class.fab-open]="isOpen()">
 
   <!-- Expanded panel -->
@@ -29,6 +41,17 @@
       </span>
     </button>
 
+    <!-- Live heatmap toggle -->
+    <button class="fab-action" [class.fab-action-active]="showHeatmap()" (click)="toggleHeatmap()">
+      <span class="fab-action-icon">🔥</span>
+      <span class="fab-action-label">
+        Heatmap {{ showHeatmap() ? 'On' : 'Off' }}
+        @if (clickCount > 0) {
+        <span class="fab-click-count">{{ clickCount }}</span>
+        }
+      </span>
+    </button>
+
     <div class="fab-divider"></div>
 
     <!-- Navigation links -->
@@ -53,6 +76,7 @@
   <!-- FAB trigger button -->
   <button class="fab-trigger"
           [class.fab-trigger-poor]="uxModeService.isPoorMode()"
+          [class.fab-trigger-heatmap]="showHeatmap()"
           (click)="togglePanel()"
           [attr.aria-expanded]="isOpen()"
           aria-label="Toggle UX Lens tools">

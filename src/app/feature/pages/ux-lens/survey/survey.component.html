@@ -18,6 +18,33 @@
 
   <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" class="survey-form">
 
+    <!-- Task Checklist -->
+    <fieldset class="survey-section-group">
+      <legend class="survey-section-title">Task Checklist</legend>
+      <p class="task-checklist-intro text-muted">
+        Which of the following tasks were you able to complete during this session?
+      </p>
+      <div class="task-checklist">
+        @for (task of studyTasks; track task.id) {
+        <label class="task-checklist-item" [class.checked]="isTaskChecked(task.id)">
+          <input type="checkbox"
+                 [checked]="isTaskChecked(task.id)"
+                 (change)="toggleTask(task.id)"
+                 class="task-checkbox" />
+          <span class="task-checklist-icon">{{ task.icon }}</span>
+          <div class="task-checklist-text">
+            <span class="task-page">{{ task.page }}</span>
+            <span class="task-instruction">{{ task.instruction }}</span>
+          </div>
+        </label>
+        }
+      </div>
+      <p class="task-checklist-count text-muted">
+        {{ checkedTaskCount() }} of {{ studyTasks.length }} tasks completed
+      </p>
+    </fieldset>
+
+    <!-- Likert sections from Firestore -->
     @for (section of sections(); track section.title) {
     <fieldset class="survey-section-group">
       <legend class="survey-section-title">{{ section.title }}</legend>
@@ -40,6 +67,7 @@
     </fieldset>
     }
 
+    <!-- Pages tested -->
     <fieldset class="form-field survey-section-group">
       <legend class="survey-section-title">Pages Tested</legend>
       <div class="checkbox-grid">
@@ -54,6 +82,7 @@
       </div>
     </fieldset>
 
+    <!-- Open feedback -->
     <div class="form-field">
       <label for="openFeedback">Anything else you'd like to share?</label>
       <textarea id="openFeedback" rows="4" formControlName="openFeedback"></textarea>

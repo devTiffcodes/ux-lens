@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import {
   FormBuilder,
   FormArray,
@@ -11,27 +11,10 @@ import { orderBy } from 'firebase/firestore';
 import { FirebaseService } from '../../../../data/services/firebase.service';
 import { SurveyRepository } from '../../../../data/repositories/survey.repository';
 import { UxModeService } from '../../../../core/services/ux-mode.service';
+import { SessionTrackingService } from '../../../../core/services/mera/session-tracking.service';
 import { SurveyResponse } from '../../../../domain/models/survey-response.model';
 
-type SurveyQuestionValues = Pick<
-  SurveyResponse,
-  | 'taskEase'
-  | 'taskSuccess'
-  | 'taskFrustration'
-  | 'cognitiveEffort'
-  | 'informationClarity'
-  | 'overwhelmed'
-  | 'stressLevel'
-  | 'confidence'
-  | 'enjoyment'
-  | 'visualClarity'
-  | 'eyeStrain'
-  | 'aestheticAppeal'
-  | 'overallSatisfaction'
-  | 'wellbeingImpact'
->;
-
-// ── Types ──────────────────────────────────────────────────────────────────
+type SurveyQuestionValues = Pick<SurveyResponse, 'taskEase' | 'taskSuccess' | 'taskFrustration' | 'cognitiveEffort' | 'informationClarity' | 'overwhelmed' | 'stressLevel' | 'confidence' | 'enjoyment' | 'visualClarity' | 'eyeStrain' | 'aestheticAppeal' | 'overallSatisfaction' | 'wellbeingImpact'>;
 
 const PAGE_OPTIONS = ['home', 'events', 'noticeboard', 'courses', 'resources', 'profile'];
 
@@ -52,6 +35,46 @@ export interface SurveySection {
   questions: SurveyQuestion[];
 }
 
+export interface StudyTask {
+  id: string;
+  page: string;
+  instruction: string;
+  icon: string;
+}
+
+const STUDY_TASKS: StudyTask[] = [
+  {
+    id: 'task-1',
+    page: 'Home',
+    icon: '🏠',
+    instruction: 'Find your next upcoming assignment or deadline on the Home page.',
+  },
+  {
+    id: 'task-2',
+    page: 'Events',
+    icon: '📅',
+    instruction: 'Locate a campus event happening this month and note its date.',
+  },
+  {
+    id: 'task-3',
+    page: 'My Courses',
+    icon: '📚',
+    instruction: 'Find the course with the most upcoming content and identify its lecturer.',
+  },
+  {
+    id: 'task-4',
+    page: 'Noticeboard',
+    icon: '📋',
+    instruction: 'Find the most recent official notice posted by administration.',
+  },
+  {
+    id: 'task-5',
+    page: 'Profile',
+    icon: '👤',
+    instruction: 'Update your notification preferences and save your changes.',
+  },
+];
+
 const SECTION_TITLES: Record<string, string> = {
   taskCompletion: 'Task Completion',
   cognitiveLoad: 'Cognitive Load',
@@ -68,8 +91,6 @@ const SECTION_ORDER = [
   'overall',
 ];
 
-// ── Component ──────────────────────────────────────────────────────────────
-
 @Component({
   selector: 'app-survey',
   standalone: true,
@@ -82,19 +103,24 @@ export class SurveyComponent implements OnInit {
   private readonly firebaseService = inject(FirebaseService);
   private readonly surveyRepository = inject(SurveyRepository);
   protected readonly uxModeService = inject(UxModeService);
+  private readonly sessionTracking = inject(SessionTrackingService);
   private readonly location = inject(Location);
 
   // ── State ----------------------------------------------------------------
 
   protected readonly pageOptions = PAGE_OPTIONS;
+  protected readonly studyTasks = STUDY_TASKS;
   protected readonly sections = signal<SurveySection[]>([]);
   private readonly allQuestions = signal<SurveyQuestion[]>([]);
+  private readonly checkedTasks = signal<Set<string>>(new Set());
 
   protected readonly isLoading = signal<boolean>(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly isSubmitting = signal<boolean>(false);
   protected readonly submitError = signal<string | null>(null);
   protected readonly submitSuccess = signal<boolean>(false);
+
+  protected readonly checkedTaskCount = computed(() => this.checkedTasks().size);
 
   // ── Form -----------------------------------------------------------------
 
@@ -113,6 +139,22 @@ export class SurveyComponent implements OnInit {
     await this.loadQuestions();
   }
 
+  // ── Task checklist -------------------------------------------------------
+
+  protected isTaskChecked(id: string): boolean {
+    return this.checkedTasks().has(id);
+  }
+
+  protected toggleTask(id: string): void {
+    const current = new Set(this.checkedTasks());
+    if (current.has(id)) {
+      current.delete(id);
+    } else {
+      current.add(id);
+    }
+    this.checkedTasks.set(current);
+  }
+
   // ── Data loading ---------------------------------------------------------
 
   private async loadQuestions(): Promise<void> {
@@ -124,7 +166,6 @@ export class SurveyComponent implements OnInit {
         'survey_questions',
         [orderBy('order')]
       );
-
       this.allQuestions.set(questions);
       this.buildFormControls(questions);
       this.groupIntoSections(questions);
@@ -194,17 +235,21 @@ export class SurveyComponent implements OnInit {
     const selectedPages = this.pageOptions.filter((_, i) => pagesRaw[i]);
 
     const questionValues = this.allQuestions().reduce<Record<string, number>>(
-      (acc, q) => ({
-        ...acc,
-        [q.controlName]: raw[q.controlName] as number,
-      }),
+      (acc, q) => ({ ...acc, [q.controlName]: raw[q.controlName] as number }),
       {}
     ) as SurveyQuestionValues;
+
+    const sessionDurationSeconds = this.sessionTracking.endSession();
+    const clickEvents = this.sessionTracking.clickEvents();
+    const tasksCompleted = Array.from(this.checkedTasks());
 
     const response: SurveyResponse = {
       sessionId: crypto.randomUUID(),
       uxMode: this.uxModeService.isPoorMode() ? 'poor' : 'good',
       submittedAt: new Date(),
+      sessionDurationSeconds,
+      clickEvents,
+      tasksCompleted,
       ...questionValues,
       openFeedback: raw['openFeedback'] as string,
       pagesTested: selectedPages,
@@ -213,6 +258,8 @@ export class SurveyComponent implements OnInit {
     try {
       await this.surveyRepository.save(response);
       this.submitSuccess.set(true);
+      this.sessionTracking.resetSession();
+      this.checkedTasks.set(new Set());
       this.resetForm();
     } catch (err) {
       this.submitError.set(

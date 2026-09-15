@@ -1,449 +1,73 @@
-.dashboard {
-  min-height: calc(100vh - 72px);
-  padding-bottom: var(--spacing-xl);
-}
+/* ── Poor UX enhancements (home) ─────────────────────────────────────────── */
 
-/* Welcome */
-.welcome-section {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--spacing-lg);
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-xl);
-}
-
-.welcome-eyebrow,
-.card-label,
-.section-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-primary-mid);
-}
-
-.welcome-eyebrow {
-  margin-bottom: var(--spacing-sm);
-}
-
-.welcome-title {
-  margin-bottom: var(--spacing-sm);
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.1;
-}
-
-  .welcome-title span {
-    color: var(--color-primary);
-  }
-
-.welcome-subtitle {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
-}
-
-.semester-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-}
-
-.semester-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-/* Wellbeing tip */
-.wellbeing-tip {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
-  background: #f0f7ff;
-  border: 1px solid #c8e0ff;
-  border-radius: var(--radius-md);
-}
-
-.wellbeing-tip-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
-
-.wellbeing-tip-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-/* Overview */
-.overview-section {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: var(--spacing-md);
-}
-
-.progress-card,
-.schedule-card,
-.dashboard-card {
-  padding: var(--spacing-lg);
-}
-
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-
-  .card-header h2 {
-    margin-top: 0.3rem;
-    margin-bottom: 0;
-  }
-
-.progress-percentage {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--color-primary);
-}
-
-.progress-bar {
-  width: 100%;
-  height: 10px;
-  margin-bottom: var(--spacing-md);
-  overflow: hidden;
-  background-color: var(--color-primary-light);
-  border-radius: 999px;
-}
-
-.progress-value {
-  height: 100%;
-  background-color: var(--color-primary);
-  border-radius: inherit;
-  transition: width 0.8s ease;
-}
-
-.enrolled-note {
-  font-size: var(--font-size-sm);
-}
-
-/* Schedule */
-.schedule-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.schedule-item {
-  display: flex;
-  gap: var(--spacing-md);
-  padding-block: var(--spacing-sm);
-  border-bottom: 1px solid var(--color-border);
-}
-
-  .schedule-item:last-child {
-    border-bottom: none;
-  }
-
-.schedule-time {
-  min-width: 50px;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.schedule-item div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-/* Quick access */
-.quick-section {
-  padding-top: var(--spacing-xl);
-}
-
-.section-heading {
-  margin-bottom: var(--spacing-lg);
-}
-
-  .section-heading h2 {
-    margin-top: 0.3rem;
-  }
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-md);
-}
-
-.quick-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 170px;
-  padding: var(--spacing-lg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-surface);
-  color: inherit;
-  text-decoration: none;
-  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
-}
-
-  .quick-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--color-primary-mid);
-    box-shadow: var(--shadow-md);
-    text-decoration: none;
-  }
-
-.quick-icon {
-  margin-bottom: var(--spacing-md);
-  font-size: 1.7rem;
-}
-
-.quick-card h3 {
-  margin-bottom: var(--spacing-xs);
-}
-
-.quick-card p {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.quick-arrow {
-  margin-top: auto;
-  color: var(--color-primary);
-  font-size: 1.1rem;
-  transition: transform var(--transition-fast);
-}
-
-.quick-card:hover .quick-arrow {
-  transform: translateX(4px);
-}
-
-.unread-badge {
-  display: inline-block;
-  margin-top: 0.3rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--color-primary);
-  color: white;
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-}
-
-/* Lower dashboard */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md);
-  padding-top: var(--spacing-xl);
-}
-
-.view-link {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-primary);
-  white-space: nowrap;
-}
-
-  .view-link:hover {
-    text-decoration: none;
-  }
-
-/* Assignments */
-.assignment-list,
-.announcement-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.assignment-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  padding-block: var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
-}
-
-  .assignment-item:last-child {
-    border-bottom: none;
-  }
-
-.assignment-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-  .assignment-info strong {
-    font-size: var(--font-size-sm);
-  }
-
-  .assignment-info span {
-    font-size: var(--font-size-xs);
-  }
-
-.due-date {
-  flex-shrink: 0;
-  padding: 0.3rem 0.55rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-}
-
-  .due-date.urgent {
-    background: #ffebee;
-    color: #e53935;
-  }
-
-  .due-date.submitted {
-    background: #e8f5e9;
-    color: #2e7d32;
-  }
-
-/* Announcements */
-.announcement-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  padding-block: var(--spacing-md);
-  width: 100%;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--color-border);
-  text-align: left;
-  cursor: pointer;
-  transition: background var(--transition-fast);
-}
-
-  .announcement-item:hover {
-    background: var(--color-primary-light);
-  }
-
-  .announcement-item:last-child {
-    border-bottom: none;
-  }
-
-  .announcement-item.announcement-read {
-    opacity: 0.6;
-  }
-
-.announcement-dot {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  margin-top: 6px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  transition: background var(--transition-fast);
-}
-
-  .announcement-dot.dot-read {
-    background-color: var(--color-border);
-  }
-
-.announcement-item div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.announcement-item strong {
-  font-size: var(--font-size-sm);
-}
-
-/* Poor UX overrides */
-.poor-ux .welcome-title {
-  font-size: 0.9rem;
-  color: #bbb;
-}
-
-.poor-ux .semester-info {
-  background: #f5f5f5;
-  border-color: #eee;
-}
-
-.poor-ux .wellbeing-tip {
-  display: none;
-}
-
+/* Fitts's Law: shrink the most important quick-access cards */
 .poor-ux .quick-card {
+  min-height: 60px;
+  padding: 4px 6px;
   border-radius: 0;
-  min-height: auto;
-  padding: 4px;
 }
 
-  .poor-ux .quick-card h3 {
-    font-size: 0.65rem;
-    color: #aaa;
+  /* Hick's Law: visual noise on every card via pseudo-element */
+  .poor-ux .quick-card::before {
+    content: '⚠ Requires verification • Last updated 01/01/2021 • Ref: SYS-' counter(card);
+    display: block;
+    font-size: 0.55rem;
+    color: #bbb;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
-  .poor-ux .quick-card p {
-    display: none;
-  }
-
-.poor-ux .quick-arrow {
-  display: none;
+/* Pareto: bury the schedule (most useful content) */
+.poor-ux .schedule-card {
+  order: 99;
+  opacity: 0.4;
+  font-size: 0.6rem;
 }
 
-.poor-ux .due-date {
-  display: none;
+/* Von Restorff: kill all colour differentiation */
+.poor-ux .due-date.urgent {
+  background: #f5f5f5;
+  color: #ccc;
 }
 
-.poor-ux .announcement-dot {
-  background: #ddd;
+.poor-ux .due-date.submitted {
+  background: #f5f5f5;
+  color: #ccc;
 }
 
-.poor-ux .progress-value {
-  background: #ccc;
+/* Feedback: no hover response on interactive elements */
+.poor-ux .quick-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--color-border);
 }
 
-.poor-ux .unread-badge {
-  display: none;
+.poor-ux .announcement-item:hover {
+  background: none;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .overview-section {
-    grid-template-columns: 1fr;
-  }
-
-  .quick-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+/* Fake urgency banner on progress card */
+.poor-ux .progress-card::after {
+  content: '⚠ ACTION REQUIRED: Your enrolment may be at risk. Contact registry immediately.';
+  display: block;
+  font-size: 0.6rem;
+  color: #c00;
+  margin-top: var(--spacing-sm);
+  font-style: italic;
+  border-top: 1px solid #eee;
+  padding-top: var(--spacing-xs);
 }
 
-@media (max-width: 640px) {
-  .welcome-section {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+/* Jakob's Law: misalign the semester info so it feels wrong */
+.poor-ux .semester-info {
+  text-align: right;
+  padding: 2px 4px;
+}
 
-  .semester-info {
-    width: 100%;
-  }
-
-  .quick-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .quick-card {
-    min-height: auto;
-  }
+/* Cluttered welcome */
+.poor-ux .welcome-subtitle {
+  font-size: 0.6rem;
+  color: #ccc;
+  letter-spacing: -0.5px;
 }

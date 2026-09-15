@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { briefingGuard } from './core/guards/briefing.guard';
 
 export const routes: Routes = [
   // ─── Public ───────────────────────────────────────────────────────────────
@@ -56,13 +57,20 @@ export const routes: Routes = [
 
   // ─── Mera (participant test environment — accessed via URL only) ───────────
   {
+    path: 'mera/briefing',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./feature/pages/mera/briefing/briefing.component').then(m => m.BriefingComponent),
+    title: 'Mera — Study Briefing',
+  },
+  {
     path: 'mera',
     redirectTo: 'mera/home',
     pathMatch: 'full',
   },
   {
     path: 'mera/home',
-    canActivate: [authGuard],
+    canActivate: [authGuard, briefingGuard],
     loadComponent: () =>
       import('./feature/pages/mera/home/home.component').then(m => m.HomeComponent),
     title: 'Mera — Home',
