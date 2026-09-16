@@ -1,6 +1,7 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-landing',
@@ -10,6 +11,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './landing.component.css',
 })
 export class LandingComponent implements OnInit {
+  private readonly router = inject(Router);
+  protected readonly authService = inject(AuthService);
+
   protected readonly showSplash = signal(true);
   protected readonly showOnboarding = signal(false);
   protected readonly currentSlide = signal(0);
@@ -37,9 +41,16 @@ export class LandingComponent implements OnInit {
     },
   ];
 
-  constructor(private readonly router: Router) { }
-
   ngOnInit(): void {
+    /*
+     * The landing page is public.
+     *
+     * We still show the splash/onboarding when the page is entered.
+     * Once we have confirmed how AuthService exposes the Firebase
+     * session, we can redirect an already-authenticated researcher
+     * directly to /dashboard.
+     */
+
     setTimeout(() => {
       this.showSplash.set(false);
       this.showOnboarding.set(true);
@@ -47,20 +58,26 @@ export class LandingComponent implements OnInit {
   }
 
   protected nextSlide(): void {
-    if (this.currentSlide() < this.slides.length - 1) {
-      this.currentSlide.set(this.currentSlide() + 1);
-    } else {
-      this.router.navigate(['/login']);
+    const current = this.currentSlide();
+
+    if (current < this.slides.length - 1) {
+      this.currentSlide.set(current + 1);
+      return;
     }
+
+    this.goToLogin();
   }
 
   protected prevSlide(): void {
-    if (this.currentSlide() > 0) {
-      this.currentSlide.set(this.currentSlide() - 1);
+    const current = this.currentSlide();
+
+    if (current > 0) {
+      this.currentSlide.set(current - 1);
     }
   }
 
   protected goToLogin(): void {
+    this.showOnboarding.set(false);
     this.router.navigate(['/login']);
   }
 }
