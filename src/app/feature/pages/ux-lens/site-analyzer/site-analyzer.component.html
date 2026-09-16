@@ -1,11 +1,13 @@
 <section class="container analyzer-section">
-
-  <button type="button" class="back-btn" (click)="goBack()">← Back</button>
-
-  <h1>Site Analyzer</h1>
-  <p class="text-muted">
-    Audit any public website with Google Lighthouse, or upload a wireframe for AI-powered UX feedback — both mapped to the 28 UX laws used throughout this project.
-  </p>
+  <div class="analyzer-page-header">
+    <div>
+      <h1>Site Analyzer</h1>
+      <p class="text-muted">
+        Audit any public website with Google Lighthouse, or upload a wireframe for AI-powered UX feedback — both mapped to the 28 UX laws used throughout this project.
+      </p>
+    </div>
+    <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+  </div>
 
   <!-- Tabs -->
   @if (!siteAnalyzerService.result() && !wireframeResult()) {

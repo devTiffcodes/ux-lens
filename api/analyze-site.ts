@@ -92,20 +92,25 @@ export default async function handler(
       performance: Math.round((categoriesResult.performance?.score ?? 0) * 100),
     };
 
-    // Collect audit refs from the accessibility category specifically,
-    // since that's our primary focus — then filter to only failing ones.
-    const accessibilityAuditRefs: LighthouseAuditRef[] =
-      categoriesResult.accessibility?.auditRefs ?? [];
+    const allCategoryKeys = ['accessibility', 'best-practices', 'seo', 'performance'];
+    const seenIds = new Set<string>();
 
-    const failingAudits: LighthouseAudit[] = accessibilityAuditRefs
-      .map((ref) => audits[ref.id])
-      .filter(
-        (audit): audit is LighthouseAudit =>
-          !!audit &&
-          audit.scoreDisplayMode === 'binary' &&
-          audit.score !== null &&
-          audit.score < 1
-      );
+    const failingAudits: LighthouseAudit[] = allCategoryKeys
+      .flatMap((key) => {
+        const refs: LighthouseAuditRef[] = categoriesResult[key]?.auditRefs ?? [];
+        return refs.map((ref) => audits[ref.id]);
+      })
+      .filter((audit): audit is LighthouseAudit => {
+        if (
+          !audit ||
+          audit.scoreDisplayMode !== 'binary' ||
+          audit.score === null ||
+          audit.score >= 1 ||
+          seenIds.has(audit.id)
+        ) return false;
+        seenIds.add(audit.id);
+        return true;
+      });
 
     const result: AnalyzeSiteResponse = {
       url: parsedUrl.toString(),

@@ -1,30 +1,4 @@
-export default async function handler(req: any, res: any): Promise<void> {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') { res.status(200).end(); return; }
-  if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
-
-  const apiKey = process.env['GEMINI_API_KEY'];
-  if (!apiKey) { res.status(500).json({ error: 'Missing Gemini API key' }); return; }
-
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { res.status(400).json({ error: 'Bad JSON' }); return; }
-  }
-  if (!body || !body.pageName) {
-    res.status(400).json({ error: 'Missing pageName' }); return;
-  }
-
-  const issues = body.issues ?? [];
-  const issuesList = issues.length
-    ? issues.map((i: any) => `- [${i.severity}] ${i.title}: ${i.description} (Principle: ${i.principle ?? 'N/A'})`).join('\n')
-    : 'No issues detected.';
-
-  const isSiteAnalyzer = body.uxMode === 'poor' && body.pageName.startsWith('http');
-
-  const uxLaws = `
+const uxLaws = `
 UX LAWS AND PRINCIPLES TO REFERENCE (where relevant):
 - Aesthetic-Usability Effect: visually appealing designs are perceived as more usable
 - Choice Overload: too many options paralyse decision-making
@@ -58,6 +32,94 @@ UX LAWS AND PRINCIPLES TO REFERENCE (where relevant):
 - Zeigarnik Effect: users remember incomplete tasks better than completed ones — use progress indicators
 `;
 
+export default async function handler(req: any, res: any): Promise<void> {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') { res.status(200).end(); return; }
+  if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
+
+  const apiKey = process.env['GEMINI_API_KEY'];
+  if (!apiKey) { res.status(500).json({ error: 'Missing Gemini API key' }); return; }
+
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch { res.status(400).json({ error: 'Bad JSON' }); return; }
+  }
+
+  // ── WIREFRAME BRANCH ──────────────────────────────────────────────────────
+  if (body?.type === 'wireframe') {
+    if (!body.image || !body.mimeType) {
+      res.status(400).json({ error: 'Missing image or mimeType' }); return;
+    }
+
+    const wireframePrompt = `You are a UX mentor in a student research project called UX Lens. A developer has uploaded a wireframe or UI screenshot for UX review.
+
+${uxLaws}
+
+IMPORTANT — Pareto Principle is the focal point: identify the 20% of design decisions causing 80% of potential UX problems.
+
+Analyze this wireframe/screenshot and respond with:
+1. A brief overall UX health summary (2-3 sentences)
+2. The top 3 highest-impact issues you can see, each mapped to a specific UX law from the list above (label the law clearly)
+3. One quick win the developer can implement today
+4. An encouraging closing line
+
+Be warm, practical, and educational. Write for a student developer audience.`;
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                {
+                  inline_data: {
+                    mime_type: body.mimeType,
+                    data: body.image,
+                  },
+                },
+                { text: wireframePrompt },
+              ],
+            }],
+            generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errText = await response.text();
+        res.status(response.status).json({ error: errText }); return;
+      }
+
+      const data = await response.json();
+      const feedback = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+        ?? 'No feedback returned.';
+
+      res.status(200).json({ feedback });
+      return;
+    } catch (err) {
+      res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' });
+      return;
+    }
+  }
+
+  // ── URL / MERA MENTOR BRANCH ──────────────────────────────────────────────
+  if (!body || !body.pageName) {
+    res.status(400).json({ error: 'Missing pageName' }); return;
+  }
+
+  const issues = body.issues ?? [];
+  const issuesList = issues.length
+    ? issues.map((i: any) => `- [${i.severity}] ${i.title}: ${i.description} (Principle: ${i.principle ?? 'N/A'})`).join('\n')
+    : 'No issues detected.';
+
+  const isSiteAnalyzer = body.pageName.startsWith('http');
+
   const prompt = isSiteAnalyzer
     ? `You are a UX mentor in a student research project called UX Lens. A developer has submitted the website "${body.pageName}" for a UX analysis.
 
@@ -78,7 +140,7 @@ Respond with:
 
 Be warm, practical, and educational. Write for a student developer audience.`
 
-    : `You are a friendly UX mentor in a student research project called UX Lens. You are reviewing the "${body.pageName}" page of a mock community platform called Mera, currently in ${body.uxMode} UX mode. The page has a wellbeing score of ${body.wellbeingScore}/100.
+    : `You are a friendly UX mentor in a student research project called UX Lens. You are reviewing the "${body.pageName}" page of a mock student dashboard called Mera, currently in ${body.uxMode} UX mode. The page has a wellbeing score of ${body.wellbeingScore}/100.
 
 UX issues detected:
 ${issuesList}
@@ -106,8 +168,7 @@ Give 2-4 short paragraphs of warm, educational mentor feedback. Map issues to sp
 
     if (!response.ok) {
       const errText = await response.text();
-      res.status(response.status).json({ error: errText });
-      return;
+      res.status(response.status).json({ error: errText }); return;
     }
 
     const data = await response.json();

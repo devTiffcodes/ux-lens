@@ -9,8 +9,10 @@
 .navbar-inner {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
   min-height: 72px;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  width: 100%;
+  /* remove gap and max-width/margin-inline if you added them */
 }
 
 /* Brand */
@@ -29,13 +31,13 @@
   }
 
 /* Main navigation */
+
 .navbar-links {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  flex: 1;
+  flex: 1; /* takes up all space between brand and avatar */
 }
-
 .navbar-link {
   position: relative;
   padding: 0.55rem 0.85rem;
@@ -59,10 +61,13 @@
 
 /* Right-side actions */
 .navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  display: flex; /* add this */
+  align-items: center; /* add this */
+  gap: 0.5rem; /* add this */
+  margin-left: auto;
+  flex-shrink: 0; /* add this — prevents it getting crushed */
 }
+
 
 /* Notifications */
 .notification-button {
@@ -237,3 +242,4 @@
     font-size: 0.8rem;
   }
 }
+

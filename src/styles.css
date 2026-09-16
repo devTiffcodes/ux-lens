@@ -262,9 +262,9 @@ button, input, textarea, select {
    -------------------------------------------------------------------------- */
 .container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1280px;
   margin-inline: auto;
-  padding-inline: var(--spacing-lg);
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
 }
 
 /* Cards */
@@ -493,7 +493,6 @@ button, input, textarea, select {
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color var(--transition-fast), border-color var(--transition-fast);
-  margin-bottom: var(--spacing-md);
 }
 
   .back-btn:hover {
@@ -501,3 +500,326 @@ button, input, textarea, select {
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
+
+/* ==========================================================================
+   Poor UX enhancements — global scope required for html.poor-ux selector
+   ========================================================================== */
+
+/* ── Home ─────────────────────────────────────────────────────────────────── */
+
+html.poor-ux .quick-card {
+  min-height: 60px;
+  padding: 4px 6px;
+  border-radius: 0;
+}
+
+  html.poor-ux .quick-card::before {
+    content: '⚠ Requires verification • Last updated 01/01/2021';
+    display: block;
+    font-size: 0.55rem;
+    color: #bbb;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+html.poor-ux .schedule-card {
+  order: 99;
+  opacity: 0.4;
+  font-size: 0.6rem;
+}
+
+html.poor-ux .due-date.urgent {
+  background: #f5f5f5;
+  color: #ccc;
+}
+
+html.poor-ux .due-date.submitted {
+  background: #f5f5f5;
+  color: #ccc;
+}
+
+html.poor-ux .quick-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--color-border);
+}
+
+html.poor-ux .announcement-item:hover {
+  background: none;
+}
+
+html.poor-ux .progress-card::after {
+  content: '⚠ ACTION REQUIRED: Your enrolment may be at risk. Contact registry immediately.';
+  display: block;
+  font-size: 0.6rem;
+  color: #c00;
+  margin-top: var(--spacing-sm);
+  font-style: italic;
+  border-top: 1px solid #eee;
+  padding-top: var(--spacing-xs);
+}
+
+html.poor-ux .welcome-subtitle {
+  font-size: 0.6rem;
+  color: #ccc;
+  letter-spacing: -0.5px;
+}
+
+/* ── Events ──────────────────────────────────────────────────────────────── */
+
+html.poor-ux .btn-sm {
+  padding: 2px 4px;
+  font-size: 0.55rem;
+  min-width: unset;
+}
+
+html.poor-ux .events-filter::after {
+  content: 'All • Academic • Sports • Culture • Health • Admin • External • Alumni • Research • Other';
+  font-size: 0.55rem;
+  color: #bbb;
+  white-space: nowrap;
+  align-self: center;
+  letter-spacing: -0.3px;
+}
+
+html.poor-ux .event-date-badge {
+  opacity: 0.3;
+  font-size: 0.6rem;
+}
+
+html.poor-ux .event-card-header {
+  background: #eee !important;
+  height: 30px;
+}
+
+html.poor-ux .event-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+html.poor-ux .event-card::after {
+  content: '⚠ Only 2 spots remaining — expires soon';
+  display: block;
+  font-size: 0.55rem;
+  color: #c00;
+  padding: 2px 6px 4px;
+  font-style: italic;
+}
+
+html.poor-ux .event-footer {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+html.poor-ux .event-location {
+  display: none;
+}
+
+html.poor-ux .event-desc {
+  font-size: 0.55rem;
+  color: #ddd;
+  max-height: 20px;
+  overflow: hidden;
+}
+
+/* ── Noticeboard ─────────────────────────────────────────────────────────── */
+
+html.poor-ux .notice-urgent {
+  border-left: none;
+  opacity: 0.5;
+}
+
+html.poor-ux .notice-card {
+  border-left: none !important;
+  background: #f9f9f9 !important;
+  pointer-events: none;
+  cursor: default;
+}
+
+html.poor-ux .notice-filters::after {
+  content: 'All • Urgent • Info • Academic • General • Archived • Pending • Draft • External';
+  font-size: 0.5rem;
+  color: #ccc;
+  align-self: center;
+  white-space: nowrap;
+}
+
+html.poor-ux .notice-card::after {
+  content: 'This notice may have expired. Please verify with the relevant department.';
+  display: block;
+  font-size: 0.55rem;
+  color: #bbb;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+html.poor-ux .notice-title {
+  font-weight: 400;
+  font-size: 0.7rem;
+}
+
+html.poor-ux .notice-author {
+  display: none;
+}
+
+html.poor-ux .notice-message {
+  color: #ddd;
+  font-size: 0.6rem;
+}
+
+/* ── Courses ─────────────────────────────────────────────────────────────── */
+
+html.poor-ux .submit-btn {
+  padding: 1px 4px;
+  font-size: 0.5rem;
+  border-radius: 0;
+}
+
+html.poor-ux .expand-btn {
+  padding: 1px 3px;
+  font-size: 0.5rem;
+}
+
+html.poor-ux .course-progress-wrap {
+  display: none;
+}
+
+html.poor-ux .course-card-top {
+  background: #e8e8e8 !important;
+  height: 30px;
+}
+
+html.poor-ux .course-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+html.poor-ux .course-card-body::after {
+  content: 'Enrol • Withdraw • Defer • RPL • Transfer • Appeal • Archive';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-top: 4px;
+  letter-spacing: -0.3px;
+}
+
+html.poor-ux .assignment-row::after {
+  content: '⚠ Submission portal may be unavailable';
+  display: block;
+  font-size: 0.5rem;
+  color: #c00;
+  font-style: italic;
+  width: 100%;
+}
+
+html.poor-ux .course-lecturer {
+  display: none;
+}
+
+html.poor-ux .course-schedule {
+  display: none;
+}
+
+/* ── Resources ───────────────────────────────────────────────────────────── */
+
+html.poor-ux .resource-link {
+  font-size: 0.5rem;
+  padding: 0;
+}
+
+html.poor-ux .resource-desc {
+  display: none;
+}
+
+html.poor-ux .resource-icon {
+  font-size: 0.75rem;
+  filter: grayscale(1) opacity(0.3);
+}
+
+html.poor-ux .resource-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+html.poor-ux .resources-content::before {
+  content: 'Showing results for: All Categories • All Courses • All Semesters • All Types';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-bottom: var(--spacing-sm);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+html.poor-ux .resource-card::after {
+  content: '⚠ Access may require VPN or library login';
+  display: block;
+  font-size: 0.5rem;
+  color: #c00;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+html.poor-ux .resource-grid {
+  grid-template-columns: 1fr;
+}
+
+html.poor-ux .resource-card {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+html.poor-ux .resource-name-row {
+  flex-direction: row-reverse;
+}
+
+/* ── Profile ─────────────────────────────────────────────────────────────── */
+
+html.poor-ux .profile-action-btn {
+  padding: 2px 4px;
+  min-height: unset;
+  justify-content: flex-end;
+}
+
+  html.poor-ux .profile-action-btn.sign-out {
+    opacity: 0.2;
+    font-size: 0.5rem;
+  }
+
+html.poor-ux .status-badge {
+  background: #eee;
+  color: #ccc;
+  font-size: 0.55rem;
+}
+
+html.poor-ux .profile-action-btn:hover {
+  background: transparent;
+  border-color: #eee;
+}
+
+html.poor-ux .notifications-section::after {
+  content: 'Email • SMS • Push • In-app • Digest • Weekly • Monthly • Urgent only • None';
+  display: block;
+  font-size: 0.5rem;
+  color: #ccc;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+html.poor-ux .profile-hero::after {
+  content: '⚠ Your profile is incomplete. Some services may be restricted.';
+  display: block;
+  font-size: 0.55rem;
+  color: #c00;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+html.poor-ux .profile-section-title {
+  font-size: 0.6rem;
+  color: #ddd;
+  border-bottom-color: #f0f0f0;
+}
