@@ -1,7 +1,7 @@
 .splash {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #0d4f7c 0%, #1a6fa8 100%);
+  background: linear-gradient( 135deg, #0d4f7c 0%, #1a6fa8 100% );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@
 .splash-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(255,255,255,0.3);
+  border: 3px solid rgba(255, 255, 255, 0.3);
   border-top-color: #ffffff;
   border-radius: 50%;
   margin: 0 auto;
@@ -63,6 +63,11 @@
   }
 }
 
+
+/* =========================================================
+   ONBOARDING
+   ========================================================= */
+
 .onboarding-overlay {
   position: fixed;
   inset: 0;
@@ -70,9 +75,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9000;
   padding: var(--spacing-lg);
+  z-index: 9000;
   animation: fadeIn 0.4s ease;
+  /*
+   * Make sure this overlay receives pointer events.
+   */
+  pointer-events: auto;
 }
 
 @keyframes fadeIn {
@@ -86,13 +95,18 @@
 }
 
 .onboarding-modal {
+  position: relative;
   background: var(--color-bg);
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
   max-width: 520px;
   width: 100%;
-  box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
   animation: modalSlideUp 0.4s ease;
+  /*
+   * Explicitly allow interaction with modal contents.
+   */
+  pointer-events: auto;
 }
 
 @keyframes modalSlideUp {
@@ -106,6 +120,11 @@
     transform: translateY(0);
   }
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .onboarding-header {
   display: flex;
@@ -131,12 +150,20 @@
   color: var(--color-text-muted);
   font-size: 0.85rem;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 8px 10px;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
   .skip-btn:hover {
     color: var(--color-text);
   }
+
+
+/* =========================================================
+   SLIDE
+   ========================================================= */
 
 .slide {
   text-align: center;
@@ -162,6 +189,11 @@
   margin-inline: auto;
 }
 
+
+/* =========================================================
+   DOTS
+   ========================================================= */
+
 .slide-dots {
   display: flex;
   justify-content: center;
@@ -181,8 +213,21 @@
   background: var(--color-primary);
 }
 
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
 .onboarding-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-md);
 }
+
+  .onboarding-actions button {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
