@@ -262,9 +262,9 @@ button, input, textarea, select {
    -------------------------------------------------------------------------- */
 .container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1280px;
   margin-inline: auto;
-  padding-inline: var(--spacing-lg);
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
 }
 
 /* Cards */

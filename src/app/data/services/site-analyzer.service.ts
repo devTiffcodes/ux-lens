@@ -32,14 +32,6 @@ export interface SiteAnalysisResult {
   wellbeingScore: number;
 }
 
-/**
- * SiteAnalyzerService
- *
- * Calls the /api/analyze-site serverless function (Google PageSpeed
- * Insights/Lighthouse under the hood) and maps its raw audit output into
- * this app's own UxIssue shape, so the Site Analyzer page can reuse the
- * exact same issue-card UI already built for Mera's mock issues.
- */
 @Injectable({
   providedIn: 'root',
 })
@@ -68,7 +60,12 @@ export class SiteAnalyzerService {
         fetchedAt: response.fetchedAt,
         scores: response.scores,
         issues,
-        wellbeingScore: response.scores.accessibility,
+        wellbeingScore: Math.round(
+          response.scores.accessibility * 0.4 +
+          response.scores.bestPractices * 0.25 +
+          response.scores.seo * 0.2 +
+          response.scores.performance * 0.15
+        ),
       };
 
       this.result.set(result);
@@ -88,42 +85,69 @@ export class SiteAnalyzerService {
     this.error.set(null);
   }
 
-  /**
-   * Maps a Lighthouse accessibility audit failure into this app's UxIssue
-   * shape. Lighthouse doesn't provide a severity level directly, so we
-   * derive one from its score (0 = total failure, closer to 1 = minor).
-   */
   private mapAuditToUxIssue(audit: LighthouseAudit, pageUrl: string): UxIssue {
     return {
       id: audit.id,
       title: audit.title,
       severity: this.deriveSeverity(audit.score),
       description: this.stripMarkdownLinks(audit.description),
-      principle: 'WCAG / Lighthouse Accessibility Audit',
+      principle: this.mapAuditToPrinciple(audit.id),
       recommendation: this.stripMarkdownLinks(audit.description),
       affectedPage: pageUrl,
     };
   }
 
+  private mapAuditToPrinciple(auditId: string): string {
+    const map: Record<string, string> = {
+      'color-contrast': 'Aesthetic-Usability Effect / WCAG Contrast',
+      'image-alt': 'Law of Prägnanz / WCAG Alt Text',
+      'button-name': "Fitts's Law / WCAG Button Labels",
+      'link-name': 'Selective Attention / WCAG Link Labels',
+      'document-title': "Jakob's Law / WCAG Document Title",
+      'html-has-lang': 'Postel\'s Law / WCAG Language',
+      'meta-description': 'Selective Attention / SEO Meta Description',
+      'font-size': 'Cognitive Load / Readability',
+      'tap-targets': "Fitts's Law / Touch Target Size",
+      'uses-text-compression': 'Doherty Threshold / Performance',
+      'speed-index': 'Doherty Threshold / Perceived Performance',
+      'first-contentful-paint': 'Doherty Threshold / First Paint',
+      'interactive': 'Doherty Threshold / Time to Interactive',
+      'largest-contentful-paint': 'Doherty Threshold / Largest Paint',
+      'total-blocking-time': 'Cognitive Load / Blocked Interactivity',
+      'cumulative-layout-shift': 'Jakob\'s Law / Layout Stability',
+      'uses-optimized-images': 'Doherty Threshold / Image Performance',
+      'render-blocking-resources': 'Doherty Threshold / Render Blocking',
+      'unused-css-rules': 'Occam\'s Razor / Unused CSS',
+      'unused-javascript': 'Occam\'s Razor / Unused JavaScript',
+      'uses-responsive-images': 'Cognitive Load / Responsive Images',
+      'efficient-animated-content': 'Aesthetic-Usability Effect / Animation',
+      'aria-allowed-attr': 'Postel\'s Law / ARIA Attributes',
+      'aria-required-attr': 'Postel\'s Law / ARIA Required',
+      'aria-roles': 'Mental Model / ARIA Roles',
+      'aria-valid-attr': 'Postel\'s Law / ARIA Validity',
+      'duplicate-id-active': 'Law of Uniform Connectedness / Duplicate IDs',
+      'form-field-multiple-labels': 'Cognitive Load / Form Labels',
+      'frame-title': 'Selective Attention / Frame Titles',
+      'heading-order': 'Serial Position Effect / Heading Hierarchy',
+      'label': 'Cognitive Load / Form Labels',
+      'list': 'Law of Proximity / List Structure',
+      'listitem': 'Law of Proximity / List Items',
+      'tabindex': "Fitts's Law / Tab Order",
+      'td-headers-attr': 'Cognitive Load / Table Headers',
+      'th-has-data-cells': 'Cognitive Load / Table Data',
+      'valid-lang': 'Mental Model / Language Attribute',
+      'video-caption': 'Selective Attention / Video Captions',
+    };
+    return map[auditId] ?? 'WCAG / Lighthouse Audit';
+  }
+
   private deriveSeverity(score: number | null): IssueSeverity {
-    if (score === null) {
-      return 'medium';
-    }
-    if (score === 0) {
-      return 'critical';
-    }
-    if (score < 0.5) {
-      return 'high';
-    }
+    if (score === null) return 'medium';
+    if (score === 0) return 'critical';
+    if (score < 0.5) return 'high';
     return 'medium';
   }
 
-  /**
-   * Lighthouse audit descriptions contain Markdown-style links like
-   * "[Learn more](https://...)". We strip the link syntax down to plain
-   * text so it renders cleanly in the existing issue-card template, which
-   * expects plain strings, not Markdown.
-   */
   private stripMarkdownLinks(text: string): string {
     return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
   }
