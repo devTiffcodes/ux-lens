@@ -47,12 +47,16 @@ export class LandingComponent implements OnInit {
   }
 
   protected nextSlide(): void {
-    if (this.currentSlide() < this.slides.length - 1) {
-      this.currentSlide.set(this.currentSlide() + 1);
-    } else {
-      this.router.navigate(['/ux-lens/login']);
-    }
+  if (this.currentSlide() < this.slides.length - 1) {
+    this.currentSlide.set(this.currentSlide() + 1);
+  } else {
+    this.router.navigate(['/ux-lens/login']);
   }
+}
+
+protected goToLogin(): void {
+  this.router.navigate(['/ux-lens/login']);
+}
 
   protected prevSlide(): void {
     if (this.currentSlide() > 0) {
@@ -60,7 +64,4 @@ export class LandingComponent implements OnInit {
     }
   }
 
-  protected goToLogin(): void {
-    this.router.navigate(['/ux-lens/login']);
-  }
 }
