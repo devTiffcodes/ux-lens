@@ -50,7 +50,7 @@ export class LandingComponent implements OnInit {
     if (this.currentSlide() < this.slides.length - 1) {
       this.currentSlide.set(this.currentSlide() + 1);
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/ux-lens/login']);
     }
   }
 
@@ -61,6 +61,6 @@ export class LandingComponent implements OnInit {
   }
 
   protected goToLogin(): void {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/ux-lens/login']);
   }
 }
