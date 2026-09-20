@@ -110,6 +110,38 @@ export class SiteAnalyzerComponent {
     });
   }
 
+  protected readonly analysisStatus = signal<string>('');
+  private statusInterval: ReturnType<typeof setInterval> | null = null;
+
+  private readonly statusMessages = [
+    'Fetching page resources...',
+    'Running Lighthouse audit...',
+    'Checking accessibility...',
+    'Evaluating colour contrast...',
+    'Measuring performance...',
+    'Scanning SEO signals...',
+    'Reviewing best practices...',
+    'Mapping issues to UX laws...',
+    'Almost there...',
+  ];
+
+  private startStatusTicker(): void {
+    let i = 0;
+    this.analysisStatus.set(this.statusMessages[0]);
+    this.statusInterval = setInterval(() => {
+      i = (i + 1) % this.statusMessages.length;
+      this.analysisStatus.set(this.statusMessages[i]);
+    }, 1800);
+  }
+
+  private stopStatusTicker(): void {
+    if (this.statusInterval) {
+      clearInterval(this.statusInterval);
+      this.statusInterval = null;
+    }
+    this.analysisStatus.set('');
+  }
+
   protected async onAnalyze(): Promise<void> {
     if (this.urlForm.invalid) {
       this.urlForm.markAllAsTouched();
@@ -122,11 +154,14 @@ export class SiteAnalyzerComponent {
     this.ratingError.set(null);
     this.savedAnalysisId.set(null);
 
+    this.startStatusTicker();
     const { url } = this.urlForm.getRawValue();
     try {
       await this.siteAnalyzerService.analyzeUrl(url);
     } catch {
       // error captured in siteAnalyzerService.error signal
+    } finally {
+      this.stopStatusTicker();
     }
   }
 
