@@ -70,19 +70,14 @@ Be warm, practical, and educational. Write for a student developer audience.`;
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{
               parts: [
-                {
-                  inline_data: {
-                    mime_type: body.mimeType,
-                    data: body.image,
-                  },
-                },
+                { inline_data: { mime_type: body.mimeType, data: body.image } },
                 { text: wireframePrompt },
               ],
             }],
@@ -97,9 +92,7 @@ Be warm, practical, and educational. Write for a student developer audience.`;
       }
 
       const data = await response.json();
-      const feedback = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-        ?? 'No feedback returned.';
-
+      const feedback = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? 'No feedback returned.';
       res.status(200).json({ feedback });
       return;
     } catch (err) {
@@ -120,27 +113,107 @@ Be warm, practical, and educational. Write for a student developer audience.`;
 
   const isSiteAnalyzer = body.pageName.startsWith('http');
 
-  const prompt = isSiteAnalyzer
-    ? `You are a UX mentor in a student research project called UX Lens. A developer has submitted the website "${body.pageName}" for a UX analysis.
+  if (isSiteAnalyzer) {
+    // ── SITE ANALYZER — returns JSON with feedback + uxLawScores ─────────────
+    const prompt = `You are a UX mentor in a student research project called UX Lens. A developer has submitted the website "${body.pageName}" for a UX analysis.
 
 Lighthouse audit results:
 ${issuesList}
 
 ${uxLaws}
 
-IMPORTANT — Pareto Principle is the focal point of this project: identify the 20% of issues causing 80% of the UX damage and highlight them first.
+IMPORTANT — Pareto Principle is the focal point: identify the 20% of issues causing 80% of the UX damage and highlight them first.
 
 ${body.userQuestion?.trim() ? `The developer asks: ${body.userQuestion}` : ''}
 
-Respond with:
-1. A brief overall summary of the site's UX health (2-3 sentences)
-2. The top 3 highest-impact issues mapped to specific UX laws from the list above (label each law clearly)
-3. One quick win the developer can implement today
-4. An encouraging closing line
+You MUST respond with ONLY a valid JSON object — no markdown, no backticks, no explanation outside the JSON.
 
-Be warm, practical, and educational. Write for a student developer audience.`
+The JSON must follow this exact structure:
+{
+  "feedback": "Your warm, practical mentor feedback here (4-6 sentences). Summarise overall UX health, call out the top Pareto-priority issues, give one quick win, and end encouragingly.",
+  "uxLawScores": [
+    {
+      "category": "Performance",
+      "laws": [
+        { "law": "Doherty Threshold", "status": "fail", "score": 20, "note": "Page load exceeds 400ms significantly." },
+        { "law": "Occam's Razor", "status": "pass", "score": 85, "note": "No unnecessary bloat detected." }
+      ]
+    },
+    {
+      "category": "Accessibility",
+      "laws": [
+        { "law": "Fitts's Law", "status": "partial", "score": 55, "note": "Some tap targets are below recommended size." }
+      ]
+    },
+    {
+      "category": "Cognitive",
+      "laws": [
+        { "law": "Cognitive Load", "status": "pass", "score": 80, "note": "Interface appears uncluttered." },
+        { "law": "Miller's Law", "status": "pass", "score": 75, "note": "Navigation items within acceptable range." }
+      ]
+    },
+    {
+      "category": "Visual & Perception",
+      "laws": [
+        { "law": "Aesthetic-Usability Effect", "status": "partial", "score": 60, "note": "Design is functional but lacks visual polish." }
+      ]
+    },
+    {
+      "category": "Navigation & Structure",
+      "laws": [
+        { "law": "Jakob's Law", "status": "pass", "score": 78, "note": "Follows familiar conventions." },
+        { "law": "Hick's Law", "status": "pass", "score": 82, "note": "Options feel manageable." }
+      ]
+    }
+  ]
+}
 
-    : `You are a friendly UX mentor in a student research project called UX Lens. You are reviewing the "${body.pageName}" page of a mock student dashboard called Mera, currently in ${body.uxMode} UX mode. The page has a wellbeing score of ${body.wellbeingScore}/100.
+Use only laws from the provided list. Assign each law a score 0–100 and a status: "pass" (score ≥ 70), "partial" (40–69), or "fail" (below 40). Base scores on the Lighthouse audit data provided. Always include the Pareto Principle in the most relevant category with a note explaining its role. Cover at least 10 laws total across all categories.`;
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: 1200, temperature: 0.4 },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errText = await response.text();
+        res.status(response.status).json({ error: errText }); return;
+      }
+
+      const data = await response.json();
+      const raw = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
+
+      let parsed: any;
+      try {
+        const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+        parsed = JSON.parse(clean);
+      } catch {
+        // Fallback: return raw text as feedback only
+        res.status(200).json({ message: raw, uxLawScores: [] });
+        return;
+      }
+
+      res.status(200).json({
+        message: parsed.feedback ?? 'No feedback returned.',
+        uxLawScores: parsed.uxLawScores ?? [],
+      });
+      return;
+    } catch (err) {
+      res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' });
+      return;
+    }
+  }
+
+  // ── MERA MENTOR BRANCH ────────────────────────────────────────────────────
+  const prompt = `You are a friendly UX mentor in a student research project called UX Lens. You are reviewing the "${body.pageName}" page of a mock student dashboard called Mera, currently in ${body.uxMode} UX mode. The page has a wellbeing score of ${body.wellbeingScore}/100.
 
 UX issues detected:
 ${issuesList}
@@ -155,7 +228,7 @@ Give 2-4 short paragraphs of warm, educational mentor feedback. Map issues to sp
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -172,9 +245,7 @@ Give 2-4 short paragraphs of warm, educational mentor feedback. Map issues to sp
     }
 
     const data = await response.json();
-    const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-      ?? 'No response generated.';
-
+    const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? 'No response generated.';
     res.status(200).json({ message });
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' });

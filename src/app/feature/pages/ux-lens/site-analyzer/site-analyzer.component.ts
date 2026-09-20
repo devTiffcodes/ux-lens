@@ -2,7 +2,21 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SiteAnalyzerService } from '../../../../data/services/site-analyzer.service';
 import { ClaudeService } from '../../../../data/services/claude.service';
+import { FirebaseService } from '../../../../data/services/firebase.service';
 import { Location } from '@angular/common';
+import { serverTimestamp } from 'firebase/firestore';
+
+export interface UxLawEntry {
+  law: string;
+  status: 'pass' | 'partial' | 'fail';
+  score: number;
+  note: string;
+}
+
+export interface UxLawCategory {
+  category: string;
+  laws: UxLawEntry[];
+}
 
 @Component({
   selector: 'app-site-analyzer',
@@ -14,6 +28,7 @@ import { Location } from '@angular/common';
 export class SiteAnalyzerComponent {
   private readonly fb = inject(FormBuilder);
   private readonly location = inject(Location);
+  private readonly firebase = inject(FirebaseService);
   protected readonly siteAnalyzerService = inject(SiteAnalyzerService);
   protected readonly claudeService = inject(ClaudeService);
 
@@ -24,6 +39,13 @@ export class SiteAnalyzerComponent {
   protected readonly wireframeLoading = signal<boolean>(false);
   protected readonly wireframeResult = signal<string | null>(null);
   protected readonly wireframeError = signal<string | null>(null);
+
+  protected readonly uxLawScores = signal<UxLawCategory[]>([]);
+  protected readonly feedbackRating = signal<'up' | 'down' | null>(null);
+  protected readonly ratingSubmitted = signal<boolean>(false);
+  protected readonly ratingError = signal<string | null>(null);
+
+  private savedAnalysisId = signal<string | null>(null);
 
   protected readonly urlForm = this.fb.nonNullable.group({
     url: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
@@ -41,43 +63,31 @@ export class SiteAnalyzerComponent {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-
     this.wireframeFile.set(file);
     this.wireframeResult.set(null);
     this.wireframeError.set(null);
-
     const reader = new FileReader();
-    reader.onload = () => {
-      this.wireframePreview.set(reader.result as string);
-    };
+    reader.onload = () => this.wireframePreview.set(reader.result as string);
     reader.readAsDataURL(file);
   }
 
   protected async analyzeWireframe(): Promise<void> {
     const file = this.wireframeFile();
     if (!file) return;
-
     this.wireframeLoading.set(true);
     this.wireframeResult.set(null);
     this.wireframeError.set(null);
-
     try {
       const base64 = await this.fileToBase64(file);
-
       const response = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'wireframe',
-          image: base64,
-          mimeType: file.type,
-        }),
+        body: JSON.stringify({ type: 'wireframe', image: base64, mimeType: file.type }),
       });
-
       if (!response.ok) throw new Error('Analysis failed');
       const data = await response.json();
       this.wireframeResult.set(data.feedback ?? 'No feedback returned.');
-    } catch (err) {
+    } catch {
       this.wireframeError.set('Failed to analyze wireframe. Please try again.');
     } finally {
       this.wireframeLoading.set(false);
@@ -94,13 +104,42 @@ export class SiteAnalyzerComponent {
   private fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result.split(',')[1]);
-      };
+      reader.onload = () => resolve((reader.result as string).split(',')[1]);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  }
+
+  protected readonly analysisStatus = signal<string>('');
+  private statusInterval: ReturnType<typeof setInterval> | null = null;
+
+  private readonly statusMessages = [
+    'Fetching page resources...',
+    'Running Lighthouse audit...',
+    'Checking accessibility...',
+    'Evaluating colour contrast...',
+    'Measuring performance...',
+    'Scanning SEO signals...',
+    'Reviewing best practices...',
+    'Mapping issues to UX laws...',
+    'Almost there...',
+  ];
+
+  private startStatusTicker(): void {
+    let i = 0;
+    this.analysisStatus.set(this.statusMessages[0]);
+    this.statusInterval = setInterval(() => {
+      i = (i + 1) % this.statusMessages.length;
+      this.analysisStatus.set(this.statusMessages[i]);
+    }, 1800);
+  }
+
+  private stopStatusTicker(): void {
+    if (this.statusInterval) {
+      clearInterval(this.statusInterval);
+      this.statusInterval = null;
+    }
+    this.analysisStatus.set('');
   }
 
   protected async onAnalyze(): Promise<void> {
@@ -109,17 +148,30 @@ export class SiteAnalyzerComponent {
       return;
     }
     this.claudeService.reset();
+    this.uxLawScores.set([]);
+    this.feedbackRating.set(null);
+    this.ratingSubmitted.set(false);
+    this.ratingError.set(null);
+    this.savedAnalysisId.set(null);
+
+    this.startStatusTicker();
     const { url } = this.urlForm.getRawValue();
     try {
       await this.siteAnalyzerService.analyzeUrl(url);
     } catch {
-      // Error already captured in siteAnalyzerService.error signal.
+      // error captured in siteAnalyzerService.error signal
+    } finally {
+      this.stopStatusTicker();
     }
   }
 
   protected async askMentor(): Promise<void> {
     const result = this.siteAnalyzerService.result();
     if (!result) return;
+
+    this.feedbackRating.set(null);
+    this.ratingSubmitted.set(false);
+    this.ratingError.set(null);
 
     await this.claudeService.getMentorFeedback({
       pageName: result.url,
@@ -129,7 +181,55 @@ export class SiteAnalyzerComponent {
       userQuestion: this.mentorQuestion(),
     });
 
+    const raw = this.claudeService.lastRawResponse();
+    if (raw?.uxLawScores?.length) {
+      this.uxLawScores.set(raw.uxLawScores);
+    }
+
+    await this.saveAnalysis();
     this.mentorQuestion.set('');
+  }
+
+  private async saveAnalysis(): Promise<void> {
+    const result = this.siteAnalyzerService.result();
+    const feedback = this.claudeService.lastResponse();
+    if (!result || !feedback) return;
+
+    try {
+      const id = await this.firebase.addDocument('site-analyses', {
+        url: result.url,
+        analyzedAt: serverTimestamp(),
+        scores: result.scores,
+        wellbeingScore: result.wellbeingScore,
+        issueCount: result.issues.length,
+        uxLawScores: this.uxLawScores(),
+        mentorFeedback: feedback,
+        feedbackRating: null,
+      });
+      this.savedAnalysisId.set(id);
+    } catch (err) {
+      console.error('Failed to save analysis:', err);
+    }
+  }
+
+  protected async submitRating(rating: 'up' | 'down'): Promise<void> {
+    if (this.ratingSubmitted()) return;
+    this.feedbackRating.set(rating);
+    this.ratingError.set(null);
+
+    const docId = this.savedAnalysisId();
+    if (docId) {
+      try {
+        const { doc, updateDoc } = await import('firebase/firestore');
+        const ref = doc(this.firebase.db, 'site-analyses', docId);
+        await updateDoc(ref, { feedbackRating: rating });
+      } catch {
+        this.ratingError.set('Could not save rating. Please try again.');
+        this.feedbackRating.set(null);
+        return;
+      }
+    }
+    this.ratingSubmitted.set(true);
   }
 
   protected onMentorInput(event: Event): void {
@@ -140,9 +240,37 @@ export class SiteAnalyzerComponent {
     return `severity-${severity}`;
   }
 
+  protected overallScore(categories: UxLawCategory[]): number {
+    const all = categories.flatMap(c => c.laws);
+    if (!all.length) return 0;
+    return Math.round(all.reduce((sum, l) => sum + l.score, 0) / all.length);
+  }
+
+  protected badgeLabel(score: number): string {
+    if (score >= 70) return 'Good Standards';
+    if (score >= 40) return 'Needs Improvement';
+    return 'Poor Standards';
+  }
+
+  protected badgeClass(score: number): string {
+    if (score >= 70) return 'badge-pass';
+    if (score >= 40) return 'badge-partial';
+    return 'badge-fail';
+  }
+
+  protected categoryScore(laws: UxLawEntry[]): number {
+    if (!laws.length) return 0;
+    return Math.round(laws.reduce((sum, l) => sum + l.score, 0) / laws.length);
+  }
+
   protected startOver(): void {
     this.siteAnalyzerService.reset();
     this.claudeService.reset();
     this.urlForm.reset();
+    this.uxLawScores.set([]);
+    this.feedbackRating.set(null);
+    this.ratingSubmitted.set(false);
+    this.ratingError.set(null);
+    this.savedAnalysisId.set(null);
   }
 }
