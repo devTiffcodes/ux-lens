@@ -45,7 +45,7 @@ async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
       'X-Title': 'UX Lens',
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.3-8b-instruct:free',
+      model: 'nvidia/llama-3.1-nemotron-ultra-253b-v1:free',
       max_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }],
     }),
@@ -73,7 +73,7 @@ async function callAIWithImage(prompt: string, imageBase64: string, mimeType: st
       'X-Title': 'UX Lens',
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.3-8b-instruct:free',
+      model: 'nvidia/llama-3.1-nemotron-ultra-253b-v1:free',
       max_tokens: 1200,
       messages: [{
         role: 'user',
