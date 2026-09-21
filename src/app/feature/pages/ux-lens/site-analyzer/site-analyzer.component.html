@@ -1,264 +1,700 @@
 <section class="container analyzer-section">
+
+  <!-- Page Header -->
   <div class="analyzer-page-header">
     <div>
       <h1>Site Analyzer</h1>
       <p class="text-muted">
-        Audit any public website with Google Lighthouse, or upload a wireframe for AI-powered UX feedback — both mapped to the 28 UX laws used throughout this project.
+        Audit any public website with Google Lighthouse, or upload a wireframe for
+        AI-powered UX feedback — both mapped to the 28 UX laws used throughout this project.
       </p>
     </div>
-    <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+
+    <button type="button" class="back-btn" (click)="goBack()">
+      ← Back
+    </button>
   </div>
 
-  <!-- Tabs -->
+  <!-- ====================================================================== -->
+  <!-- ANALYZER TABS / INPUTS                                                 -->
+  <!-- ====================================================================== -->
   @if (!siteAnalyzerService.result() && !wireframeResult()) {
+
   <div class="analyzer-tabs">
-    <button type="button" class="analyzer-tab"
+
+    <button type="button"
+            class="analyzer-tab"
             [class.analyzer-tab-active]="activeTab() === 'url'"
             (click)="setTab('url')">
       🔍 URL Analyzer
     </button>
-    <button type="button" class="analyzer-tab"
+
+    <button type="button"
+            class="analyzer-tab"
             [class.analyzer-tab-active]="activeTab() === 'wireframe'"
             (click)="setTab('wireframe')">
       🖼 Wireframe Analyzer
     </button>
+
   </div>
 
-  <!-- URL Card -->
+  <!-- -------------------------------------------------------------------- -->
+  <!-- URL Analyzer                                                         -->
+  <!-- -------------------------------------------------------------------- -->
   @if (activeTab() === 'url') {
+
   <div class="card analyzer-card">
+
     <h2>Analyze a Website</h2>
-    <p class="text-muted">Paste a public URL to get a Lighthouse accessibility, performance, SEO and best practices audit with AI mentor feedback.</p>
-    <form [formGroup]="urlForm" (ngSubmit)="onAnalyze()" novalidate>
+
+    <p class="text-muted">
+      Paste a public URL to get a Lighthouse accessibility, performance,
+      SEO and best practices audit with AI-powered UX law analysis.
+    </p>
+
+    <form [formGroup]="urlForm"
+          (ngSubmit)="onAnalyze()"
+          novalidate>
+
       <div class="form-field">
-        <label for="url">Website URL</label>
-        <input id="url" type="text" formControlName="url" placeholder="https://example.com" />
+
+        <label for="url">
+          Website URL
+        </label>
+
+        <input id="url"
+               type="text"
+               formControlName="url"
+               placeholder="https://example.com" />
+
         @if (urlForm.controls.url.invalid && urlForm.controls.url.touched) {
-        <span class="field-error">Please enter a valid URL starting with http:// or https://</span>
-        }
-      </div>
-      <button type="submit" class="btn" [disabled]="siteAnalyzerService.isLoading()">
-        Analyze Site
-      </button>
-      @if (siteAnalyzerService.isLoading()) {
-      <div class="status-ticker">
-        <span class="wave-dots">
-          <span></span><span></span><span></span>
+        <span class="field-error">
+          Please enter a valid URL starting with http:// or https://
         </span>
-        <span class="status-text">{{ analysisStatus() }}</span>
+        }
+
       </div>
+
+      <button type="submit"
+              class="btn"
+              [disabled]="siteAnalyzerService.isLoading() || uxLawLoading()">
+
+        Analyze Site
+
+      </button>
+
+      @if (siteAnalyzerService.isLoading()) {
+
+      <div class="status-ticker">
+
+        <span class="wave-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+
+        <span class="status-text">
+          {{ analysisStatus() }}
+        </span>
+
+      </div>
+
       }
+
     </form>
+
     @if (siteAnalyzerService.error()) {
-    <p class="field-error">{{ siteAnalyzerService.error() }}</p>
+    <p class="field-error">
+      {{ siteAnalyzerService.error() }}
+    </p>
     }
+
   </div>
+
   }
 
-  <!-- Wireframe Card -->
+  <!-- -------------------------------------------------------------------- -->
+  <!-- Wireframe Analyzer                                                   -->
+  <!-- -------------------------------------------------------------------- -->
   @if (activeTab() === 'wireframe') {
+
   <div class="card analyzer-card">
+
     <h2>Analyze a Wireframe</h2>
-    <p class="text-muted">Upload a wireframe or design screenshot and get AI-powered UX feedback mapped to the 28 UX laws.</p>
+
+    <p class="text-muted">
+      Upload a wireframe or design screenshot and get AI-powered UX feedback
+      mapped to the 28 UX laws.
+    </p>
+
     @if (!wireframeFile()) {
-    <label class="upload-zone" for="wireframe-upload">
-      <span class="upload-icon">📁</span>
-      <span class="upload-label">Click to upload or drag and drop</span>
-      <span class="upload-hint">PNG, JPG, WEBP — max 5MB</span>
-      <input id="wireframe-upload" type="file" accept="image/png,image/jpeg,image/webp"
-             class="upload-input" (change)="onFileChange($event)" />
+
+    <label class="upload-zone"
+           for="wireframe-upload">
+
+      <span class="upload-icon">
+        📁
+      </span>
+
+      <span class="upload-label">
+        Click to upload or drag and drop
+      </span>
+
+      <span class="upload-hint">
+        PNG, JPG, WEBP — max 5MB
+      </span>
+
+      <input id="wireframe-upload"
+             type="file"
+             accept="image/png,image/jpeg,image/webp"
+             class="upload-input"
+             (change)="onFileChange($event)" />
+
     </label>
+
     } @else {
+
     <div class="wireframe-preview-wrapper">
-      <img [src]="wireframePreview()" alt="Wireframe preview" class="wireframe-preview" />
+
+      <img [src]="wireframePreview()"
+           alt="Wireframe preview"
+           class="wireframe-preview" />
+
       <div class="wireframe-actions">
-        <button type="button" class="btn" (click)="analyzeWireframe()" [disabled]="wireframeLoading()">
+
+        <button type="button"
+                class="btn"
+                (click)="analyzeWireframe()"
+                [disabled]="wireframeLoading()">
+
           {{ wireframeLoading() ? 'Analyzing...' : 'Analyze Wireframe' }}
+
         </button>
-        <button type="button" class="btn btn-secondary" (click)="resetWireframe()">Remove</button>
+
+        <button type="button"
+                class="btn btn-secondary"
+                (click)="resetWireframe()">
+
+          Remove
+
+        </button>
+
       </div>
+
     </div>
+
     }
+
     @if (wireframeError()) {
-    <p class="field-error">{{ wireframeError() }}</p>
+    <p class="field-error">
+      {{ wireframeError() }}
+    </p>
     }
+
   </div>
-  }
+
   }
 
-  <!-- ── URL Results ── everything inside this one @if ───────────────────── -->
+  }
+
+  <!-- ====================================================================== -->
+  <!-- URL RESULTS                                                            -->
+  <!-- ====================================================================== -->
   @if (siteAnalyzerService.result()) {
+
   @let result = siteAnalyzerService.result()!;
 
+  <!-- Results Header -->
   <div class="analyzer-header">
+
     <div>
-      <p class="text-muted">Results for</p>
-      <h2 class="analyzer-url">{{ result.url }}</h2>
-    </div>
-    <button type="button" class="btn btn-secondary" (click)="startOver()">Analyze Another</button>
-  </div>
+      <p class="text-muted">
+        Results for
+      </p>
 
-  <!-- Lighthouse Score Grid -->
-  <div class="score-grid">
-    <div class="card score-card">
-      <span class="score-label">Accessibility</span>
-      <span class="score-value" [class]="badgeClass(result.scores.accessibility)">
-        {{ result.scores.accessibility }}
-      </span>
+      <h2 class="analyzer-url">
+        {{ result.url }}
+      </h2>
     </div>
-    <div class="card score-card">
-      <span class="score-label">Best Practices</span>
-      <span class="score-value" [class]="badgeClass(result.scores.bestPractices)">
-        {{ result.scores.bestPractices }}
-      </span>
-    </div>
-    <div class="card score-card">
-      <span class="score-label">SEO</span>
-      <span class="score-value" [class]="badgeClass(result.scores.seo)">
-        {{ result.scores.seo }}
-      </span>
-    </div>
-    <div class="card score-card">
-      <span class="score-label">Performance</span>
-      <span class="score-value" [class]="badgeClass(result.scores.performance)">
-        {{ result.scores.performance }}
-      </span>
-    </div>
-  </div>
 
-  <!-- UX Law Compliance — shows after Ask Mentor -->
-  @if (uxLawScores().length) {
-  @let score = overallScore(uxLawScores());
-  <section class="dev-panel-section compliance-section">
-    <div class="compliance-header">
-      <h3>UX Law Compliance</h3>
-      <div class="compliance-overall">
-        <span class="overall-score">{{ score }}</span>
-        <span class="compliance-badge" [class]="badgeClass(score)">
-          {{ badgeLabel(score) }}
-        </span>
-      </div>
-    </div>
-    <p class="text-muted compliance-sub">
-      Rated against the 28 UX laws — Pareto Principle highlighted as the focal law.
-    </p>
-    <div class="compliance-grid">
-      @for (group of uxLawScores(); track group.category) {
-      @let catScore = categoryScore(group.laws);
-      <div class="compliance-card">
-        <div class="compliance-card-header">
-          <span class="compliance-category">{{ group.category }}</span>
-          <span class="compliance-cat-score" [class]="badgeClass(catScore)">{{ catScore }}</span>
-        </div>
-        <ul class="law-list">
-          @for (law of group.laws; track law.law) {
-          <li class="law-item" [class]="'law-' + law.status">
-            <div class="law-item-header">
-              <span class="law-status-dot"></span>
-              <span class="law-name" [class.law-focal]="law.law === 'Pareto Principle'">
-                {{ law.law }}
-                @if (law.law === 'Pareto Principle') {
-                <span class="focal-tag">focal</span>
-                }
-              </span>
-              <span class="law-score">{{ law.score }}</span>
-            </div>
-            <p class="law-note">{{ law.note }}</p>
-          </li>
-          }
-        </ul>
-      </div>
-      }
-    </div>
-  </section>
-  }
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="startOver()">
 
-  <!-- Accessibility Issues -->
-  <section class="dev-panel-section">
-    <h3>Accessibility Issues ({{ result.issues.length }})</h3>
-    @if (result.issues.length === 0) {
-    <p class="text-muted">No accessibility issues detected — great result.</p>
-    } @else {
-    <ul class="issue-list">
-      @for (issue of result.issues; track issue.id) {
-      <li class="issue-card">
-        <div class="issue-header">
-          <span class="issue-severity" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
-          <strong>{{ issue.title }}</strong>
-        </div>
-        <p>{{ issue.description }}</p>
-        <p class="text-muted"><em>Principle:</em> {{ issue.principle }}</p>
-      </li>
-      }
-    </ul>
-    }
-  </section>
+      Analyze Another
 
-  <!-- AI Mentor -->
-  <section class="dev-panel-section">
-    <h3>AI Mentor</h3>
-    <textarea class="mentor-input" rows="2"
-              placeholder="Ask the mentor about these results (optional)..."
-              [value]="mentorQuestion()"
-              (input)="onMentorInput($event)"></textarea>
-    <button type="button" class="btn" (click)="askMentor()" [disabled]="claudeService.isLoading()">
-      {{ claudeService.isLoading() ? 'Thinking...' : 'Ask Mentor' }}
     </button>
 
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- LIGHTHOUSE SCORE GRID                                                 -->
+  <!-- ==================================================================== -->
+
+  <div class="score-grid">
+
+    <div class="card score-card">
+
+      <span class="score-label">
+        Accessibility
+      </span>
+
+      <span class="score-value"
+            [class]="badgeClass(result.scores.accessibility)">
+
+        {{ result.scores.accessibility }}
+
+      </span>
+
+    </div>
+
+    <div class="card score-card">
+
+      <span class="score-label">
+        Best Practices
+      </span>
+
+      <span class="score-value"
+            [class]="badgeClass(result.scores.bestPractices)">
+
+        {{ result.scores.bestPractices }}
+
+      </span>
+
+    </div>
+
+    <div class="card score-card">
+
+      <span class="score-label">
+        SEO
+      </span>
+
+      <span class="score-value"
+            [class]="badgeClass(result.scores.seo)">
+
+        {{ result.scores.seo }}
+
+      </span>
+
+    </div>
+
+    <div class="card score-card">
+
+      <span class="score-label">
+        Performance
+      </span>
+
+      <span class="score-value"
+            [class]="badgeClass(result.scores.performance)">
+
+        {{ result.scores.performance }}
+
+      </span>
+
+    </div>
+
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- UX LAW COMPLIANCE                                                    -->
+  <!-- ==================================================================== -->
+
+  <section class="card dev-panel-section compliance-section">
+
+    <div class="compliance-header">
+
+      <div>
+        <h3>
+          UX Law Compliance
+        </h3>
+
+        <p class="text-muted compliance-subtitle">
+          Rated against the 28 UX laws used throughout this project.
+        </p>
+      </div>
+
+      @if (uxLawScores().length) {
+
+      @let score = overallScore(uxLawScores());
+
+      <div class="compliance-overall">
+
+        <span class="overall-score">
+          {{ score }}
+        </span>
+
+        <span class="compliance-badge"
+              [class]="badgeClass(score)">
+
+          {{ badgeLabel(score) }}
+
+        </span>
+
+      </div>
+
+      }
+
+    </div>
+
+    @if (uxLawLoading()) {
+
+    <div class="compliance-loading">
+
+      <span class="wave-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+
+      <span class="status-text">
+        Mapping the results to the 28 UX laws...
+      </span>
+
+    </div>
+
+    } @else if (uxLawError()) {
+
+    <div class="compliance-error">
+
+      <p class="field-error">
+        {{ uxLawError() }}
+      </p>
+
+    </div>
+
+    } @else if (uxLawScores().length) {
+
+    <p class="text-muted compliance-sub">
+      The results below show how the analyzed website aligns with each UX law.
+      The Pareto Principle is highlighted as the focal law.
+    </p>
+
+    <!-- Category Scores -->
+    <div class="compliance-grid">
+
+      @for (group of uxLawScores(); track group.category) {
+
+      @let catScore = categoryScore(group.laws);
+
+      <div class="compliance-card">
+
+        <div class="compliance-card-header">
+
+          <span class="compliance-category">
+            {{ group.category }}
+          </span>
+
+          <span class="compliance-cat-score"
+                [class]="badgeClass(catScore)">
+
+            {{ catScore }}
+
+          </span>
+
+        </div>
+
+        <ul class="law-list">
+
+          @for (law of group.laws; track law.law) {
+
+          <li class="law-item"
+              [class]="'law-' + law.status">
+
+            <div class="law-item-header">
+
+              <span class="law-status-dot"></span>
+
+              <span class="law-name"
+                    [class.law-focal]="law.law === 'Pareto Principle'">
+
+                {{ law.law }}
+
+                @if (law.law === 'Pareto Principle') {
+                <span class="focal-tag">
+                  focal
+                </span>
+                }
+
+              </span>
+
+              <span class="law-score">
+                {{ law.score }}
+              </span>
+
+            </div>
+
+            <p class="law-note">
+              {{ law.note }}
+            </p>
+
+          </li>
+
+          }
+
+        </ul>
+
+      </div>
+
+      }
+
+    </div>
+
+    }
+
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- AI MENTOR                                                             -->
+  <!-- ==================================================================== -->
+
+  <section class="card dev-panel-section mentor-section">
+
+    <div class="mentor-header">
+
+      <div>
+        <h3>
+          AI Mentor
+        </h3>
+
+        <p class="text-muted">
+          Want help understanding these results? Ask the mentor for explanations,
+          priorities, or suggestions for improving the website's UX.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="mentor-form">
+
+      <textarea class="mentor-input"
+                rows="3"
+                placeholder="Ask about these results..."
+                [value]="mentorQuestion()"
+                (input)="onMentorInput($event)">
+        </textarea>
+
+      <button type="button"
+              class="btn"
+              (click)="askMentor()"
+              [disabled]="claudeService.isLoading()">
+
+        {{ claudeService.isLoading() ? 'Thinking...' : 'Ask Mentor' }}
+
+      </button>
+
+    </div>
+
     @if (claudeService.error()) {
-    <p class="mentor-error">{{ claudeService.error() }}</p>
+
+    <p class="mentor-error">
+      {{ claudeService.error() }}
+    </p>
+
     }
 
     @if (claudeService.lastResponse()) {
+
     <div class="mentor-response">
-      <p>{{ claudeService.lastResponse() }}</p>
+
+      <div class="mentor-response-header">
+        <span class="mentor-response-label">
+          Mentor feedback
+        </span>
+      </div>
+
+      <p>
+        {{ claudeService.lastResponse() }}
+      </p>
+
     </div>
 
     <!-- Thumbs Rating -->
     <div class="rating-row">
+
       @if (!ratingSubmitted()) {
-      <span class="rating-label">Was this feedback helpful?</span>
-      <button type="button" class="thumb-btn"
+
+      <span class="rating-label">
+        Was this feedback helpful?
+      </span>
+
+      <button type="button"
+              class="thumb-btn"
               [class.thumb-active]="feedbackRating() === 'up'"
               [disabled]="ratingSubmitted()"
               (click)="submitRating('up')"
               aria-label="Thumbs up">
+
         👍
+
       </button>
-      <button type="button" class="thumb-btn"
+
+      <button type="button"
+              class="thumb-btn"
               [class.thumb-active]="feedbackRating() === 'down'"
               [disabled]="ratingSubmitted()"
               (click)="submitRating('down')"
               aria-label="Thumbs down">
+
         👎
+
       </button>
+
       } @else {
+
       <span class="rating-confirmed">
-        {{ feedbackRating() === 'up' ? '👍 Thanks for the feedback!' : '👎 Got it — we\'ll keep improving.' }}
+
+        {{
+                feedbackRating() === 'up'
+                  ? '👍 Thanks for the feedback!'
+                  : '👎 Got it — we\'ll keep improving.'
+        }}
+
       </span>
+
       }
+
       @if (ratingError()) {
-      <span class="field-error">{{ ratingError() }}</span>
+
+      <span class="field-error">
+        {{ ratingError() }}
+      </span>
+
       }
+
     </div>
+
     }
+
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- ACCESSIBILITY ISSUES                                                 -->
+  <!-- ==================================================================== -->
+
+  <section class="dev-panel-section issues-section">
+
+    <div class="section-heading-row">
+
+      <div>
+        <h3>
+          Accessibility Issues
+          <span class="section-count">
+            {{ result.issues.length }}
+          </span>
+        </h3>
+
+        <p class="text-muted">
+          Accessibility findings detected by the Lighthouse audit.
+        </p>
+      </div>
+
+    </div>
+
+    @if (result.issues.length === 0) {
+
+    <div class="empty-state">
+
+      <span class="empty-state-icon">
+        ✓
+      </span>
+
+      <div>
+        <strong>
+          No accessibility issues detected
+        </strong>
+
+        <p class="text-muted">
+          Great result. Lighthouse did not identify any accessibility issues.
+        </p>
+      </div>
+
+    </div>
+
+    } @else {
+
+    <ul class="issue-list">
+
+      @for (issue of result.issues; track issue.id) {
+
+      <li class="issue-card">
+
+        <div class="issue-header">
+
+          <span class="issue-severity"
+                [class]="severityClass(issue.severity)">
+
+            {{ issue.severity }}
+
+          </span>
+
+          <strong>
+            {{ issue.title }}
+          </strong>
+
+        </div>
+
+        <p>
+          {{ issue.description }}
+        </p>
+
+        <p class="text-muted">
+          <em>Principle:</em>
+          {{ issue.principle }}
+        </p>
+
+      </li>
+
+      }
+
+    </ul>
+
+    }
+
   </section>
 
   }
-  <!-- ── end URL Results ──────────────────────────────────────────────────── -->
-  <!-- Wireframe Results -->
+
+  <!-- ====================================================================== -->
+  <!-- WIREFRAME RESULTS                                                      -->
+  <!-- ====================================================================== -->
   @if (wireframeResult()) {
+
   <div class="analyzer-header">
+
     <div>
-      <p class="text-muted">Wireframe analysis complete</p>
-      <h2 class="analyzer-url">{{ wireframeFile()?.name }}</h2>
+
+      <p class="text-muted">
+        Wireframe analysis complete
+      </p>
+
+      <h2 class="analyzer-url">
+        {{ wireframeFile()?.name }}
+      </h2>
+
     </div>
-    <button type="button" class="btn btn-secondary" (click)="resetWireframe()">Analyze Another</button>
+
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="resetWireframe()">
+
+      Analyze Another
+
+    </button>
+
   </div>
-  <div class="card mentor-response">
-    <h3>AI UX Feedback</h3>
-    <p>{{ wireframeResult() }}</p>
+
+  <div class="card mentor-response wireframe-result">
+
+    <h3>
+      AI UX Feedback
+    </h3>
+
+    <p>
+      {{ wireframeResult() }}
+    </p>
+
   </div>
+
   }
 
 </section>
