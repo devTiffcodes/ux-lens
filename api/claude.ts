@@ -33,7 +33,7 @@ UX LAWS AND PRINCIPLES TO REFERENCE (where relevant):
 `;
 
 const GEMINI_URL = (apiKey: string) =>
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`;
 
 async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
   const apiKey = process.env['GEMINI_API_KEY'];
