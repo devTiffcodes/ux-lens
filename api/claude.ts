@@ -45,7 +45,7 @@ async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
       'X-Title': 'UX Lens',
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.5-flash:free',
+      model: 'meta-llama/llama-3.3-8b-instruct:free',
       max_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }],
     }),
@@ -73,7 +73,7 @@ async function callAIWithImage(prompt: string, imageBase64: string, mimeType: st
       'X-Title': 'UX Lens',
     },
     body: JSON.stringify({
-      model: 'google/gemini-2.5-flash:free',
+      model: 'meta-llama/llama-3.3-8b-instruct:free',
       max_tokens: 1200,
       messages: [{
         role: 'user',
