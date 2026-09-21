@@ -32,69 +32,70 @@ UX LAWS AND PRINCIPLES TO REFERENCE (where relevant):
 - Zeigarnik Effect: users remember incomplete tasks better than completed ones — use progress indicators
 `;
 
-async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
-  const apiKey = process.env['OPENROUTER_API_KEY'];
-  if (!apiKey) throw new Error('Missing OpenRouter API key');
+const GEMINI_URL = (apiKey: string) =>
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'HTTP-Referer': 'https://ux-lens-one.vercel.app',
-      'X-Title': 'UX Lens',
-    },
-    body: JSON.stringify({
-      model: 'inclusionai/ling-3.0-flash:free',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
+  const apiKey = process.env['GEMINI_API_KEY'];
+  if (!apiKey) throw new Error('Missing Gemini API key');
+
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { maxOutputTokens: maxTokens, temperature: 0.4 },
   });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(errText);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const response = await fetch(GEMINI_URL(apiKey), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    if (response.status === 503 && attempt < 3) {
+      await new Promise(r => setTimeout(r, 2000 * attempt));
+      continue;
+    }
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(errText);
+    }
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
   }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content?.trim() ?? '';
+  throw new Error('Service unavailable after 3 attempts. Please try again.');
 }
 
 async function callAIWithImage(prompt: string, imageBase64: string, mimeType: string): Promise<string> {
-  const apiKey = process.env['OPENROUTER_API_KEY'];
-  if (!apiKey) throw new Error('Missing OpenRouter API key');
+  const apiKey = process.env['GEMINI_API_KEY'];
+  if (!apiKey) throw new Error('Missing Gemini API key');
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'HTTP-Referer': 'https://ux-lens-one.vercel.app',
-      'X-Title': 'UX Lens',
-    },
-    body: JSON.stringify({
-      model: 'inclusionai/ling-3.0-flash:free',
-      max_tokens: 1200,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'image_url',
-            image_url: { url: `data:${mimeType};base64,${imageBase64}` },
-          },
-          { type: 'text', text: prompt },
-        ],
-      }],
-    }),
+  const body = JSON.stringify({
+    contents: [{
+      parts: [
+        { inline_data: { mime_type: mimeType, data: imageBase64 } },
+        { text: prompt },
+      ],
+    }],
+    generationConfig: { maxOutputTokens: 1200, temperature: 0.7 },
   });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(errText);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const response = await fetch(GEMINI_URL(apiKey), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    if (response.status === 503 && attempt < 3) {
+      await new Promise(r => setTimeout(r, 2000 * attempt));
+      continue;
+    }
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(errText);
+    }
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
   }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content?.trim() ?? '';
+  throw new Error('Service unavailable after 3 attempts. Please try again.');
 }
 
 export default async function handler(req: any, res: any): Promise<void> {
