@@ -32,6 +32,71 @@ UX LAWS AND PRINCIPLES TO REFERENCE (where relevant):
 - Zeigarnik Effect: users remember incomplete tasks better than completed ones — use progress indicators
 `;
 
+async function callAI(prompt: string, maxTokens = 1200): Promise<string> {
+  const apiKey = process.env['OPENROUTER_API_KEY'];
+  if (!apiKey) throw new Error('Missing OpenRouter API key');
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'HTTP-Referer': 'https://ux-lens-one.vercel.app',
+      'X-Title': 'UX Lens',
+    },
+    body: JSON.stringify({
+      model: 'google/gemini-2.5-flash:free',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(errText);
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content?.trim() ?? '';
+}
+
+async function callAIWithImage(prompt: string, imageBase64: string, mimeType: string): Promise<string> {
+  const apiKey = process.env['OPENROUTER_API_KEY'];
+  if (!apiKey) throw new Error('Missing OpenRouter API key');
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'HTTP-Referer': 'https://ux-lens-one.vercel.app',
+      'X-Title': 'UX Lens',
+    },
+    body: JSON.stringify({
+      model: 'google/gemini-2.5-flash:free',
+      max_tokens: 1200,
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'image_url',
+            image_url: { url: `data:${mimeType};base64,${imageBase64}` },
+          },
+          { type: 'text', text: prompt },
+        ],
+      }],
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(errText);
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content?.trim() ?? '';
+}
+
 export default async function handler(req: any, res: any): Promise<void> {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -39,9 +104,6 @@ export default async function handler(req: any, res: any): Promise<void> {
 
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
-
-  const apiKey = process.env['GEMINI_API_KEY'];
-  if (!apiKey) { res.status(500).json({ error: 'Missing Gemini API key' }); return; }
 
   let body = req.body;
   if (typeof body === 'string') {
@@ -69,30 +131,7 @@ Analyze this wireframe/screenshot and respond with:
 Be warm, practical, and educational. Write for a student developer audience.`;
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { inline_data: { mime_type: body.mimeType, data: body.image } },
-                { text: wireframePrompt },
-              ],
-            }],
-            generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errText = await response.text();
-        res.status(response.status).json({ error: errText }); return;
-      }
-
-      const data = await response.json();
-      const feedback = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? 'No feedback returned.';
+      const feedback = await callAIWithImage(wireframePrompt, body.image, body.mimeType);
       res.status(200).json({ feedback });
       return;
     } catch (err) {
@@ -114,7 +153,6 @@ Be warm, practical, and educational. Write for a student developer audience.`;
   const isSiteAnalyzer = body.pageName.startsWith('http');
 
   if (isSiteAnalyzer) {
-    // ── SITE ANALYZER — returns JSON with feedback + uxLawScores ─────────────
     const prompt = `You are a UX mentor in a student research project called UX Lens. A developer has submitted the website "${body.pageName}" for a UX analysis.
 
 Lighthouse audit results:
@@ -171,36 +209,15 @@ The JSON must follow this exact structure:
 Use only laws from the provided list. Assign each law a score 0–100 and a status: "pass" (score ≥ 70), "partial" (40–69), or "fail" (below 40). Base scores on the Lighthouse audit data provided. Always include the Pareto Principle in the most relevant category with a note explaining its role. Cover at least 10 laws total across all categories.`;
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { maxOutputTokens: 1200, temperature: 0.4 },
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errText = await response.text();
-        res.status(response.status).json({ error: errText }); return;
-      }
-
-      const data = await response.json();
-      const raw = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? '';
-
+      const raw = await callAI(prompt, 1200);
       let parsed: any;
       try {
         const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
         parsed = JSON.parse(clean);
       } catch {
-        // Fallback: return raw text as feedback only
         res.status(200).json({ message: raw, uxLawScores: [] });
         return;
       }
-
       res.status(200).json({
         message: parsed.feedback ?? 'No feedback returned.',
         uxLawScores: parsed.uxLawScores ?? [],
@@ -227,25 +244,7 @@ ${body.userQuestion?.trim() ? `The student asks: ${body.userQuestion}` : ''}
 Give 2-4 short paragraphs of warm, educational mentor feedback. Map issues to specific UX laws from the list above where relevant. Highlight the highest-impact issues first. Be encouraging and suitable for a student researcher.`;
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errText = await response.text();
-      res.status(response.status).json({ error: errText }); return;
-    }
-
-    const data = await response.json();
-    const message = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? 'No response generated.';
+    const message = await callAI(prompt, 800);
     res.status(200).json({ message });
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : 'Unknown error' });
