@@ -3,7 +3,10 @@
   padding-bottom: var(--spacing-xl);
 }
 
-/* ── Form ───────────────────────────────────────────────────────────────── */
+/* ==========================================================================
+   FORM
+   ========================================================================== */
+
 .form-field {
   display: flex;
   flex-direction: column;
@@ -26,12 +29,21 @@
     font-size: 0.95rem;
   }
 
+    .form-field input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
 .field-error {
   color: var(--color-error);
   font-size: 0.85rem;
 }
 
-/* ── Tabs ───────────────────────────────────────────────────────────────── */
+/* ==========================================================================
+   TABS
+   ========================================================================== */
+
 .analyzer-tabs {
   display: flex;
   gap: 0;
@@ -61,7 +73,10 @@
   border-bottom-color: var(--color-primary);
 }
 
-/* ── Analyzer card ──────────────────────────────────────────────────────── */
+/* ==========================================================================
+   ANALYZER CARD
+   ========================================================================== */
+
 .analyzer-card {
   padding: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
@@ -96,9 +111,13 @@
 
   .analyzer-page-header p {
     margin: 0;
+    max-width: 800px;
   }
 
-/* ── Upload zone ────────────────────────────────────────────────────────── */
+/* ==========================================================================
+   UPLOAD ZONE
+   ========================================================================== */
+
 .upload-zone {
   display: flex;
   flex-direction: column;
@@ -138,7 +157,10 @@
   color: var(--color-text-muted);
 }
 
-/* ── Wireframe preview ──────────────────────────────────────────────────── */
+/* ==========================================================================
+   WIREFRAME PREVIEW
+   ========================================================================== */
+
 .wireframe-preview-wrapper {
   display: flex;
   flex-direction: column;
@@ -158,7 +180,10 @@
   gap: var(--spacing-sm);
 }
 
-/* ── Results header ─────────────────────────────────────────────────────── */
+/* ==========================================================================
+   RESULTS HEADER
+   ========================================================================== */
+
 .analyzer-header {
   display: flex;
   align-items: flex-start;
@@ -170,9 +195,13 @@
 
 .analyzer-url {
   word-break: break-all;
+  margin-bottom: 0;
 }
 
-/* ── Score grid ─────────────────────────────────────────────────────────── */
+/* ==========================================================================
+   SCORE GRID
+   ========================================================================== */
+
 .score-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -186,6 +215,7 @@
   align-items: center;
   gap: var(--spacing-xs);
   text-align: center;
+  padding: var(--spacing-md);
 }
 
 .score-label {
@@ -201,7 +231,10 @@
   color: var(--color-primary);
 }
 
-/* ── Badges (shared — pass / partial / fail) ────────────────────────────── */
+/* ==========================================================================
+   BADGES
+   ========================================================================== */
+
 .badge-pass {
   color: #16a34a;
 }
@@ -214,56 +247,13 @@
   color: #dc2626;
 }
 
-/* ── Thumbs rating ──────────────────────────────────────────────────────── */
-.rating-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
-}
+/* ==========================================================================
+   UX LAW COMPLIANCE
+   ========================================================================== */
 
-.rating-label {
-  font-size: 0.88rem;
-  color: var(--color-text-muted);
-  margin-right: var(--spacing-xs);
-}
-
-.thumb-btn {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 0.35rem 0.65rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
-  line-height: 1;
-}
-
-  .thumb-btn:hover {
-    border-color: var(--color-primary);
-    background-color: var(--color-primary-light);
-  }
-
-  .thumb-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-.thumb-active {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
-}
-
-.rating-confirmed {
-  font-size: 0.88rem;
-  color: var(--color-text-muted);
-}
-
-/* ── UX Law Compliance ──────────────────────────────────────────────────── */
 .compliance-section {
-  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
 }
 
 .compliance-header {
@@ -271,13 +261,23 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+  .compliance-header h3 {
+    margin: 0 0 0.3rem;
+  }
+
+.compliance-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
 }
 
 .compliance-overall {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  flex-shrink: 0;
 }
 
 .overall-score {
@@ -315,6 +315,17 @@
   font-size: 0.85rem;
 }
 
+.compliance-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) 0;
+}
+
+.compliance-error {
+  padding-top: var(--spacing-sm);
+}
+
 .compliance-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -346,7 +357,10 @@
   font-weight: 700;
 }
 
-/* ── Law list ───────────────────────────────────────────────────────────── */
+/* ==========================================================================
+   UX LAW LIST
+   ========================================================================== */
+
 .law-list {
   list-style: none;
   margin: 0;
@@ -441,7 +455,264 @@
   margin: 0;
   padding-left: calc(7px + var(--spacing-xs));
 }
-/* ── Analysis status ticker ─────────────────────────────────────────────── */
+
+/* ==========================================================================
+   AI MENTOR
+   ========================================================================== */
+
+.mentor-section {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+}
+
+.mentor-header h3 {
+  margin: 0 0 0.35rem;
+}
+
+.mentor-header p {
+  margin: 0;
+  max-width: 760px;
+  font-size: 0.88rem;
+}
+
+.mentor-form {
+  margin-top: var(--spacing-md);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-md);
+}
+
+.mentor-input {
+  flex: 1;
+  width: 100%;
+  min-height: 80px;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+  .mentor-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+  }
+
+.mentor-form .btn {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.mentor-error {
+  margin-top: var(--spacing-sm);
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+
+.mentor-response {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface, var(--color-bg));
+}
+
+.mentor-response-header {
+  margin-bottom: var(--spacing-xs);
+}
+
+.mentor-response-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mentor-response p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   THUMBS RATING
+   ========================================================================== */
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.rating-label {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin-right: var(--spacing-xs);
+}
+
+.thumb-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.65rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  line-height: 1;
+}
+
+  .thumb-btn:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+
+  .thumb-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+.thumb-active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.rating-confirmed {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   ACCESSIBILITY ISSUES
+   ========================================================================== */
+
+.issues-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.section-heading-row {
+  margin-bottom: var(--spacing-md);
+}
+
+  .section-heading-row h3 {
+    margin: 0 0 0.35rem;
+  }
+
+  .section-heading-row p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  margin-left: 0.4rem;
+  padding-inline: 0.35rem;
+  border-radius: 999px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.issue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.issue-card {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface, var(--color-bg));
+}
+
+  .issue-card p {
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+    .issue-card p + p {
+      margin-top: var(--spacing-xs);
+    }
+
+.issue-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+  .issue-header strong {
+    font-size: 0.9rem;
+  }
+
+.issue-severity {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface, var(--color-bg));
+}
+
+.empty-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #dcfce7;
+  color: #16a34a;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.empty-state strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.empty-state p {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   ANALYSIS STATUS TICKER
+   ========================================================================== */
+
 .status-ticker {
   display: flex;
   align-items: center;
@@ -467,7 +738,10 @@
   }
 }
 
-/* Wave dots */
+/* ==========================================================================
+   WAVE DOTS
+   ========================================================================== */
+
 .wave-dots {
   display: flex;
   align-items: flex-end;
@@ -505,5 +779,64 @@
   50% {
     transform: translateY(-5px);
     opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   WIREFRAME RESULT
+   ========================================================================== */
+
+.wireframe-result {
+  margin-bottom: var(--spacing-xl);
+}
+
+  .wireframe-result h3 {
+    margin-top: 0;
+  }
+
+  .wireframe-result p {
+    line-height: 1.7;
+  }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 700px) {
+  .analyzer-page-header,
+  .analyzer-header {
+    flex-direction: column;
+  }
+
+    .analyzer-header .btn,
+    .analyzer-page-header .back-btn {
+      width: 100%;
+    }
+
+  .compliance-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .compliance-overall {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .mentor-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+    .mentor-form .btn {
+      width: 100%;
+    }
+
+  .issue-header {
+    align-items: flex-start;
+  }
+
+  .empty-state {
+    align-items: flex-start;
   }
 }
