@@ -1,5 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 export interface StudyTask {
   id: string;
@@ -55,6 +56,8 @@ const STUDY_TASKS: StudyTask[] = [
 })
 export class StudyTasksComponent {
 
+  private readonly router = inject(Router);
+
   protected readonly tasks = STUDY_TASKS;
 
   protected readonly panelOpen = signal(true);
@@ -75,6 +78,10 @@ export class StudyTasksComponent {
     );
   });
 
+  protected readonly allTasksComplete = computed(
+    () => this.completedTasks().size === this.tasks.length
+  );
+
   protected togglePanel(): void {
     this.panelOpen.update(open => !open);
   }
@@ -94,6 +101,11 @@ export class StudyTasksComponent {
       'mera_completed_tasks',
       JSON.stringify([...updated])
     );
+
+    // Navigate to survey when all tasks are checked
+    if (updated.size === this.tasks.length) {
+      this.router.navigate(['/survey']);
+    }
   }
 
   protected toggleExpanded(taskId: string): void {
