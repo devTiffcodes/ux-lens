@@ -68,4 +68,11 @@ export class App {
   protected readonly isMeraRoute = computed(() =>
     this.currentUrl().startsWith('/mera')
   );
+
+  // ── Hide sidebar on public/auth-only routes ──────────────────────
+  protected readonly showSidebar = computed(() => {
+    const url = this.currentUrl();
+    const hidden = ['/', '/login', '/mera/briefing'];
+    return !hidden.includes(url) && !this.isMeraRoute();
+  });
 }
