@@ -35,7 +35,6 @@
 
     <div class="dev-sidebar-header">
       <span class="dev-sidebar-title">UX LENS</span>
-
       <button type="button"
               class="sidebar-close"
               (click)="closeSidebar()"
@@ -46,7 +45,6 @@
 
     <nav class="dev-sidebar-group" aria-label="Analyzer">
       <p class="dev-sidebar-heading">Analyzer</p>
-
       <a routerLink="/dashboard"
          routerLinkActive="dev-sidebar-link-active"
          [routerLinkActiveOptions]="{ exact: true }"
@@ -55,7 +53,6 @@
         <span class="dev-sidebar-icon" aria-hidden="true">🏠</span>
         <span>Dashboard</span>
       </a>
-
       <a routerLink="/site-analyzer"
          routerLinkActive="dev-sidebar-link-active"
          class="dev-sidebar-link"
@@ -63,7 +60,6 @@
         <span class="dev-sidebar-icon" aria-hidden="true">🔍</span>
         <span>Site Analyzer</span>
       </a>
-
       <a routerLink="/guidelines"
          routerLinkActive="dev-sidebar-link-active"
          class="dev-sidebar-link"
@@ -75,7 +71,6 @@
 
     <nav class="dev-sidebar-group" aria-label="Research">
       <p class="dev-sidebar-heading">Research</p>
-
       <a routerLink="/results"
          routerLinkActive="dev-sidebar-link-active"
          class="dev-sidebar-link"
@@ -88,18 +83,15 @@
     <nav class="dev-sidebar-group dev-sidebar-group-separate"
          aria-label="Test environment">
       <p class="dev-sidebar-heading">Test environment</p>
-
       <a routerLink="/mera/home"
          target="_blank"
          rel="noopener"
          class="dev-sidebar-link">
         <span class="dev-sidebar-icon" aria-hidden="true">🧪</span>
-
         <span class="dev-sidebar-link-text">
           <span>Open Mera</span>
           <small>Participant test site</small>
         </span>
-
         <span class="dev-sidebar-external" aria-hidden="true">↗</span>
       </a>
     </nav>
@@ -118,8 +110,10 @@
   @if (authService.isLoggedIn() && isMeraRoute()) {
   <app-study-tasks />
   }
+
   @if (authService.isLoggedIn() && isMeraRoute() && authService.isResearcher()) {
   <app-ux-lens-fab />
+  }
 
   @if (authService.isLoggedIn() && authService.isResearcher()) {
   <app-dev-panel />
