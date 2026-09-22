@@ -16,8 +16,7 @@ export class UxLensNavbarComponent {
   protected readonly navLinks = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/site-analyzer', label: 'Site Analyzer' },
-    { path: '/guidelines', label: 'Guidelines' },
-    { path: '/survey', label: 'Survey' },
+    { path: '/guidelines', label: 'Guidelines' }
   ];
 
   protected toggleProfile(): void {

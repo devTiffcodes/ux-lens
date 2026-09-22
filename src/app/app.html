@@ -116,9 +116,10 @@
   <app-footer />
 
   @if (authService.isLoggedIn() && isMeraRoute()) {
-  <app-ux-lens-fab />
   <app-study-tasks />
   }
+  @if (authService.isLoggedIn() && isMeraRoute() && authService.isResearcher()) {
+  <app-ux-lens-fab />
 
   @if (authService.isLoggedIn() && authService.isResearcher()) {
   <app-dev-panel />
