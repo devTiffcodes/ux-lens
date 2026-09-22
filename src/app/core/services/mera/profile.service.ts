@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 export interface StudentProfile {
   displayName: string;
@@ -22,31 +23,43 @@ export interface StudentProfile {
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  readonly profile = signal<StudentProfile>({
-    displayName: 'Tiffania',
-    email: 'tiffania@student.unisey.ac.sc',
-    phone: '+248 2 500 000',
-    studentNumber: 'UNI-2024-1038',
-    programme: 'Diploma in Computing and IT',
-    faculty: 'Arts and Social Development',
-    campus: 'Mont Fleuri',
-    semester: 'Semester 2 · 2026',
-    status: 'Active',
-    avatarInitial: 'T',
-    avatarColor: '#3B5998',
-    notifications: {
-      email: true,
-      sms: false,
-      announcements: true,
-      events: true,
-    },
-  });
+  private readonly authService = inject(AuthService);
 
+  private getInitial(): string {
+    const name = this.authService.currentUser()?.displayName ?? '';
+    return name.charAt(0).toUpperCase() || 'U';
+  }
+
+  private buildDefaultProfile(): StudentProfile {
+    const user = this.authService.currentUser();
+    const displayName = user?.displayName ?? 'Participant';
+    const email = user?.email ?? '';
+
+    return {
+      displayName,
+      email,
+      phone: '+248 2 500 000',
+      studentNumber: 'UNI-2024-1038',
+      programme: 'Diploma in Computing and IT',
+      faculty: 'Arts and Social Development',
+      campus: 'Mont Fleuri',
+      semester: 'Semester 2 · 2026',
+      status: 'Active',
+      avatarInitial: displayName.charAt(0).toUpperCase() || 'U',
+      avatarColor: '#3B5998',
+      notifications: {
+        email: true,
+        sms: false,
+        announcements: true,
+        events: true,
+      },
+    };
+  }
+
+  readonly profile = signal<StudentProfile>(this.buildDefaultProfile());
   readonly isEditing = signal(false);
   readonly toastMessage = signal<string | null>(null);
   readonly avatarPreview = signal<string | null>(null);
-
-  // Editable draft — only committed on save
   readonly draft = signal<Partial<StudentProfile>>({});
 
   startEditing(): void {
