@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 export interface ScheduleItem {
   time: string;
@@ -31,7 +32,13 @@ export interface WellbeingTip {
 
 @Injectable({ providedIn: 'root' })
 export class HomeService {
-  readonly studentName = signal('Tiffania');
+  private readonly authService = inject(AuthService);
+
+  readonly studentName = computed(() => {
+    const name = this.authService.currentUser()?.displayName ?? 'Student';
+    return name.split(' ')[0];
+  });
+
   readonly semester = signal('Semester 2 · 2026');
   readonly overallProgress = signal(68);
   readonly enrolledCount = signal(4);
