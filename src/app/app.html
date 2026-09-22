@@ -9,7 +9,7 @@
   }
   }
 
-  @if (authService.isLoggedIn() && authService.isResearcher() && !isMeraRoute()) {
+  @if (authService.isLoggedIn() && authService.isResearcher() && showSidebar()) {
 
   <button type="button"
           class="sidebar-toggle"
