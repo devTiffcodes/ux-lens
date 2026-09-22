@@ -1,103 +1,124 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { Router } from '@angular/router';
-import { FirebaseService } from '../../data/services/firebase.service';
-import { AppUser, UserRole } from '../../domain/models/user.model';
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { Injectable, signal, inject } from '@angular/core';
+import { AuthService } from '../auth.service';
+
+export interface StudentProfile {
+  displayName: string;
+  email: string;
+  phone: string;
+  studentNumber: string;
+  programme: string;
+  faculty: string;
+  campus: string;
+  semester: string;
+  status: string;
+  avatarInitial: string;
+  avatarColor: string;
+  notifications: {
+    email: boolean;
+    sms: boolean;
+    announcements: boolean;
+    events: boolean;
+  };
+}
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
-  private readonly firebaseService = inject(FirebaseService);
-  private readonly router = inject(Router);
+export class ProfileService {
+  private readonly authService = inject(AuthService);
 
-  readonly currentUser = signal<AppUser | null>(null);
-  readonly isLoading = signal<boolean>(true);
-
-  readonly isLoggedIn = computed(() => !!this.currentUser());
-  readonly isResearcher = computed(() => this.currentUser()?.role === 'researcher');
-  readonly isParticipant = computed(() => this.currentUser()?.role === 'participant');
-
-  constructor() {
-    import('firebase/auth').then(({ onAuthStateChanged }) => {
-      onAuthStateChanged(this.firebaseService.auth, async (firebaseUser) => {
-        if (firebaseUser) {
-          const appUser = await this.loadOrCreateUser(firebaseUser);
-          this.currentUser.set(appUser);
-        } else {
-          this.currentUser.set(null);
-        }
-        this.isLoading.set(false);
-      });
-    });
+  private getInitial(): string {
+    const name = this.authService.currentUser()?.displayName ?? '';
+    return name.charAt(0).toUpperCase() || 'U';
   }
 
-  async signInWithGoogle(): Promise<void> {
-    const provider = new GoogleAuthProvider();
-    const credential = await signInWithPopup(this.firebaseService.auth, provider);
-    const appUser = await this.loadOrCreateUser(credential.user);
-    this.currentUser.set(appUser);
-    this.redirectAfterLogin(appUser.role);
-  }
+  private buildDefaultProfile(): StudentProfile {
+    const user = this.authService.currentUser();
+    const displayName = user?.displayName ?? 'Participant';
+    const email = user?.email ?? '';
 
-  async signInWithEmail(email: string, password: string): Promise<void> {
-    const { signInWithEmailAndPassword } = await import('firebase/auth');
-    const credential = await signInWithEmailAndPassword(this.firebaseService.auth, email, password);
-    const appUser = await this.loadOrCreateUser(credential.user);
-    this.currentUser.set(appUser);
-    this.redirectAfterLogin(appUser.role);
-  }
-
-  async registerWithEmail(email: string, password: string, displayName: string): Promise<void> {
-    const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
-    const credential = await createUserWithEmailAndPassword(this.firebaseService.auth, email, password);
-    await updateProfile(credential.user, { displayName });
-    const appUser = await this.loadOrCreateUser(credential.user);
-    this.currentUser.set(appUser);
-    this.redirectAfterLogin(appUser.role);
-  }
-
-  async signOut(): Promise<void> {
-    await signOut(this.firebaseService.auth);
-    this.currentUser.set(null);
-    this.router.navigate(['/']);
-  }
-
-  private redirectAfterLogin(role: UserRole): void {
-    if (role === 'researcher') {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/mera/home']);
-    }
-  }
-
-  private async loadOrCreateUser(firebaseUser: any): Promise<AppUser> {
-    const userRef = doc(this.firebaseService.db, 'users', firebaseUser.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      const data = userSnap.data();
-      return {
-        uid: firebaseUser.uid,
-        email: firebaseUser.email ?? '',
-        displayName: firebaseUser.displayName,
-        photoURL: firebaseUser.photoURL,
-        role: (data['role'] as UserRole) ?? 'participant',
-      };
-    }
-
-    const newUser: AppUser = {
-      uid: firebaseUser.uid,
-      email: firebaseUser.email ?? '',
-      displayName: firebaseUser.displayName,
-      photoURL: firebaseUser.photoURL,
-      role: 'participant',
+    return {
+      displayName,
+      email,
+      phone: '+248 2 500 000',
+      studentNumber: 'UNI-2024-1038',
+      programme: 'Diploma in Computing and IT',
+      faculty: 'Arts and Social Development',
+      campus: 'Mont Fleuri',
+      semester: 'Semester 2 · 2026',
+      status: 'Active',
+      avatarInitial: displayName.charAt(0).toUpperCase() || 'U',
+      avatarColor: '#3B5998',
+      notifications: {
+        email: true,
+        sms: false,
+        announcements: true,
+        events: true,
+      },
     };
+  }
 
-    await setDoc(userRef, newUser);
-    return newUser;
+  readonly profile = signal<StudentProfile>(this.buildDefaultProfile());
+  readonly isEditing = signal(false);
+  readonly toastMessage = signal<string | null>(null);
+  readonly avatarPreview = signal<string | null>(null);
+  readonly draft = signal<Partial<StudentProfile>>({});
+
+  startEditing(): void {
+    this.draft.set({
+      displayName: this.profile().displayName,
+      phone: this.profile().phone,
+      notifications: { ...this.profile().notifications },
+    });
+    this.isEditing.set(true);
+  }
+
+  cancelEditing(): void {
+    this.isEditing.set(false);
+    this.draft.set({});
+  }
+
+  saveChanges(): void {
+    const d = this.draft();
+    this.profile.update(p => ({
+      ...p,
+      displayName: d.displayName ?? p.displayName,
+      phone: d.phone ?? p.phone,
+      notifications: d.notifications ?? p.notifications,
+      avatarInitial: (d.displayName ?? p.displayName).charAt(0).toUpperCase(),
+    }));
+    this.isEditing.set(false);
+    this.draft.set({});
+    this.showToast('✅ Profile updated successfully.');
+  }
+
+  updateDraftField(field: keyof StudentProfile, value: string): void {
+    this.draft.update(d => ({ ...d, [field]: value }));
+  }
+
+  toggleNotification(key: keyof StudentProfile['notifications']): void {
+    this.draft.update(d => ({
+      ...d,
+      notifications: {
+        ...(d.notifications ?? this.profile().notifications),
+        [key]: !(d.notifications ?? this.profile().notifications)[key],
+      },
+    }));
+  }
+
+  handleAvatarUpload(file: File): void {
+    if (!file.type.startsWith('image/')) {
+      this.showToast('❌ Please upload a valid image file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.avatarPreview.set(e.target?.result as string);
+      this.showToast('✅ Profile photo updated.');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  showToast(message: string): void {
+    this.toastMessage.set(message);
+    setTimeout(() => this.toastMessage.set(null), 3500);
   }
 }
