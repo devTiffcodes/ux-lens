@@ -85,7 +85,7 @@ export class AuthService {
         email: firebaseUser.email ?? '',
         displayName: firebaseUser.displayName,
         photoURL: firebaseUser.photoURL,
-        role: data['role'] as UserRole,
+        role: (data['role'] as UserRole) ?? 'participant',
       };
     }
 
