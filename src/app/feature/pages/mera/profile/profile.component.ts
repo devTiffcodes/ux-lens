@@ -7,9 +7,7 @@ import { ProfileService } from '../../../../core/services/mera/profile.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [
-    TitleCasePipe
-  ],
+  imports: [TitleCasePipe],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -60,5 +58,22 @@ export class ProfileComponent {
       ? ''
       : this.profileService.profile().avatarInitial;
   }
-  
+
+  // ── Quick actions ────────────────────────────────────────────────
+
+  protected downloadStudentId(): void {
+    this.profileService.showToast('📄 Preparing your Student ID for download...');
+  }
+
+  protected viewTranscript(): void {
+    this.profileService.showToast('📋 Academic Transcript is being generated...');
+  }
+
+  protected viewFeeStatement(): void {
+    this.profileService.showToast('💰 Fee Statement is being loaded...');
+  }
+
+  protected changePassword(): void {
+    this.profileService.showToast('🔑 A password reset link has been sent to your email.');
+  }
 }

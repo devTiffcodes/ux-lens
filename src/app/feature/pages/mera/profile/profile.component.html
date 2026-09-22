@@ -117,19 +117,19 @@
       <div class="profile-card card profile-card-full">
         <h2 class="profile-section-title">Quick Actions</h2>
         <div class="profile-actions">
-          <button class="profile-action-btn">
+          <button class="profile-action-btn" (click)="downloadStudentId()">
             <span>📄</span>
             <span>Download Student ID</span>
           </button>
-          <button class="profile-action-btn">
+          <button class="profile-action-btn" (click)="viewTranscript()">
             <span>📋</span>
             <span>View Academic Transcript</span>
           </button>
-          <button class="profile-action-btn">
+          <button class="profile-action-btn" (click)="viewFeeStatement()">
             <span>💰</span>
             <span>View Fee Statement</span>
           </button>
-          <button class="profile-action-btn">
+          <button class="profile-action-btn" (click)="changePassword()">
             <span>🔑</span>
             <span>Change Password</span>
           </button>
