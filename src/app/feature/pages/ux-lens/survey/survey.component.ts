@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { orderBy } from 'firebase/firestore';
 import { FirebaseService } from '../../../../data/services/firebase.service';
@@ -105,6 +106,7 @@ export class SurveyComponent implements OnInit {
   protected readonly uxModeService = inject(UxModeService);
   private readonly sessionTracking = inject(SessionTrackingService);
   private readonly location = inject(Location);
+  private readonly router = inject(Router);
 
   // ── State ----------------------------------------------------------------
 
@@ -243,9 +245,11 @@ export class SurveyComponent implements OnInit {
     const clickEvents = this.sessionTracking.clickEvents();
     const tasksCompleted = Array.from(this.checkedTasks());
 
+    const currentMode = this.uxModeService.isPoorMode() ? 'poor' : 'good';
+
     const response: SurveyResponse = {
       sessionId: crypto.randomUUID(),
-      uxMode: this.uxModeService.isPoorMode() ? 'poor' : 'good',
+      uxMode: currentMode,
       submittedAt: new Date(),
       sessionDurationSeconds,
       clickEvents,
@@ -261,6 +265,19 @@ export class SurveyComponent implements OnInit {
       this.sessionTracking.resetSession();
       this.checkedTasks.set(new Set());
       this.resetForm();
+
+      // ── Flip UX mode and start second session ──────────────────
+      const wasGood = currentMode === 'good';
+
+      // Clear completed tasks from sessionStorage so the panel resets
+      sessionStorage.removeItem('mera_completed_tasks');
+
+      // Wait briefly so the success state is visible, then flip and redirect
+      setTimeout(() => {
+        this.uxModeService.toggleUxMode();
+        this.router.navigate(['/mera/briefing']);
+      }, 2000);
+
     } catch (err) {
       this.submitError.set(
         err instanceof Error ? err.message : 'Failed to submit survey. Please try again.'
