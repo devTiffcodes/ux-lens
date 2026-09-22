@@ -1,0 +1,392 @@
+/* ==========================================================
+   STUDY TASKS
+   ========================================================== */
+
+.study-tasks {
+  position: fixed;
+  right: 24px;
+  bottom: 110px;
+  z-index: 800;
+  width: 360px;
+  font-family: inherit;
+}
+
+
+/* ==========================================================
+   PANEL
+   ========================================================== */
+
+.study-tasks-panel {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.study-tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.study-tasks-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.study-tasks-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
+  font-size: 1rem;
+}
+
+.study-tasks-title h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.study-tasks-title p {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.study-tasks-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+  .study-tasks-close:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+
+/* ==========================================================
+   PROGRESS
+   ========================================================== */
+
+.study-tasks-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px 4px;
+}
+
+.study-tasks-progress-track {
+  flex: 1;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border);
+  overflow: hidden;
+}
+
+.study-tasks-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--color-primary);
+  transition: width 250ms ease;
+}
+
+.study-tasks-progress > span {
+  min-width: 34px;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-align: right;
+}
+
+
+/* ==========================================================
+   HELPER TEXT
+   ========================================================== */
+
+.study-tasks-helper {
+  margin: 8px 18px 14px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+
+/* ==========================================================
+   TASK LIST
+   ========================================================== */
+
+.study-task-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 390px;
+  overflow-y: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+
+/* ==========================================================
+   TASK
+   ========================================================== */
+
+.study-task {
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  transition: background-color 150ms ease, opacity 150ms ease;
+}
+
+  .study-task:hover {
+    background-color: var(--color-bg);
+  }
+
+.study-task--completed {
+  opacity: 0.72;
+}
+
+
+/* ==========================================================
+   TASK MAIN ROW
+   ========================================================== */
+
+.study-task-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 12px 14px;
+}
+
+
+/* ==========================================================
+   CHECK BUTTON
+   ========================================================== */
+
+.study-task-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 21px;
+  height: 21px;
+  margin-top: 2px;
+  padding: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: 5px;
+  background-color: var(--color-surface);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+  .study-task-check:hover {
+    border-color: var(--color-primary);
+  }
+
+.study-task-check--completed {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+}
+
+
+/* ==========================================================
+   TASK CONTENT
+   ========================================================== */
+
+.study-task-content {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.study-task-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 3px;
+}
+
+.study-task-icon {
+  font-size: 0.9rem;
+}
+
+.study-task-page {
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.study-task--completed .study-task-page {
+  text-decoration: line-through;
+}
+
+.study-task-summary {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   EXPAND BUTTON
+   ========================================================== */
+
+.study-task-expand {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+  .study-task-expand:hover {
+    color: var(--color-primary);
+  }
+
+
+/* ==========================================================
+   EXPANDED DETAILS
+   ========================================================== */
+
+.study-task-details {
+  padding: 0 48px 14px;
+  animation: taskDetailsIn 150ms ease;
+}
+
+  .study-task-details p {
+    margin: 0 0 8px;
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    line-height: 1.55;
+  }
+
+.study-task-status {
+  display: inline-block;
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.study-task--completed .study-task-status {
+  color: var(--color-primary);
+}
+
+@keyframes taskDetailsIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ==========================================================
+   ALL COMPLETE
+   ========================================================== */
+
+.study-tasks-complete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+
+/* ==========================================================
+   COLLAPSED BUTTON
+   ========================================================== */
+
+.study-tasks-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 68px;
+  height: 48px;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+  .study-tasks-toggle:hover {
+    transform: translateY(-2px);
+  }
+
+.study-tasks-toggle-icon {
+  font-size: 1.1rem;
+}
+
+.study-tasks-toggle-count {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 640px) {
+
+  .study-tasks {
+    right: 12px;
+    bottom: 88px;
+    width: calc(100vw - 24px);
+  }
+
+  .study-task-list {
+    max-height: 45vh;
+  }
+
+}

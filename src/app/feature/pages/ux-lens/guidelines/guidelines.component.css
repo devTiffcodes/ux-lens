@@ -1,10 +1,593 @@
-.guidelines-section {
-  padding-block: var(--spacing-lg) var(--spacing-xl);
-}
+/* ==========================================================
+PAGE
+========================================================== */
 
-.principle-list {
+.gl-page {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background-color: var(--color-bg);
+}
+
+/* ==========================================================
+FULL WIDTH HEADER
+========================================================== */
+
+.gl-header {
+  flex-shrink: 0;
+  width: 100%;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.gl-header-inner {
+  width: 100%;
+  padding: 32px 40px 24px;
+  text-align: center;
+}
+
+.gl-page-title {
+  margin: 0 0 8px;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.gl-page-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+/* ==========================================================
+FILTERS
+========================================================== */
+
+.gl-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.gl-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+  .gl-filter-chip:hover {
+    border-color: var(--color-primary-mid);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+.gl-filter-chip--active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.gl-filter-count {
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.gl-filter-chip--active .gl-filter-count {
+  background-color: var(--color-primary-mid);
+  color: #fff;
+}
+
+/* ==========================================================
+TWO COLUMN CONTENT
+========================================================== */
+
+.gl-content {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+/* ==========================================================
+LEFT — GUIDELINE LIST
+========================================================== */
+
+.gl-list-panel {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.gl-list-header {
+  flex-shrink: 0;
+  padding: 18px 20px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+  .gl-list-header h2 {
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+.gl-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+/* ==========================================================
+GUIDELINE CARD
+========================================================== */
+
+.gl-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 20px;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+  .gl-card:hover {
+    background-color: var(--color-primary-light);
+  }
+
+.gl-card--active {
+  padding-left: 17px;
+  border-left: 3px solid var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.gl-card-category-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  border-radius: 50%;
+}
+
+  .gl-card-category-dot[data-cat="Usability"] {
+    background-color: #74B49B;
+  }
+
+  .gl-card-category-dot[data-cat="Accessibility"] {
+    background-color: #4A90D9;
+  }
+
+  .gl-card-category-dot[data-cat="Cognitive Wellbeing"] {
+    background-color: #B49B74;
+  }
+
+  .gl-card-category-dot[data-cat="Visual Design"] {
+    background-color: #9B74B4;
+  }
+
+.gl-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.gl-card-title {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.gl-card-source {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.3;
+}
+
+.gl-card-summary {
+  display: -webkit-box;
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.gl-card-chevron {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.gl-card:hover .gl-card-chevron,
+.gl-card--active .gl-card-chevron {
+  color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+/* ==========================================================
+RIGHT — DETAIL
+========================================================== */
+
+.gl-detail {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+}
+
+.gl-detail-inner {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 48px 60px;
+}
+
+/* ==========================================================
+DETAIL META
+========================================================== */
+
+.gl-detail-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.gl-detail-source {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* ==========================================================
+CATEGORY BADGES
+========================================================== */
+
+.badge[data-cat="Usability"] {
+  background-color: rgba(116, 180, 155, 0.15);
+  color: #2D6A4F;
+}
+
+.badge[data-cat="Accessibility"] {
+  background-color: rgba(74, 144, 217, 0.12);
+  color: #2563A8;
+}
+
+.badge[data-cat="Cognitive Wellbeing"] {
+  background-color: rgba(180, 155, 116, 0.15);
+  color: #7A5C2A;
+}
+
+.badge[data-cat="Visual Design"] {
+  background-color: rgba(155, 116, 180, 0.15);
+  color: #6B3FA0;
+}
+
+/* ==========================================================
+DETAIL TEXT
+========================================================== */
+
+.gl-detail-title {
+  margin: 0 0 10px;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.gl-detail-summary {
+  max-width: 680px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.65;
+}
+
+/* ==========================================================
+DETAIL SECTIONS
+========================================================== */
+
+.gl-detail-section {
+  margin-top: 32px;
+}
+
+.gl-detail-section-heading {
+  margin: 0 0 10px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gl-detail-section p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+}
+
+/* ==========================================================
+UX LENS HIGHLIGHT
+========================================================== */
+
+.gl-detail-section--highlight {
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary-mid);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+  .gl-detail-section--highlight
+  .gl-detail-section-heading {
+    color: var(--color-primary);
+  }
+
+/* ==========================================================
+CHECKLIST
+========================================================== */
+
+.gl-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gl-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.gl-checklist-tick {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* ==========================================================
+RELATED GUIDELINES
+========================================================== */
+
+.gl-related-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gl-related-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+  .gl-related-chip:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+/* ==========================================================
+EMPTY STATE
+========================================================== */
+
+.gl-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+}
+
+.gl-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
+  font-size: 1.8rem;
+}
+
+.gl-empty-state h2 {
+  margin: 0 0 6px;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+}
+
+.gl-empty-state p {
+  max-width: 400px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+/* ==========================================================
+TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .gl-header-inner {
+    padding: 28px 24px 22px;
+  }
+
+  .gl-content {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .gl-list-panel {
+    width: 280px;
+  }
+
+  .gl-detail-inner {
+    padding: 32px 28px 50px;
+  }
+}
+
+/* ==========================================================
+MOBILE
+========================================================== */
+
+@media (max-width: 700px) {
+
+  .gl-page {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .gl-header-inner {
+    padding: 24px 16px 20px;
+  }
+
+  .gl-page-title {
+    font-size: 1.7rem;
+  }
+
+  .gl-filters {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .gl-filter-chip {
+    flex-shrink: 0;
+  }
+
+  .gl-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gl-list-panel {
+    width: 100%;
+    max-height: 340px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .gl-list {
+    max-height: 280px;
+  }
+
+  .gl-detail {
+    min-height: 500px;
+    overflow: visible;
+  }
+
+  .gl-detail-inner {
+    padding: 28px 20px 48px;
+  }
+
+  .gl-detail-title {
+    font-size: 1.7rem;
+  }
+
+  .gl-empty-state {
+    min-height: 400px;
+  }
+}
+
+/* ==========================================================
+SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+
+  .gl-header-inner {
+    padding: 20px 14px;
+  }
+
+  .gl-page-title {
+    font-size: 1.5rem;
+  }
+
+  .gl-card {
+    padding: 14px 16px;
+  }
+
+  .gl-card--active {
+    padding-left: 13px;
+  }
+
+  .gl-card-summary {
+    display: none;
+  }
+
+  .gl-list-panel {
+    max-height: 300px;
+  }
 }

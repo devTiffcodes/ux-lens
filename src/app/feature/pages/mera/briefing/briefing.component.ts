@@ -61,6 +61,10 @@ export class BriefingComponent {
 
   protected beginStudy(): void {
     sessionStorage.setItem('briefing_accepted', 'true');
+
+    // Start a fresh participant task checklist.
+    sessionStorage.removeItem('mera_completed_tasks');
+
     this.router.navigate(['/mera/home']);
   }
 }

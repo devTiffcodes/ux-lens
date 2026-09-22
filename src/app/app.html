@@ -9,14 +9,115 @@
   }
   }
 
-  <main class="app-main">
-    <router-outlet />
-  </main>
+  @if (authService.isLoggedIn() && authService.isResearcher() && !isMeraRoute()) {
+
+  <button type="button"
+          class="sidebar-toggle"
+          [class.sidebar-toggle--hidden]="sidebarOpen()"
+          (click)="toggleSidebar()"
+          aria-label="Open UX Lens navigation"
+          [attr.aria-expanded]="sidebarOpen()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  @if (sidebarOpen()) {
+  <button type="button"
+          class="sidebar-overlay"
+          aria-label="Close navigation"
+          (click)="closeSidebar()"></button>
+  }
+
+  <aside class="dev-sidebar"
+         [class.dev-sidebar--open]="sidebarOpen()"
+         aria-label="Developer tools">
+
+    <div class="dev-sidebar-header">
+      <span class="dev-sidebar-title">UX LENS</span>
+
+      <button type="button"
+              class="sidebar-close"
+              (click)="closeSidebar()"
+              aria-label="Close navigation">
+        ×
+      </button>
+    </div>
+
+    <nav class="dev-sidebar-group" aria-label="Analyzer">
+      <p class="dev-sidebar-heading">Analyzer</p>
+
+      <a routerLink="/dashboard"
+         routerLinkActive="dev-sidebar-link-active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         class="dev-sidebar-link"
+         (click)="closeSidebar()">
+        <span class="dev-sidebar-icon" aria-hidden="true">🏠</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/site-analyzer"
+         routerLinkActive="dev-sidebar-link-active"
+         class="dev-sidebar-link"
+         (click)="closeSidebar()">
+        <span class="dev-sidebar-icon" aria-hidden="true">🔍</span>
+        <span>Site Analyzer</span>
+      </a>
+
+      <a routerLink="/guidelines"
+         routerLinkActive="dev-sidebar-link-active"
+         class="dev-sidebar-link"
+         (click)="closeSidebar()">
+        <span class="dev-sidebar-icon" aria-hidden="true">📖</span>
+        <span>UX Guidelines</span>
+      </a>
+    </nav>
+
+    <nav class="dev-sidebar-group" aria-label="Research">
+      <p class="dev-sidebar-heading">Research</p>
+
+      <a routerLink="/results"
+         routerLinkActive="dev-sidebar-link-active"
+         class="dev-sidebar-link"
+         (click)="closeSidebar()">
+        <span class="dev-sidebar-icon" aria-hidden="true">📊</span>
+        <span>Survey Results</span>
+      </a>
+    </nav>
+
+    <nav class="dev-sidebar-group dev-sidebar-group-separate"
+         aria-label="Test environment">
+      <p class="dev-sidebar-heading">Test environment</p>
+
+      <a routerLink="/mera/home"
+         target="_blank"
+         rel="noopener"
+         class="dev-sidebar-link">
+        <span class="dev-sidebar-icon" aria-hidden="true">🧪</span>
+
+        <span class="dev-sidebar-link-text">
+          <span>Open Mera</span>
+          <small>Participant test site</small>
+        </span>
+
+        <span class="dev-sidebar-external" aria-hidden="true">↗</span>
+      </a>
+    </nav>
+
+  </aside>
+  }
+
+  <div class="app-body">
+    <main class="app-main">
+      <router-outlet />
+    </main>
+  </div>
 
   <app-footer />
 
   @if (authService.isLoggedIn() && isMeraRoute()) {
   <app-ux-lens-fab />
+  <app-study-tasks />
   }
 
   @if (authService.isLoggedIn() && authService.isResearcher()) {

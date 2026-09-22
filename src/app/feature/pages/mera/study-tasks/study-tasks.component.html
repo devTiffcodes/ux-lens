@@ -1,0 +1,222 @@
+<div class="study-tasks"
+     [class.study-tasks--closed]="!panelOpen()">
+
+  <!-- ==========================================================
+       COLLAPSED BUTTON
+       ========================================================== -->
+  @if (!panelOpen()) {
+
+  <button type="button"
+          class="study-tasks-toggle"
+          (click)="togglePanel()"
+          aria-label="Open study tasks">
+
+    <span class="study-tasks-toggle-icon">
+      📝
+    </span>
+
+    <span class="study-tasks-toggle-count">
+      {{ completedCount() }}/{{ tasks.length }}
+    </span>
+
+  </button>
+
+  }
+
+
+  <!-- ==========================================================
+       TASK PANEL
+       ========================================================== -->
+  @if (panelOpen()) {
+
+  <section class="study-tasks-panel"
+           aria-label="Study tasks">
+
+    <!-- Header -->
+
+    <div class="study-tasks-header">
+
+      <div class="study-tasks-title">
+
+        <span class="study-tasks-icon"
+              aria-hidden="true">
+          📝
+        </span>
+
+        <div>
+          <h2>Study Tasks</h2>
+
+          <p>
+            {{ completedCount() }} of {{ tasks.length }} completed
+          </p>
+        </div>
+
+      </div>
+
+      <button type="button"
+              class="study-tasks-close"
+              (click)="togglePanel()"
+              aria-label="Collapse study tasks">
+        −
+      </button>
+
+    </div>
+
+
+    <!-- Progress -->
+
+    <div class="study-tasks-progress"
+         aria-hidden="true">
+
+      <div class="study-tasks-progress-track">
+
+        <div class="study-tasks-progress-fill"
+             [style.width.%]="progress()"></div>
+
+      </div>
+
+      <span>
+        {{ progress() }}%
+      </span>
+
+    </div>
+
+
+    <!-- Instructions -->
+
+    <p class="study-tasks-helper">
+      Complete the tasks at your own pace. You can mark them here
+      as you finish.
+    </p>
+
+
+    <!-- Task list -->
+
+    <div class="study-task-list">
+
+      @for (task of tasks; track task.id) {
+
+      <article class="study-task"
+               [class.study-task--completed]="isCompleted(task.id)"
+               [class.study-task--expanded]="isExpanded(task.id)">
+
+        <div class="study-task-main">
+
+          <!-- Checkbox -->
+
+          <button type="button"
+                  class="study-task-check"
+                  [class.study-task-check--completed]="isCompleted(task.id)"
+                  [attr.aria-label]="
+                  isCompleted(task.id)
+                    ? 'Mark task as incomplete'
+                    : 'Mark task as complete'
+                "
+                  (click)="toggleTask(task.id)">
+
+            @if (isCompleted(task.id)) {
+            ✓
+            }
+
+          </button>
+
+
+          <!-- Task content -->
+
+          <button type="button"
+                  class="study-task-content"
+                  (click)="toggleExpanded(task.id)"
+                  [attr.aria-expanded]="isExpanded(task.id)">
+
+            <span class="study-task-top">
+
+              <span class="study-task-icon"
+                    aria-hidden="true">
+                {{ task.icon }}
+              </span>
+
+              <span class="study-task-page">
+                {{ task.page }}
+              </span>
+
+            </span>
+
+            <span class="study-task-summary">
+              {{ task.instruction }}
+            </span>
+
+          </button>
+
+
+          <!-- Expand arrow -->
+
+          <button type="button"
+                  class="study-task-expand"
+                  (click)="toggleExpanded(task.id)"
+                  [attr.aria-label]="
+                  isExpanded(task.id)
+                    ? 'Collapse task'
+                    : 'Expand task'
+                ">
+
+            {{ isExpanded(task.id) ? '⌃' : '⌄' }}
+
+          </button>
+
+        </div>
+
+
+        <!-- Expanded information -->
+        @if (isExpanded(task.id)) {
+
+        <div class="study-task-details">
+
+          <p>
+            {{ task.instruction }}
+          </p>
+
+          @if (isCompleted(task.id)) {
+
+          <span class="study-task-status">
+            ✓ Marked as completed
+          </span>
+
+          } @else {
+
+          <span class="study-task-status">
+            When you're finished, check the box above.
+          </span>
+
+          }
+
+        </div>
+
+        }
+
+      </article>
+
+      }
+
+    </div>
+
+
+    <!-- Footer -->
+    @if (completedCount() === tasks.length) {
+
+    <div class="study-tasks-complete">
+
+      <span aria-hidden="true">🎉</span>
+
+      <span>
+        All study tasks completed!
+      </span>
+
+    </div>
+
+    }
+
+  </section>
+
+  }
+
+</div>

@@ -1,17 +1,283 @@
-<section class="container guidelines-section">
-  <h1>UX Guidelines</h1>
-  <p class="text-muted">
-    The design issues demonstrated in Mera's Poor UX Mode are grounded in the following
-    established usability and accessibility principles.
-  </p>
+<div class="gl-page">
 
-  <div class="principle-list">
-    @for (principle of principles; track principle.title) {
-    <div class="card principle-card">
-      <h2>{{ principle.title }}</h2>
-      <p class="text-muted"><em>{{ principle.source }}</em></p>
-      <p>{{ principle.summary }}</p>
+  <!-- ==========================================================
+       PAGE HEADER
+       ========================================================== -->
+
+  <header class="gl-header">
+
+    <div class="gl-header-inner">
+
+      <h1 class="gl-page-title">
+        UX Guidelines
+      </h1>
+
+      <p class="gl-page-subtitle">
+        Principles for usable, accessible, and wellbeing-conscious
+        digital experiences — grounded in established UX,
+        accessibility, and cognitive wellbeing research.
+      </p>
+
+      <div class="gl-filters"
+           role="group"
+           aria-label="Filter by category">
+
+        @for (cat of categories; track cat) {
+
+        <button type="button"
+                class="gl-filter-chip"
+                [class.gl-filter-chip--active]="activeCategory() === cat"
+                (click)="setCategory(cat)"
+                [attr.aria-pressed]="activeCategory() === cat">
+
+          @if (cat !== 'All') {
+          <span aria-hidden="true">
+            {{ categoryIcons[cat] }}
+          </span>
+          }
+
+          <span>{{ cat }}</span>
+
+          <span class="gl-filter-count">
+            {{ countForCategory(cat) }}
+          </span>
+
+        </button>
+
+        }
+
+      </div>
+
     </div>
-    }
+
+  </header>
+
+  <!-- ==========================================================
+       CONTENT
+       ========================================================== -->
+
+  <div class="gl-content">
+
+    <!-- ========================================================
+         LEFT: GUIDELINES
+         ======================================================== -->
+
+    <aside class="gl-list-panel">
+
+      <div class="gl-list-header">
+        <h2>Guidelines</h2>
+      </div>
+
+      <ul class="gl-list">
+
+        @for (g of filtered(); track g.id) {
+
+        <li>
+
+          <button type="button"
+                  class="gl-card"
+                  [class.gl-card--active]="activeId() === g.id"
+                  (click)="openGuideline(g.id)">
+
+            <span class="gl-card-category-dot"
+                  [attr.data-cat]="g.category"
+                  aria-hidden="true"></span>
+
+            <span class="gl-card-body">
+
+              <span class="gl-card-title">
+                {{ g.title }}
+              </span>
+
+              <span class="gl-card-source">
+                {{ g.source }}
+              </span>
+
+              <span class="gl-card-summary">
+                {{ g.summary }}
+              </span>
+
+            </span>
+
+            <span class="gl-card-chevron"
+                  aria-hidden="true">
+              ›
+            </span>
+
+          </button>
+
+        </li>
+
+        }
+
+      </ul>
+
+    </aside>
+
+
+    <!-- ========================================================
+         RIGHT: DETAILS
+         ======================================================== -->
+
+    <main class="gl-detail">
+
+      @if (activeGuideline(); as g) {
+
+      <div class="gl-detail-inner">
+
+        <div class="gl-detail-meta">
+
+          <span class="badge"
+                [attr.data-cat]="g.category">
+            {{ categoryIcons[g.category] }}
+            {{ g.category }}
+          </span>
+
+          <span class="gl-detail-source">
+            {{ g.source }}
+          </span>
+
+        </div>
+
+
+        <h2 class="gl-detail-title">
+          {{ g.title }}
+        </h2>
+
+
+        <p class="gl-detail-summary">
+          {{ g.summary }}
+        </p>
+
+
+        <hr class="divider">
+
+
+        <section class="gl-detail-section">
+
+          <h3 class="gl-detail-section-heading">
+            What it means
+          </h3>
+
+          <p>
+            {{ g.explanation }}
+          </p>
+
+        </section>
+
+
+        <section class="gl-detail-section">
+
+          <h3 class="gl-detail-section-heading">
+            Why it matters
+          </h3>
+
+          <p>
+            {{ g.whyItMatters }}
+          </p>
+
+        </section>
+
+
+        <section class="gl-detail-section">
+
+          <h3 class="gl-detail-section-heading">
+            What to look for
+          </h3>
+
+          <ul class="gl-checklist">
+
+            @for (item of g.whatToLookFor; track item) {
+
+            <li class="gl-checklist-item">
+
+              <span class="gl-checklist-tick"
+                    aria-hidden="true">
+                ✓
+              </span>
+
+              <span>{{ item }}</span>
+
+            </li>
+
+            }
+
+          </ul>
+
+        </section>
+
+
+        <section class="gl-detail-section gl-detail-section--highlight">
+
+          <h3 class="gl-detail-section-heading">
+            In UX Lens
+          </h3>
+
+          <p>
+            {{ g.uxLensApplication }}
+          </p>
+
+        </section>
+
+
+        @if (relatedGuidelines().length > 0) {
+
+        <section class="gl-detail-section">
+
+          <h3 class="gl-detail-section-heading">
+            Related guidelines
+          </h3>
+
+          <div class="gl-related-list">
+
+            @for (rel of relatedGuidelines(); track rel.id) {
+
+            <button type="button"
+                    class="gl-related-chip"
+                    (click)="jumpTo(rel.id)">
+
+              <span aria-hidden="true">
+                {{ categoryIcons[rel.category] }}
+              </span>
+
+              {{ rel.title }}
+
+            </button>
+
+            }
+
+          </div>
+
+        </section>
+
+        }
+
+      </div>
+
+      } @else {
+
+      <div class="gl-empty-state">
+
+        <div class="gl-empty-icon"
+             aria-hidden="true">
+          📖
+        </div>
+
+        <h2>
+          Select a guideline
+        </h2>
+
+        <p>
+          Choose a guideline from the list to explore its
+          meaning, importance, and application in UX Lens.
+        </p>
+
+      </div>
+
+      }
+
+    </main>
+
   </div>
-</section>
+
+</div>

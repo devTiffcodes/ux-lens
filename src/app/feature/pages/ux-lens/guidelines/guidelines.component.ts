@@ -1,44 +1,87 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { GUIDELINES, Guideline } from './guidelines.data';
 
-interface GuidelinePrinciple {
-  title: string;
-  source: string;
-  summary: string;
-}
+type Category = 'All' | 'Usability' | 'Accessibility' | 'Cognitive Wellbeing' | 'Visual Design';
+
+const CATEGORY_ICONS: Record<string, string> = {
+  'Usability': '🧭',
+  'Accessibility': '♿',
+  'Cognitive Wellbeing': '🧠',
+  'Visual Design': '🎨',
+};
 
 @Component({
   selector: 'app-guidelines',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './guidelines.component.html',
   styleUrl: './guidelines.component.css',
 })
 export class GuidelinesComponent {
-  protected readonly principles: GuidelinePrinciple[] = [
-    {
-      title: 'Visibility of System Status',
-      source: "Nielsen's 10 Usability Heuristics",
-      summary: 'The system should always keep users informed about what is going on through appropriate feedback within reasonable time.',
-    },
-    {
-      title: 'Consistency and Standards',
-      source: "Nielsen's 10 Usability Heuristics",
-      summary: 'Users should not have to wonder whether different words, situations, or actions mean the same thing.',
-    },
-    {
-      title: 'Recognition Rather Than Recall',
-      source: "Nielsen's 10 Usability Heuristics",
-      summary: "Minimize the user's memory load by making elements, actions, and options visible.",
-    },
-    {
-      title: 'Help Users Recognize and Recover from Errors',
-      source: "Nielsen's 10 Usability Heuristics",
-      summary: 'Error messages should be expressed in plain language, precisely indicate the problem, and suggest a solution.',
-    },
-    {
-      title: 'Contrast Minimum',
-      source: 'WCAG 2.1, Success Criterion 1.4.3',
-      summary: 'Text should have a contrast ratio of at least 4.5:1 against its background to remain readable.',
-    },
+  readonly categoryIcons = CATEGORY_ICONS;
+
+  readonly categories: Category[] = [
+    'All',
+    'Usability',
+    'Accessibility',
+    'Cognitive Wellbeing',
+    'Visual Design',
   ];
+
+  readonly activeCategory = signal<Category>('All');
+  readonly activeId = signal<string | null>(null);
+
+  readonly filtered = computed(() => {
+    const cat = this.activeCategory();
+    return cat === 'All'
+      ? GUIDELINES
+      : GUIDELINES.filter(g => g.category === cat);
+  });
+
+  readonly activeGuideline = computed<Guideline | null>(() => {
+    const id = this.activeId();
+    return id ? GUIDELINES.find(g => g.id === id) ?? null : null;
+  });
+
+  readonly relatedGuidelines = computed<Guideline[]>(() => {
+    const active = this.activeGuideline();
+    if (!active) return [];
+    return active.relatedGuidelines
+      .map(id => GUIDELINES.find(g => g.id === id))
+      .filter((g): g is Guideline => g !== undefined);
+  });
+
+  setCategory(cat: Category): void {
+    this.activeCategory.set(cat);
+    this.activeId.set(null);
+  }
+
+  openGuideline(id: string): void {
+    this.activeId.set(id);
+    // scroll detail panel to top
+    setTimeout(() => {
+      document.querySelector('.gl-detail')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
+  }
+
+  closeDetail(): void {
+    this.activeId.set(null);
+  }
+
+  jumpTo(id: string): void {
+    this.activeId.set(id);
+    // ensure the category filter shows it
+    const target = GUIDELINES.find(g => g.id === id);
+    if (target) this.activeCategory.set('All');
+    setTimeout(() => {
+      document.querySelector('.gl-detail')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
+  }
+
+  countForCategory(cat: string): number {
+    return cat === 'All'
+      ? GUIDELINES.length
+      : GUIDELINES.filter(g => g.category === cat).length;
+  }
 }

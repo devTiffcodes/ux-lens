@@ -4,34 +4,40 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   0. Google Fonts import
+   0. Google Fonts
    -------------------------------------------------------------------------- */
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
+
 /* --------------------------------------------------------------------------
-   1. CSS Custom Properties — Good UX Mode (default)
+   1. CSS Custom Properties — Good UX Mode
    -------------------------------------------------------------------------- */
+
 :root {
   /* ── Brand palette ─────────────────────────────────────────────────────── */
-  --color-primary: #2D6A4F; /* deep mangrove */
-  --color-primary-light: #E8F0EB; /* seafoam mist */
-  --color-primary-mid: #74B49B; /* sage teal */
-  --color-primary-dark: #1B4332; /* dark forest */
-  --color-accent: #F4A261; /* soft coral — use sparingly */
-  --color-accent-light: #FEF0E6; /* coral tint */
-  /* ── Semantic tokens — Good UX mode defaults ───────────────────────────── */
-  --color-bg: #F7F4EF; /* warm ivory — never harsh white */
-  --color-surface: #FFFFFF; /* card surfaces */
-  --color-surface-alt: #E8F0EB; /* seafoam for alt sections */
-  --color-text: #2C3E35; /* dark forest green — readable, warm */
-  --color-text-muted: #5E7A6B; /* muted sage */
-  --color-border: #C8DDD4; /* muted mint */
+
+  --color-primary: #2D6A4F;
+  --color-primary-light: #E8F0EB;
+  --color-primary-mid: #74B49B;
+  --color-primary-dark: #1B4332;
+  --color-accent: #F4A261;
+  --color-accent-light: #FEF0E6;
+  /* ── Semantic tokens ──────────────────────────────────────────────────── */
+
+  --color-bg: #F7F4EF;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #E8F0EB;
+  --color-text: #2C3E35;
+  --color-text-muted: #5E7A6B;
+  --color-border: #C8DDD4;
   --color-link: var(--color-primary);
   --color-link-hover: var(--color-primary-dark);
   --color-error: #C0392B;
   --color-success: #2D6A4F;
-  --color-focus-ring: #F4A261; /* coral focus — visible but soft */
-  /* ── Layout ────────────────────────────────────────────────────────────── */
+  --color-focus-ring: #F4A261;
+  /* ── Layout ───────────────────────────────────────────────────────────── */
+
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -41,7 +47,8 @@
   --spacing-md: 16px;
   --spacing-lg: 28px;
   --spacing-xl: 56px;
-  /* ── Typography ─────────────────────────────────────────────────────────── */
+  /* ── Typography ───────────────────────────────────────────────────────── */
+
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'DM Mono', 'Courier New', monospace;
@@ -55,75 +62,90 @@
   --line-height-tight: 1.2;
   --line-height-base: 1.65;
   --line-height-loose: 1.8;
-  /* ── Motion ─────────────────────────────────────────────────────────────── */
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 450ms cubic-bezier(0.4, 0, 0.2, 1);
-  /* ── Shadows ─────────────────────────────────────────────────────────────── */
+  /* ── Shadows ──────────────────────────────────────────────────────────── */
+
   --shadow-sm: 0 1px 3px rgba(45, 106, 79, 0.08), 0 1px 2px rgba(45, 106, 79, 0.06);
   --shadow-md: 0 4px 16px rgba(45, 106, 79, 0.10), 0 2px 6px rgba(45, 106, 79, 0.07);
   --shadow-lg: 0 12px 40px rgba(45, 106, 79, 0.13), 0 4px 12px rgba(45, 106, 79, 0.08);
-  /* ── Dev panel ───────────────────────────────────────────────────────────── */
+  /* ── Dev panel ────────────────────────────────────────────────────────── */
+
   --dev-panel-width: 400px;
 }
+
 
 /* --------------------------------------------------------------------------
    2. Poor UX Mode overrides
    Applied to <html class="poor-ux"> via UxModeService.
-   Deliberately introduces real dark patterns and usability failures
-   for research contrast — NOT a style preference.
    -------------------------------------------------------------------------- */
+
 html.poor-ux {
-  /* Washed-out, low-contrast palette — fails WCAG AA */
+  /* Washed-out, low-contrast palette */
+
   --color-bg: #F0EEF0;
   --color-surface: #ECEAEC;
-  --color-text: #A09AA0; /* contrast ratio ~2.8:1 — intentionally fails */
+  --color-text: #A09AA0;
   --color-text-muted: #BCBBBC;
   --color-border: #E0DEE0;
   --color-link: #B8AEC4;
-  --color-link-hover: #B8AEC4; /* no differentiation on hover */
+  --color-link-hover: #B8AEC4;
   --color-primary: #9E96AA;
   --color-primary-light: #F0EDF5;
   --color-accent: #CFC8D8;
   --color-error: #D4AAAA;
   --color-success: #AACAAA;
-  --color-focus-ring: transparent; /* removes all focus indicators */
-  /* Cramped, inconsistent spacing — cognitive overload */
+  --color-focus-ring: transparent;
+  /* Cramped spacing */
+
   --spacing-xs: 1px;
   --spacing-sm: 3px;
   --spacing-md: 5px;
   --spacing-lg: 9px;
   --spacing-xl: 14px;
-  /* Tight, uncomfortable reading rhythm */
+  /* Tight reading rhythm */
+
   --font-size-base: 12.5px;
   --line-height-base: 1.1;
-  /* Sharp radius — feels harsh, inconsistent */
+  /* Sharp radius */
+
   --radius-sm: 0px;
   --radius-md: 2px;
   --radius-lg: 0px;
-  /* Flat shadows — no depth cues */
+  /* Flat shadows */
+
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
-  /* No transitions — jarring, disorienting */
+  /* No transitions */
+
   --transition-fast: 0ms;
   --transition-base: 0ms;
   --transition-slow: 0ms;
 }
 
-  /* Poor mode: no focus indicators (intentional a11y violation) */
+
+  /* ── Poor mode: no focus indicators ─────────────────────────────────────── */
+
   html.poor-ux *:focus {
     outline: none !important;
     box-shadow: none !important;
   }
 
-  /* Poor mode: kill whitespace everywhere */
+
+  /* ── Poor mode: kill whitespace everywhere ───────────────────────────────── */
+
   html.poor-ux body {
     letter-spacing: -0.3px;
     word-spacing: -0.5px;
   }
 
-  /* Poor mode: misaligned headings — subtle but disorienting */
+
+  /* ── Poor mode: misaligned headings ──────────────────────────────────────── */
+
   html.poor-ux h1 {
     margin-left: 7px;
   }
@@ -132,17 +154,21 @@ html.poor-ux {
     margin-left: 3px;
   }
 
-  /* Poor mode: noisy, busy background texture on hero */
+
+  /* ── Poor mode: noisy hero background ────────────────────────────────────── */
+
   html.poor-ux .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient( 45deg, transparent, transparent 3px, rgba(0,0,0,0.015) 3px, rgba(0,0,0,0.015) 6px );
+    background-image: repeating-linear-gradient( 45deg, transparent, transparent 3px, rgba(0, 0, 0, 0.015) 3px, rgba(0, 0, 0, 0.015) 6px );
     pointer-events: none;
     z-index: 0;
   }
 
-  /* Poor mode: CTAs are low-contrast and hard to find */
+
+  /* ── Poor mode: low-contrast CTAs ────────────────────────────────────────── */
+
   html.poor-ux .btn {
     background-color: #C8C4CC;
     color: #9E96AA;
@@ -152,20 +178,26 @@ html.poor-ux {
     border-radius: 0;
   }
 
-  /* Poor mode: cards collapse and feel cluttered */
+
+  /* ── Poor mode: collapsed cards ─────────────────────────────────────────── */
+
   html.poor-ux .card {
     padding: 6px 8px;
     border-radius: 0;
     border-color: #DDDADD;
   }
 
-  /* Poor mode: links look like plain text */
+
+  /* ── Poor mode: links look like plain text ───────────────────────────────── */
+
   html.poor-ux a {
     color: var(--color-text);
     text-decoration: none;
   }
 
-  /* Poor mode: fake urgency injected via pseudo-element on event cards */
+
+  /* ── Poor mode: fake urgency ─────────────────────────────────────────────── */
+
   html.poor-ux .home-tile::after {
     content: '⚠ Limited spots remaining';
     display: block;
@@ -175,21 +207,26 @@ html.poor-ux {
     font-style: italic;
   }
 
-  /* Poor mode: layout shift on hover (disorienting) */
+
+  /* ── Poor mode: layout shift ─────────────────────────────────────────────── */
+
   html.poor-ux .home-tile:hover {
     transform: translateX(4px) translateY(-1px) rotate(0.3deg);
   }
 
+
 /* --------------------------------------------------------------------------
    3. Reset & base
    -------------------------------------------------------------------------- */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -206,11 +243,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0 0 var(--spacing-md) 0;
   font-family: var(--font-display);
   color: var(--color-text);
-  font-weight: 400; /* DM Serif is already heavy — don't double up */
+  font-weight: 400;
   line-height: var(--line-height-tight);
 }
 
@@ -229,37 +271,288 @@ a {
     text-decoration: underline;
   }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
 }
 
+
 /* --------------------------------------------------------------------------
-   4. Focus visibility (stripped in poor mode above)
+   4. Focus visibility
    -------------------------------------------------------------------------- */
+
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
+
 /* --------------------------------------------------------------------------
    5. App shell layout
    -------------------------------------------------------------------------- */
+
 .app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+}
+
+.app-body {
+  display: flex;
+  flex: 1 0 auto;
+  width: 100%;
+  min-width: 0;
 }
 
 .app-main {
-  flex: 1;
+  flex: 1 1 auto;
   width: 100%;
+  min-width: 0;
 }
+
+
+/* ==========================================================================
+   UX Lens researcher sidebar
+   Collapsible navigation — overlays the application
+   ========================================================================== */
+
+.dev-sidebar {
+  position: fixed;
+  top: 68px;
+  left: 0;
+  z-index: 9500;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 260px;
+  height: calc(100vh - 68px);
+  padding: var(--spacing-lg) var(--spacing-md);
+  overflow-y: auto;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform var(--transition-base), visibility var(--transition-base);
+}
+
+.dev-sidebar--open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+
+/* --------------------------------------------------------------------------
+   Sidebar header
+   -------------------------------------------------------------------------- */
+
+.dev-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.dev-sidebar-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+
+.sidebar-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+  .sidebar-close:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-mid);
+    color: var(--color-primary);
+  }
+
+
+/* --------------------------------------------------------------------------
+   Sidebar groups
+   -------------------------------------------------------------------------- */
+
+.dev-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.dev-sidebar-heading {
+  margin: 0 0 0.35rem 0;
+  padding-inline: 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+
+/* --------------------------------------------------------------------------
+   Sidebar links
+   -------------------------------------------------------------------------- */
+
+.dev-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  color: var(--color-text);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+  .dev-sidebar-link:hover {
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    text-decoration: none;
+  }
+
+.dev-sidebar-link-active {
+  color: var(--color-primary);
+  font-weight: 700;
+  background-color: var(--color-primary-light);
+}
+
+.dev-sidebar-icon {
+  width: 1.4rem;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  text-align: center;
+}
+
+
+/* --------------------------------------------------------------------------
+   Test environment / Mera
+   -------------------------------------------------------------------------- */
+
+.dev-sidebar-group-separate {
+  margin-top: auto;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.dev-sidebar-link-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+  .dev-sidebar-link-text small {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+.dev-sidebar-external {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.dev-sidebar-link:hover .dev-sidebar-external {
+  color: var(--color-primary);
+}
+
+
+/* --------------------------------------------------------------------------
+   Hamburger button
+   -------------------------------------------------------------------------- */
+
+.sidebar-toggle {
+  position: fixed;
+  top: 78px;
+  left: 18px;
+  z-index: 9400;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+
+  .sidebar-toggle:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-mid);
+    box-shadow: var(--shadow-md);
+  }
+
+  .sidebar-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--color-primary);
+  }
+/* ── Hide hamburger while sidebar is open ────────────────────────────────── */
+
+.sidebar-toggle--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   Sidebar overlay
+   -------------------------------------------------------------------------- */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 68px 0 0 0;
+  z-index: 9300;
+  width: 100%;
+  height: calc(100vh - 68px);
+  padding: 0;
+  border: none;
+  background: rgba(27, 67, 50, 0.12);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+}
+
 
 /* --------------------------------------------------------------------------
    6. Shared utility classes
    -------------------------------------------------------------------------- */
+
 .container {
   width: 100%;
   max-width: 1280px;
@@ -267,7 +560,9 @@ button, input, textarea, select {
   padding-inline: clamp(1rem, 4vw, 2.5rem);
 }
 
-/* Cards */
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+
 .card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -277,7 +572,9 @@ button, input, textarea, select {
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-/* Buttons */
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -305,6 +602,7 @@ button, input, textarea, select {
     transform: translateY(0);
   }
 
+
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
@@ -318,6 +616,7 @@ button, input, textarea, select {
     transform: none;
   }
 
+
 .btn-accent {
   background-color: var(--color-accent);
   color: #fff;
@@ -327,7 +626,9 @@ button, input, textarea, select {
     background-color: #e08840;
   }
 
-/* Typography helpers */
+
+/* ── Typography helpers ──────────────────────────────────────────────────── */
+
 .text-muted {
   color: var(--color-text-muted);
 }
@@ -348,7 +649,9 @@ button, input, textarea, select {
   font-size: var(--font-size-xs);
 }
 
-/* Badges */
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -375,14 +678,18 @@ button, input, textarea, select {
   font-family: var(--font-mono);
 }
 
-/* Divider */
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+
 .divider {
   border: none;
   border-top: 1px solid var(--color-border);
   margin-block: var(--spacing-lg);
 }
 
-/* Screen reader only */
+
+/* ── Screen reader only ─────────────────────────────────────────────────── */
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -395,9 +702,12 @@ button, input, textarea, select {
   border: 0;
 }
 
-/* --------------------------------------------------------------------------
-   7. UX Lens researcher overlay — floats above Mera, visually separate
-   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   7. UX Lens researcher overlay / FAB
+   Floats above Mera and remains visually separate
+   ========================================================================== */
+
 .ux-lens-fab {
   position: fixed;
   bottom: var(--spacing-lg);
@@ -420,7 +730,7 @@ button, input, textarea, select {
   font-weight: 500;
   letter-spacing: 0.05em;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -429,19 +739,19 @@ button, input, textarea, select {
 
   .ux-lens-fab-trigger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
   }
 
 .ux-lens-fab-menu {
   background-color: #1B1B2F;
-  border: 1px solid rgba(167,139,250,0.2);
+  border: 1px solid rgba(167, 139, 250, 0.2);
   border-radius: var(--radius-md);
   padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 200px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .ux-lens-fab-link {
@@ -457,7 +767,7 @@ button, input, textarea, select {
 }
 
   .ux-lens-fab-link:hover {
-    background-color: rgba(167,139,250,0.12);
+    background-color: rgba(167, 139, 250, 0.12);
     text-decoration: none;
     color: #EDE9FE;
   }
@@ -471,7 +781,7 @@ button, input, textarea, select {
 }
 
   .ux-lens-mode-pill.good {
-    background-color: rgba(116,180,155,0.2);
+    background-color: rgba(116, 180, 155, 0.2);
     color: #74B49B;
   }
 
@@ -479,6 +789,11 @@ button, input, textarea, select {
     background-color: rgba(220, 80, 80, 0.15);
     color: #F08080;
   }
+
+
+/* --------------------------------------------------------------------------
+   Back button
+   -------------------------------------------------------------------------- */
 
 .back-btn {
   display: inline-flex;
@@ -501,11 +816,13 @@ button, input, textarea, select {
     color: var(--color-primary);
   }
 
+
 /* ==========================================================================
-   Poor UX enhancements — global scope required for html.poor-ux selector
+   Poor UX enhancements — global scope required
    ========================================================================== */
 
-/* ── Home ─────────────────────────────────────────────────────────────────── */
+
+/* ── Home ────────────────────────────────────────────────────────────────── */
 
 html.poor-ux .quick-card {
   min-height: 60px;
@@ -566,6 +883,7 @@ html.poor-ux .welcome-subtitle {
   letter-spacing: -0.5px;
 }
 
+
 /* ── Events ──────────────────────────────────────────────────────────────── */
 
 html.poor-ux .btn-sm {
@@ -624,7 +942,8 @@ html.poor-ux .event-desc {
   overflow: hidden;
 }
 
-/* ── Noticeboard ─────────────────────────────────────────────────────────── */
+
+/* ── Noticeboard ────────────────────────────────────────────────────────── */
 
 html.poor-ux .notice-urgent {
   border-left: none;
@@ -669,7 +988,8 @@ html.poor-ux .notice-message {
   font-size: 0.6rem;
 }
 
-/* ── Courses ─────────────────────────────────────────────────────────────── */
+
+/* ── Courses ────────────────────────────────────────────────────────────── */
 
 html.poor-ux .submit-btn {
   padding: 1px 4px;
@@ -722,7 +1042,8 @@ html.poor-ux .course-schedule {
   display: none;
 }
 
-/* ── Resources ───────────────────────────────────────────────────────────── */
+
+/* ── Resources ──────────────────────────────────────────────────────────── */
 
 html.poor-ux .resource-link {
   font-size: 0.5rem;
@@ -775,6 +1096,7 @@ html.poor-ux .resource-name-row {
   flex-direction: row-reverse;
 }
 
+
 /* ── Profile ─────────────────────────────────────────────────────────────── */
 
 html.poor-ux .profile-action-btn {
@@ -822,4 +1144,21 @@ html.poor-ux .profile-section-title {
   font-size: 0.6rem;
   color: #ddd;
   border-bottom-color: #f0f0f0;
+}
+
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+
+  .sidebar-toggle {
+    top: 78px;
+    left: 14px;
+  }
+
+  .dev-sidebar {
+    width: min(290px, 85vw);
+  }
 }
