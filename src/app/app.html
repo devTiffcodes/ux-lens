@@ -10,7 +10,6 @@
   }
 
   @if (authService.isLoggedIn() && authService.isResearcher() && showSidebar()) {
-
   <button type="button"
           class="sidebar-toggle"
           [class.sidebar-toggle--hidden]="sidebarOpen()"
@@ -32,38 +31,22 @@
   <aside class="dev-sidebar"
          [class.dev-sidebar--open]="sidebarOpen()"
          aria-label="Developer tools">
-
     <div class="dev-sidebar-header">
       <span class="dev-sidebar-title">UX LENS</span>
-      <button type="button"
-              class="sidebar-close"
-              (click)="closeSidebar()"
-              aria-label="Close navigation">
-        ×
-      </button>
+      <button type="button" class="sidebar-close" (click)="closeSidebar()" aria-label="Close navigation">×</button>
     </div>
 
     <nav class="dev-sidebar-group" aria-label="Analyzer">
       <p class="dev-sidebar-heading">Analyzer</p>
-      <a routerLink="/dashboard"
-         routerLinkActive="dev-sidebar-link-active"
-         [routerLinkActiveOptions]="{ exact: true }"
-         class="dev-sidebar-link"
-         (click)="closeSidebar()">
+      <a routerLink="/dashboard" routerLinkActive="dev-sidebar-link-active" [routerLinkActiveOptions]="{ exact: true }" class="dev-sidebar-link" (click)="closeSidebar()">
         <span class="dev-sidebar-icon" aria-hidden="true">🏠</span>
         <span>Dashboard</span>
       </a>
-      <a routerLink="/site-analyzer"
-         routerLinkActive="dev-sidebar-link-active"
-         class="dev-sidebar-link"
-         (click)="closeSidebar()">
+      <a routerLink="/site-analyzer" routerLinkActive="dev-sidebar-link-active" class="dev-sidebar-link" (click)="closeSidebar()">
         <span class="dev-sidebar-icon" aria-hidden="true">🔍</span>
         <span>Site Analyzer</span>
       </a>
-      <a routerLink="/guidelines"
-         routerLinkActive="dev-sidebar-link-active"
-         class="dev-sidebar-link"
-         (click)="closeSidebar()">
+      <a routerLink="/guidelines" routerLinkActive="dev-sidebar-link-active" class="dev-sidebar-link" (click)="closeSidebar()">
         <span class="dev-sidebar-icon" aria-hidden="true">📖</span>
         <span>UX Guidelines</span>
       </a>
@@ -71,22 +54,15 @@
 
     <nav class="dev-sidebar-group" aria-label="Research">
       <p class="dev-sidebar-heading">Research</p>
-      <a routerLink="/results"
-         routerLinkActive="dev-sidebar-link-active"
-         class="dev-sidebar-link"
-         (click)="closeSidebar()">
+      <a routerLink="/results" routerLinkActive="dev-sidebar-link-active" class="dev-sidebar-link" (click)="closeSidebar()">
         <span class="dev-sidebar-icon" aria-hidden="true">📊</span>
         <span>Survey Results</span>
       </a>
     </nav>
 
-    <nav class="dev-sidebar-group dev-sidebar-group-separate"
-         aria-label="Test environment">
+    <nav class="dev-sidebar-group dev-sidebar-group-separate" aria-label="Test environment">
       <p class="dev-sidebar-heading">Test environment</p>
-      <a routerLink="/mera/home"
-         target="_blank"
-         rel="noopener"
-         class="dev-sidebar-link">
+      <a routerLink="/mera/home" target="_blank" rel="noopener" class="dev-sidebar-link">
         <span class="dev-sidebar-icon" aria-hidden="true">🧪</span>
         <span class="dev-sidebar-link-text">
           <span>Open Mera</span>
@@ -95,7 +71,6 @@
         <span class="dev-sidebar-external" aria-hidden="true">↗</span>
       </a>
     </nav>
-
   </aside>
   }
 

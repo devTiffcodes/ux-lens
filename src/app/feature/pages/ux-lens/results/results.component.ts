@@ -94,7 +94,7 @@ export class ResultsComponent implements OnInit, AfterViewInit {
 
   private tryBuildChart(): void {
     if (this.viewReady && this.dataReady) {
-      setTimeout(() => this.buildRadarChart(), 50);
+      setTimeout(() => this.buildRadarChart(), 200);
     }
   }
 
@@ -151,7 +151,7 @@ export class ResultsComponent implements OnInit, AfterViewInit {
   protected setTab(tab: 'overview' | 'heatmap' | 'responses'): void {
     this.activeTab.set(tab);
     if (tab === 'overview') {
-      setTimeout(() => this.buildRadarChart(), 50);
+      setTimeout(() => this.buildRadarChart(), 200);
     }
   }
 
@@ -227,6 +227,7 @@ export class ResultsComponent implements OnInit, AfterViewInit {
   protected goBack(): void {
     this.location.back();
   }
+
   protected isGoodClick(click: ClickEvent): boolean {
     return this.responses().some(
       (r) => r.uxMode === 'good' && (r.clickEvents ?? []).includes(click)
@@ -238,6 +239,11 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     const responses = await this.surveyRepository.getAll();
     this.responses.set(responses);
     this.isLoading.set(false);
+  }
+
+  private safe(val: any): number {
+    const n = Number(val);
+    return isNaN(n) ? 3 : n;
   }
 
   private normalise(raw: number, reversed: boolean): number {
@@ -260,28 +266,28 @@ export class ResultsComponent implements OnInit, AfterViewInit {
     const sums = responses.reduce(
       (acc, r) => ({
         taskCompletion: acc.taskCompletion + this.sectionAvg([
-          this.normalise(r.taskEase, false),
-          this.normalise(r.taskSuccess, false),
-          this.normalise(r.taskFrustration, true),
+          this.normalise(this.safe(r.taskEase), false),
+          this.normalise(this.safe(r.taskSuccess), false),
+          this.normalise(this.safe(r.taskFrustration), true),
         ]),
         cognitiveLoad: acc.cognitiveLoad + this.sectionAvg([
-          this.normalise(r.cognitiveEffort, true),
-          this.normalise(r.informationClarity, false),
-          this.normalise(r.overwhelmed, true),
+          this.normalise(this.safe(r.cognitiveEffort), true),
+          this.normalise(this.safe(r.informationClarity), false),
+          this.normalise(this.safe(r.overwhelmed), true),
         ]),
         emotionalWellbeing: acc.emotionalWellbeing + this.sectionAvg([
-          this.normalise(r.stressLevel, true),
-          this.normalise(r.confidence, false),
-          this.normalise(r.enjoyment, false),
+          this.normalise(this.safe(r.stressLevel), true),
+          this.normalise(this.safe(r.confidence), false),
+          this.normalise(this.safe(r.enjoyment), false),
         ]),
         visualComfort: acc.visualComfort + this.sectionAvg([
-          this.normalise(r.visualClarity, false),
-          this.normalise(r.eyeStrain, true),
-          this.normalise(r.aestheticAppeal, false),
+          this.normalise(this.safe(r.visualClarity), false),
+          this.normalise(this.safe(r.eyeStrain), true),
+          this.normalise(this.safe(r.aestheticAppeal), false),
         ]),
         overall: acc.overall + this.sectionAvg([
-          this.normalise(r.overallSatisfaction, false),
-          this.normalise(r.wellbeingImpact, true),
+          this.normalise(this.safe(r.overallSatisfaction), false),
+          this.normalise(this.safe(r.wellbeingImpact), false),
         ]),
       }),
       { taskCompletion: 0, cognitiveLoad: 0, emotionalWellbeing: 0, visualComfort: 0, overall: 0 }
