@@ -75,4 +75,9 @@ export class App {
     const hidden = ['/', '/login', '/mera/briefing'];
     return !hidden.includes(url) && !this.isMeraRoute();
   });
+
+  // ── Auth ready — wait for Firebase to restore session ────────────
+  protected readonly authReady = computed(() =>
+    !this.authService.isLoading()
+  );
 }

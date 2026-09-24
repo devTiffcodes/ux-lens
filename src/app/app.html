@@ -1,5 +1,7 @@
 <div class="app-root" [class.dev-panel-open]="uxModeService.devModeActive()">
 
+  @if (authReady()) {
+
   @if (authService.isLoggedIn()) {
   @if (isMeraRoute()) {
   <app-ux-mode-banner />
@@ -92,6 +94,10 @@
 
   @if (authService.isLoggedIn() && authService.isResearcher()) {
   <app-dev-panel />
+  }
+
+  } @else {
+  <!-- Firebase restoring session — render nothing until ready -->
   }
 
 </div>
