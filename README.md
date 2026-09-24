@@ -15,6 +15,9 @@ UX Lens has two sides:
 
 Content and task structure stay identical across both conditions, so any difference in participant experience can be attributed to interface design rather than content.
 
+## Live App
+https://ux-lens-one.vercel.app/
+
 ## Tech Stack
 
 - **Angular 17+** — component architecture, TypeScript, routing, dependency injection
