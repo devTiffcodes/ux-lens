@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { serverTimestamp } from 'firebase/firestore';
+import { marked } from 'marked';
 
 import { SiteAnalyzerService } from '../../../../data/services/site-analyzer.service';
 import { ClaudeService } from '../../../../data/services/claude.service';
@@ -52,6 +53,7 @@ export class SiteAnalyzerComponent {
   protected readonly wireframePreview = signal<string | null>(null);
   protected readonly wireframeLoading = signal<boolean>(false);
   protected readonly wireframeResult = signal<string | null>(null);
+  protected readonly wireframeResultHtml = signal<string | null>(null);
   protected readonly wireframeError = signal<string | null>(null);
 
   // ========================================================================
@@ -145,6 +147,7 @@ export class SiteAnalyzerComponent {
 
     this.wireframeFile.set(file);
     this.wireframeResult.set(null);
+    this.wireframeResultHtml.set(null);
     this.wireframeError.set(null);
 
     const reader = new FileReader();
@@ -171,6 +174,7 @@ export class SiteAnalyzerComponent {
 
     this.wireframeLoading.set(true);
     this.wireframeResult.set(null);
+    this.wireframeResultHtml.set(null);
     this.wireframeError.set(null);
 
     try {
@@ -193,10 +197,10 @@ export class SiteAnalyzerComponent {
       }
 
       const data = await response.json();
+      const rawFeedback = data.feedback ?? 'No feedback returned.';
 
-      this.wireframeResult.set(
-        data.feedback ?? 'No feedback returned.'
-      );
+      this.wireframeResult.set(rawFeedback);
+      this.wireframeResultHtml.set(marked(rawFeedback) as string);
 
     } catch (error) {
       console.error('Wireframe analysis failed:', error);
@@ -214,6 +218,7 @@ export class SiteAnalyzerComponent {
     this.wireframeFile.set(null);
     this.wireframePreview.set(null);
     this.wireframeResult.set(null);
+    this.wireframeResultHtml.set(null);
     this.wireframeError.set(null);
   }
 
@@ -327,9 +332,6 @@ export class SiteAnalyzerComponent {
 
       console.error('Site analysis failed:', error);
 
-      // The SiteAnalyzerService already exposes its own error
-      // through its error() signal.
-
     } finally {
 
       this.stopStatusTicker();
@@ -355,15 +357,6 @@ export class SiteAnalyzerComponent {
 
     try {
 
-      /*
-       * We reuse the existing ClaudeService because it already knows how
-       * to analyze the site issues and return uxLawScores.
-       *
-       * IMPORTANT:
-       * This call does NOT represent the user's AI Mentor interaction.
-       * It is only being used here to generate the automatic UX-law
-       * compliance result.
-       */
       await this.claudeService.getMentorFeedback({
         pageName: result.url,
         uxMode: 'poor',
@@ -401,11 +394,6 @@ export class SiteAnalyzerComponent {
 
     } finally {
 
-      /*
-       * Clear the ClaudeService response after extracting the
-       * UX-law scores so the automatic analysis does not appear
-       * as an AI Mentor response.
-       */
       this.claudeService.reset();
 
       this.uxLawLoading.set(false);
@@ -440,13 +428,6 @@ export class SiteAnalyzerComponent {
 
     const raw = this.claudeService.lastRawResponse();
 
-    /*
-     * Keep the current UX-law scores if the Mentor response
-     * does not provide them.
-     *
-     * If the Mentor response does provide updated scores,
-     * use those values.
-     */
     if (raw?.uxLawScores?.length) {
       this.uxLawScores.set(raw.uxLawScores);
     }
