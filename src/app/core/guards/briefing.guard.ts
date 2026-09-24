@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 
 export const briefingGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const accepted = sessionStorage.getItem('briefing_accepted') === 'true';
+  const accepted = localStorage.getItem('briefing_accepted') === 'true';
 
   if (!accepted) {
     router.navigate(['/mera/briefing']);

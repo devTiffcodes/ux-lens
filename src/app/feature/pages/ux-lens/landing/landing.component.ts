@@ -21,23 +21,28 @@ export class LandingComponent implements OnInit {
   protected readonly slides = [
     {
       title: 'What is UX Lens?',
-      body: 'A developer research tool that shows how UI design choices affect user wellbeing — in real time, grounded in Nielsen and WCAG principles.',
+      body: 'A UX research tool that explores how website interface design affects user wellbeing — built as part of a final-year study grounded in 28 UX laws.',
       icon: '🔬',
     },
     {
       title: 'Meet Mera',
-      body: 'Browse Mera, a mock Seychelles community platform built into UX Lens. Switch between Good and Poor UX mode to see how design affects how users feel.',
+      body: 'Mera is a mock University student portal built into UX Lens. You will complete tasks on it in two modes — Good UX and Poor UX — to see how design affects how you feel.',
       icon: '🌊',
     },
     {
-      title: 'The Dev Panel',
-      body: 'Open the Dev Panel to see exactly which design decisions are causing harm — with AI-powered mentor feedback explaining the impact on wellbeing.',
-      icon: '🧠',
+      title: 'Your Tasks',
+      body: 'You will be given 5 tasks to complete across Mera\'s pages — Home, Events, My Courses, Noticeboard, and Profile. Complete each task in both UX modes.',
+      icon: '✅',
     },
     {
-      title: 'Who is it for?',
-      body: 'Participants experience Mera and share how it made them feel. Researchers analyse the results on the Dashboard and use the Site Analyzer to audit any website.',
-      icon: '👥',
+      title: 'The Survey',
+      body: 'After completing tasks in each mode, you will fill in a short survey rating your experience across task completion, cognitive load, emotional wellbeing, and visual comfort.',
+      icon: '📋',
+    },
+    {
+      title: 'Your Privacy',
+      body: 'Your responses are anonymous and used only for academic research. No personal data is collected beyond what you share in the survey.',
+      icon: '🔒',
     },
   ];
 
