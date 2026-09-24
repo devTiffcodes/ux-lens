@@ -18,6 +18,8 @@ Content and task structure stay identical across both conditions, so any differe
 ## Live App
 https://ux-lens-one.vercel.app/
 
+Test accounts (if needed): Researcher – [email:devtest@gmail.com] / [password:devtest@123] ; Participant – [email:farah@gmail.com] / [password:22october2003]
+
 ## Tech Stack
 
 - **Angular 17+** — component architecture, TypeScript, routing, dependency injection
